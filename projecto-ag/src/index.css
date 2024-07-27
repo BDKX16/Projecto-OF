@@ -43,6 +43,7 @@ body {
   margin: 0 auto;
 }
 .header {
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -75,7 +76,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #a51d1d;
   cursor: pointer;
   transition: border-color 0.25s;
 }
