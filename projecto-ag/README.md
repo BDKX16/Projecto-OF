@@ -11,34 +11,36 @@ Estructura de carpetas(chatgpt):
 
 my-react-app/
 ├── public/
-│   ├── favicon.ico
-│   ├── index.html
-│   └── assets/
-│       └── images/
+│ ├── favicon.ico
+│ ├── index.html
+│ └── assets/
+│ └── images/
 ├── src/
-│   ├── assets/
-│   │   ├── images/
-│   │   └── styles/
-│   │       ├── components/
-│   │       └── pages/
-│   ├── components/
-│   │   ├── Header.jsx
-│   │   ├── Footer.jsx
-│   │   └── ...
-│   ├── pages/
-│   │   ├── Home.jsx
-│   │   ├── About.jsx
-│   │   └── ...
-│   ├── hooks/
-│   │   └── useCustomHook.js
-│   ├── contexts/
-│   │   └── UserContext.jsx
-│   ├── utils/
-│   │   └── helpers.js
-│   ├── App.jsx
-│   ├── main.jsx
-│   ├── index.css
-│   └── index.js
+│ ├── assets/
+│ │ ├── images/
+│ │ └── styles/
+│ │ ├── components/
+│ │ └── pages/
+│ ├── components/
+│ │ ├── Header.jsx
+│ │ ├── Footer.jsx
+│ │ └── ...
+│ ├── pages/
+│ │ ├── Home.jsx
+│ │ ├── About.jsx
+│ │ └── ...
+│ ├── hooks/
+│ │ └── useCustomHook.js
+│ ├── contexts/
+│ │ └── UserContext.jsx
+│ ├── utils/
+│ │ └── helpers.js
+│ ├── adapters
+│ │ └── ApiUsers.jsx
+│ ├── App.jsx
+│ ├── main.jsx
+│ ├── index.css
+│ └── index.js
 ├── .gitignore
 ├── package.json
 ├── README.md
