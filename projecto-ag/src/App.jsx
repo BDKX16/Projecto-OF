@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import Modal from "./utils/Modal";
 
 function App() {
   return (
@@ -17,7 +18,7 @@ function App() {
         </div>
       </header>
 
-      <div className="container"> </div>
+      <div className="container">{/*<Modal></Modal>*/}</div>
 
       <footer>
         <div className="redes-sociales">
