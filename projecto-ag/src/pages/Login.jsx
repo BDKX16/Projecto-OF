@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import useFetchAndLoad from "../hooks/useFetchAndLoad";
-import { login } from "../services/public";
+import { login, register } from "../services/public";
 import { createUserAdapter } from "../adapters/user";
 import { Button } from "@mui/material";
 import { createUser, modifyUser } from "./../redux/states/user";
@@ -10,9 +10,11 @@ export const Login = () => {
   const userState = useSelector((store) => store.user);
 
   const handleClick = async () => {
-    const result = await callEndpoint(login());
+    const result = await callEndpoint(login("xavimegag@gmail.com", "Luna999"));
+    console.log(result);
     dispatch(createUser(createUserAdapter(result)));
   };
+
   const handleModify = async () => {
     dispatch(modifyUser({ name: "pepe" }));
   };
