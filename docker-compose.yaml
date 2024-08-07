@@ -13,3 +13,20 @@ services:
       - ./mongodata:/data/db
     ports:
       - "${MONGO_EXT_PORT}:27017"
+  node:
+    container_name: node
+    image: "node:14.15.1"
+    restart: always
+    working_dir: /home/node/app
+    volumes:
+      - ./mycode/index.js:/home/node/app/index.js
+    command: sh -c "node index.js"
+
+    ports:
+      - 3000:3000
+      - 3001:3001
+      - 80:3002
+
+    links:
+      - mongo
+      - emqx
