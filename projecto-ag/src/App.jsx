@@ -1,22 +1,72 @@
 import { useState } from "react";
 import "./App.css";
-import Modal from "./utils/Modal";
+import { Twirl as Hamburger } from "hamburger-react";
 
 function App() {
+  const [sidebarState, setSidebarState] = useState(false);
+
+  const toggleSidebar = () => {
+    if (sidebarState) {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.style.opacity = "0";
+      setSidebarState(false);
+    } else {
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.style.opacity = "1";
+      setSidebarState(true);
+    }
+  };
   return (
     <>
-      <header>
-        <div className="logo"></div>
-        <div className="categorias">
-          <p>Categoria 1</p>
-          <p>Categoria 2</p>
-          <p>Categoria 3</p>
-          <p>Categoria 4</p>
-        </div>
-        <div className="lupa-buscador">
-          <p>Lupa</p>
-        </div>
-      </header>
+      <nav>
+        <ul class="sidebar">
+          <li onClick={toggleSidebar}>
+            <a href="#">XXXX</a>
+          </li>
+          <li>
+            <a href="#">Favoritos</a>
+          </li>
+          <li>
+            <a href="#">Video del mes</a>
+          </li>
+          <li>
+            <a href="#">Mas likeados</a>
+          </li>
+          <li>
+            <a href="#">Más recientes</a>
+          </li>
+          <li>
+            <a href="#">Carrito</a>
+          </li>
+        </ul>
+
+        <ul className="topbar">
+          <li className="principal">
+            <img src="https://static.vecteezy.com/system/resources/thumbnails/012/986/755/small/abstract-circle-logo-icon-free-png.png"></img>
+          </li>
+          <li className="hideOnMobile">
+            <a href="#">Favoritos</a>
+          </li>
+          <li className="hideOnMobile">
+            <a href="#">Video del mes</a>
+          </li>
+          <li className="hideOnMobile">
+            <a href="#">Mas likeados</a>
+          </li>
+          <li className="hideOnMobile">
+            <a href="#">Más recientes</a>
+          </li>
+          <li className="hideOnMobile">
+            <a href="#">Carrito</a>
+          </li>
+
+          <li className="menu-button" onClick={() => toggleSidebar()}>
+            <a href="#">
+              <Hamburger></Hamburger>
+            </a>
+          </li>
+        </ul>
+      </nav>
 
       <div className="container">{/*<Modal></Modal>*/}</div>
 
