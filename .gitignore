@@ -13,6 +13,11 @@ api-ag/node_modules
 dist
 dist-ssr
 *.local
+mongodata
+dist
+dist-ssr
+*.local
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
