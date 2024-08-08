@@ -14,7 +14,7 @@ import {
   Grid,
   Box,
 } from "@mui/material";
-
+import { enqueueSnackbar } from "notistack";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { createUser } from "./../redux/states/user";
 
@@ -52,7 +52,19 @@ export default function Login() {
     const result = await callEndpoint(
       login(data.get("email"), data.get("password"))
     );
-    dispatch(createUser(createUserAdapter(result)));
+    if (result.status !== 200) {
+      enqueueSnackbar("Invalid credentials", {
+        variant: "error",
+      });
+      return;
+    } else {
+      enqueueSnackbar("Login success", {
+        variant: "success",
+      });
+      dispatch(createUser(createUserAdapter(result)));
+    }
+
+    console.log(result);
   };
 
   const handleSubmitRegister = async (event) => {
