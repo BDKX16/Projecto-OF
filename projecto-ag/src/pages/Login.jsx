@@ -149,7 +149,7 @@ export default function Login() {
                     onClick={() => setNewUser(false)}
                     variant="body2"
                   >
-                    {"Already have an account? Sign Up"}
+                    {"Already have an account? Log in"}
                   </Link>
                 </Grid>
               </Grid>
