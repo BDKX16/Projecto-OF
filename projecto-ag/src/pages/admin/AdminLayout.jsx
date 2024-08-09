@@ -5,12 +5,15 @@ import {
   List,
   ListItemButton,
   ListItemText,
+  Button,
 } from "@mui/material";
 
 const drawerWidth = 105;
 
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { Settings } from "@mui/icons-material";
+import AccountMenu from "./AccountMenu";
 
 const Root = styled.div`
   display: flex;
@@ -57,7 +60,15 @@ const AdminLayout = (props) => {
         </List>
       </StyledDrawer>
       <Content>
-        <Toolbar />
+        <Toolbar
+          style={{
+            marginLeft: "auto",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <AccountMenu />
+        </Toolbar>
         <div> {props.children}</div>
       </Content>
     </Root>

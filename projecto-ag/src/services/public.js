@@ -28,3 +28,13 @@ export const register = (name, username, password) => {
     controller,
   };
 };
+
+export const getContent = () => {
+  const controller = loadAbort();
+  return {
+    call: axios.get("http://localhost:3001/api/content", {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
