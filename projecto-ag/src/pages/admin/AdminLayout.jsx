@@ -6,6 +6,7 @@ import {
   ListItemButton,
   ListItemText,
   Button,
+  Avatar,
 } from "@mui/material";
 
 const drawerWidth = 105;
@@ -48,6 +49,8 @@ const AdminLayout = (props) => {
       >
         <Toolbar />
         <List>
+          <Avatar sx={{ width: 42, height: 42, margin: 3 }}>M</Avatar>
+
           <ListItemButton component={Link} to="/admin/content">
             <ListItemText primary="Content" />
           </ListItemButton>

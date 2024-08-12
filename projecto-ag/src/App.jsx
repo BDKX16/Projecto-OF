@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { Twirl as Hamburger } from "hamburger-react";
+import Content from "./pages/content/Content";
 
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
@@ -19,7 +20,7 @@ function App() {
   return (
     <>
       <nav>
-        <ul class="sidebar">
+        <ul className="sidebar">
           <li onClick={toggleSidebar}>
             <a href="#">XXXX</a>
           </li>
@@ -68,7 +69,9 @@ function App() {
         </ul>
       </nav>
 
-      <div className="container">{/*<Modal></Modal>*/}</div>
+      <div className="container">
+        <Content></Content>
+      </div>
 
       <footer>
         <div className="redes-sociales">
