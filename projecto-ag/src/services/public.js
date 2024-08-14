@@ -32,7 +32,7 @@ export const register = (name, username, password) => {
 export const getContent = () => {
   const controller = loadAbort();
   return {
-    call: axios.get("http://localhost:3001/api/content", {
+    call: axios.get("http://localhost:3001/api/categorys", {
       signal: controller.signal,
     }),
     controller,

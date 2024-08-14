@@ -10,7 +10,9 @@ const useFetchAndLoad = () => {
     let result = {};
     try {
       result = await axiosCall.call;
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
     setLoading(false);
     return result;
   };

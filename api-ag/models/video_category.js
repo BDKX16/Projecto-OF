@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 
 const videoCategorySchema = new mongoose.Schema({
   categoryId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Category",
     required: true,
   },
   videoId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "Video",
     required: true,
   },

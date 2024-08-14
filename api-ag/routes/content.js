@@ -2,6 +2,11 @@ const express = require("express");
 
 const router = express.Router();
 
+const Content = require("../models/content.js");
+const Category = require("../models/category.js");
+const VideoCategory = require("../models/video_category.js");
+const mongoose = require("mongoose");
+
 // GET /api/content/:videoId
 router.get("/content/:videoId", (req, res) => {
   const videoId = req.params.videoId;
@@ -24,8 +29,6 @@ router.get("/content/:videoId", (req, res) => {
 
 // GET /api/content
 router.get("/content", (req, res) => {
-  const videoId = req.params.videoId;
-
   // Fetch the content of the video with the given videoId
   // Replace this with your own logic to fetch the video content
 
@@ -54,6 +57,38 @@ router.get("/content", (req, res) => {
   ];
 
   res.json(videoContent);
+});
+
+// GET /api/categorys
+router.get("/categorys", async (req, res) => {
+  //get all categorys
+  var categorys = await Category.find({});
+
+  //for each category push all videos
+  let algo = await Promise.all(
+    categorys.map(async (item) => {
+      try {
+        var category = item;
+        var video_categorys = await VideoCategory.find({
+          categoryId: category._id,
+        });
+        //get all videos
+        var videos = await Promise.all(
+          video_categorys.map(async (element) => {
+            return await Content.findOne({ _id: element.videoId });
+          })
+        );
+        category.videos = videos;
+        console.log(category);
+        console.log(category.videos);
+        return category;
+      } catch (error) {
+        console.log(error);
+      }
+    })
+  );
+
+  res.json(algo);
 });
 
 module.exports = router;
