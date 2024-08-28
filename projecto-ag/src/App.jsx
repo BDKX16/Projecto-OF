@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { Twirl as Hamburger } from "hamburger-react";
+import Lupa from "./utils/icons/Lupa";
 
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
@@ -19,7 +20,7 @@ function App() {
   return (
     <>
       <nav>
-        <ul class="sidebar">
+        <ul className="sidebar">
           <li onClick={toggleSidebar}>
             <a href="#">XXXX</a>
           </li>
@@ -59,7 +60,14 @@ function App() {
           <li className="hideOnMobile">
             <a href="#">Carrito</a>
           </li>
-
+          <li className="hideOnMobile">
+            <a className="buscar">
+              <input type="text" placeholder="buscar" required></input>
+              <a className="btn-lupa">
+                <Lupa className="Lupa2"></Lupa>
+              </a>
+            </a>
+          </li>
           <li className="menu-button" onClick={() => toggleSidebar()}>
             <a href="#">
               <Hamburger></Hamburger>
