@@ -17,9 +17,10 @@ import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { getContent } from "../../../services/public";
+import { getContent, addContent } from "../../../services/public";
 import { createContentAdapter } from "../../../adapters/content";
 import { formatDateToString } from "../../../utils/format-date-to-string";
+import LoadingSpinner from "../../content/components/LoadingSpinner";
 
 const ABMTable = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
@@ -44,8 +45,6 @@ const ABMTable = () => {
         enqueueSnackbar("Error", {
           variant: "error",
         });
-        console.log("Error");
-        console.log(result);
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {
@@ -60,10 +59,21 @@ const ABMTable = () => {
     fetchData();
   }, []);
 
-  const handleAdd = () => {
+  const handleAdd = async (e) => {
+    e.preventDefault();
     setData([...data, { ...formData, id: Date.now() }]);
     setFormData({ name: "", age: "" });
     setIsAddOpen(false);
+
+    //handle submit form
+
+    const result = await callEndpoint(addContent(formData));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error", { variant: "error" });
+    } else {
+      enqueueSnackbar("Contenido agregado", { variant: "success" });
+      setData([...data, result.data]);
+    }
   };
 
   const handleEdit = () => {
@@ -192,8 +202,14 @@ const ABMTable = () => {
         </Box>
         {/* video cover preview */}
       </Collapse>
-      {data.length === 0 ? (
-        <p>No hay datos</p>
+      {loading ? (
+        <div className="main-container">
+          <LoadingSpinner />
+        </div>
+      ) : data.length === 0 ? (
+        <div className="main-container">
+          <p>No hay datos</p>
+        </div>
       ) : (
         <TableContainer component={Paper}>
           <Table>

@@ -24,8 +24,6 @@ const Content = () => {
         enqueueSnackbar("Error", {
           variant: "error",
         });
-        console.log("Error");
-        console.log(result);
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {

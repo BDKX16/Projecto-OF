@@ -2,61 +2,100 @@ const express = require("express");
 
 const router = express.Router();
 
+const mongoose = require("mongoose");
+
 const Content = require("../models/content.js");
 const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
-const mongoose = require("mongoose");
-
+const Payment = require("../models/payment.js");
 // GET /api/content/:videoId
-router.get("/content/:videoId", (req, res) => {
+router.get("/content/:videoId", async (req, res) => {
   const videoId = req.params.videoId;
 
-  // Fetch the content of the video with the given videoId
-  // Replace this with your own logic to fetch the video content
+  if (videoId === "undefined") {
+    return res.status(400).json({ message: "VideoId is required" });
+  }
 
-  //Authenticate if the user is allowed to view the video
+  try {
+    const content = await Content.findOne({ _id: videoId });
+    if (!content) {
+      return res.status(404).json({ message: "Content not found" });
+    }
 
-  // Example response
-  const videoContent = {
-    id: videoId,
-    title: "Video Title",
-    description: "Video Description",
-    url: "https://example.com/videos/video1.mp4",
-  };
+    const payment = await Payment.findOne({ videoId: videoId });
 
-  res.json(videoContent);
+    if (!payment) {
+      const videoContent = {
+        videoUrl: undefined,
+        description: content.description,
+        coverUrl: content.coverUrl,
+        status: undefined,
+        price: content.price,
+        createdAt: content.createdAt,
+        id: content.id,
+      };
+      return res.status(200).json(videoContent);
+    }
+
+    if (payment.status !== "completed") {
+      const videoContent = {
+        videoUrl: undefined,
+        status: payment.status,
+        description: content.description,
+        coverUrl: content.coverUrl,
+        price: content.price,
+        createdAt: content.createdAt,
+        id: content.id,
+      };
+      return res.status(200).json(videoContent);
+    }
+
+    // Example response
+    const videoContent = {
+      title: content.title,
+      description: content.description,
+      videoUrl: content.videoUrl,
+      status: payment.status,
+      coverUrl: content.coverUrl,
+      price: content.price,
+      createdAt: content.createdAt,
+      id: content.id,
+    };
+
+    return res.status(200).json(videoContent);
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 // GET /api/content
-router.get("/content", (req, res) => {
-  // Fetch the content of the video with the given videoId
-  // Replace this with your own logic to fetch the video content
+router.get("/content", async (req, res) => {
+  try {
+    const content = await Content.find({});
+    return res.status(200).json(content);
+  } catch (error) {
+    returnres.status(500).json({ message: "Internal server error" });
+  }
+});
 
-  //Authenticate if the user is allowed to view the video
+router.post("/content", async (req, res) => {
+  try {
+    const content = req.body;
+    await Content.create(content);
+    return res.status(200).json(content);
+  } catch (error) {
+    returnres.status(500).json({ message: "Internal server error" });
+  }
+});
 
-  // Example response
-  const videoContent = [
-    {
-      id: "as7dyn8q7yn8172dynq807dy8q2",
-      title: "Video Title",
-      description: "Video Description",
-      createdAt: "2021-09-01T12:00:00Z",
-      videoUrl: "https://example.com/videos/video1.mp4",
-      coverUrl: "https://example.com/images/video1.jpg",
-      price: 10.0,
-    },
-    {
-      id: "d81228dy172dynq807dy8q2",
-      title: "Video Title1",
-      description: "Video Description1",
-      createdAt: "2021-09-01T12:00:00Z",
-      videoUrl: "https://example.com/videos/video1.mp4",
-      coverUrl: "https://example.com/images/video1.jpg",
-      price: 12.0,
-    },
-  ];
-
-  res.json(videoContent);
+router.put("/content", async (req, res) => {
+  try {
+    const content = req.body;
+    await Content.updateOne({ _id: content._id }, content);
+    return res.status(200).json(content);
+  } catch (error) {
+    returnres.status(500).json({ message: "Internal server error" });
+  }
 });
 
 // GET /api/categorys

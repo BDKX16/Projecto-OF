@@ -26,7 +26,7 @@ const Layout = () => {
           element={userState.name ? <Navigate to="/dashboard" /> : <Login />}
           caseSensitive={false}
         ></Route>
-        <Route path={`/`} element={<App />}></Route>
+        <Route path={`/*`} element={<App />}></Route>
         <Route
           path={`/admin/*`}
           element={

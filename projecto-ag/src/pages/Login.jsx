@@ -82,7 +82,7 @@ export default function Login() {
     }
 
     const result = await callEndpoint(
-      register(data.get("email"), data.get("password"))
+      register(data.get("email"), data.get("email"), data.get("password"))
     );
     dispatch(createUser(createUserAdapter(result)));
   };

@@ -3,9 +3,19 @@ const { checkAuth, checkRole } = require("../middlewares/authentication");
 
 const router = express.Router();
 
+/*
+Page personalization:
+logo 128x128
+logo 64x64
+logo 30x30
+
+
+*/
+
 // GET /admin/content - Get all content
 router.get("/content", checkAuth, (req, res) => {
   // Logic to fetch all content from the database
+
   // ...
   res.send("Get all content");
 });

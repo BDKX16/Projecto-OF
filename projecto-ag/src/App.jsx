@@ -3,6 +3,8 @@ import "./App.css";
 import { Twirl as Hamburger } from "hamburger-react";
 import Content from "./pages/content/Content";
 
+import { Route, Routes } from "react-router-dom";
+import ContentPage from "./pages/content/contentpage/ContentPage";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
 
@@ -70,7 +72,11 @@ function App() {
       </nav>
 
       <div className="container">
-        <Content></Content>
+        <Routes>
+          <Route path={`/`} element={<Content />} />
+          <Route path="/video" element={<ContentPage />} />
+          <Route path={`/video/:id`} element={<ContentPage />} />
+        </Routes>
       </div>
 
       <footer>

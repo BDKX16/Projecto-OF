@@ -87,7 +87,7 @@ router.post("/register", async (req, res) => {
       email: email,
       password: encryptedPassword,
     };
-
+    /** 
     try {
       const info = await transporter.sendMail({
         from: '"Almengala👻" <almengala@gmail.com>', // sender address
@@ -103,7 +103,7 @@ router.post("/register", async (req, res) => {
     } catch (error) {
       console.error(error);
     }
-
+*/
     await User.create(newUser);
 
     const response = {

@@ -17,7 +17,7 @@ import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { getContent } from "../../../services/public";
+import { getTemplates } from "../../../services/public";
 import { createContentAdapter } from "../../../adapters/content";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 
@@ -32,7 +32,7 @@ const Templates = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await callEndpoint(getContent());
+      const result = await callEndpoint(getTemplates());
 
       if (Object.keys(result).length === 0) {
         return;
@@ -44,8 +44,6 @@ const Templates = () => {
         enqueueSnackbar("Error", {
           variant: "error",
         });
-        console.log("Error");
-        console.log(result);
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {

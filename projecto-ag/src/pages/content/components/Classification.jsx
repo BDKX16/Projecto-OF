@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../content.css"; // Archivo CSS para estilos personalizados
+import { Button } from "@mui/material";
 
 const images = [
   "https://via.placeholder.com/240x180/FF5733/FFFFFF?text=Image+1",
@@ -69,7 +70,16 @@ const Classification = () => {
                 className="carousel-image"
               />
               <h3 className="carousel-image-title">Title {index + 1}</h3>
-              <button className="carousel-image-button">Comprar</button>
+
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                className="carousel-image-button"
+                href={"video?id=" + "asdasdasdasd"}
+              >
+                Ver mas
+              </Button>
             </div>
           </div>
         ))}

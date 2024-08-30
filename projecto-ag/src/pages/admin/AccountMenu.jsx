@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
+import ContrastIcon from "@mui/icons-material/Contrast";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -89,13 +90,19 @@ export default function AccountMenu() {
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
-          Add another account
+          Manage accounts
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
-          Settings
+          Page settings
+        </MenuItem>
+        <MenuItem onClick={handleClose}>
+          <ListItemIcon>
+            <ContrastIcon fontSize="small" />
+          </ListItemIcon>
+          Page theme
         </MenuItem>
         <MenuItem onClick={handleClose}>
           <ListItemIcon>

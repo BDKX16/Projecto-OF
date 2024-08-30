@@ -3,6 +3,9 @@ const express = require("express");
 
 const router = express.Router();
 
+const Payment = require("../models/payment.js");
+const Content = require("../models/content.js");
+
 // Set up MercadoPago credentials
 //mercadopago.configure({
 //  access_token: "YOUR_ACCESS_TOKEN",
@@ -33,6 +36,24 @@ router.post("/payments", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create payment" });
+  }
+});
+
+// Get user payment
+router.get("/payments", async (req, res) => {
+  try {
+    const { id } = req.params;
+    // Get the payment status
+    let payments = await Payment.find({ userId: id });
+
+    if (payments.length === 0) {
+      return res.status(404).json({ error: "No payments found" });
+    }
+
+    res.status(200).json(payments);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get payment status" });
   }
 });
 
