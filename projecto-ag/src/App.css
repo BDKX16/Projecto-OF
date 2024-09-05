@@ -101,6 +101,9 @@ nav li:first-child {
 .buscar {
   position: relative;
 }
+.buscar input {
+  color: white;
+}
 
 .btn-lupa {
   position: absolute;
