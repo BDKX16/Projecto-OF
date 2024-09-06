@@ -1,5 +1,5 @@
 const express = require("express");
-//mconst mercadopago = require("mercadopago");
+const { MercadoPagoConfig, Preference } = require("mercadopago");
 
 const router = express.Router();
 
@@ -7,39 +7,52 @@ const Payment = require("../models/payment.js");
 const Content = require("../models/content.js");
 
 // Set up MercadoPago credentials
-//mercadopago.configure({
-//  access_token: "YOUR_ACCESS_TOKEN",
-//});
+const client = new MercadoPagoConfig({
+  accessToken:
+    process.env.MERCADOPAGO_ACCESS_TOKEN ||
+    "TEST-4044483755982456-090411-5db8f54f0db2a277d1634dc16b51bc3d-157050868",
+});
 
 // Create a new payment
 router.post("/payments", async (req, res) => {
   try {
     const { amount, description } = req.body;
+    var paymentData;
+    //guardar solicitud en mongo, estado: pendiente
 
     // Create a payment preference
-    const preference = {
-      items: [
-        {
-          title: description,
-          quantity: 1,
-          currency_id: "USD",
-          unit_price: parseFloat(amount),
+    const requestMP = {
+      body: {
+        items: [
+          {
+            title: description,
+            quantity: 1,
+            unit_price: 100,
+          },
+        ],
+        redirect_urls: {
+          success: "http://localhost:3000/success",
+          failure: "http://localhost:3000/failure",
         },
-      ],
+      },
     };
+    const preference = await new Preference(client)
+      .create(requestMP)
+      .then((res) => (paymentData = res))
+      .catch((error) => console.error(error));
 
     // Create a payment
+    console.log(preference);
     //const response = await mercadopago.preferences.create(preference);
-
     // Return the payment preference ID
-    //res.json({ preferenceId: response.body.id });
+    res.json({ preferenceLink: paymentData.init_point });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to create payment" });
   }
 });
 
-// Get user payment
+// Get user payments
 router.get("/payments", async (req, res) => {
   try {
     const { id } = req.params;
