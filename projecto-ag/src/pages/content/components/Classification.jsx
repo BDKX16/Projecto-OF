@@ -6,22 +6,22 @@ import "../content.css"; // Archivo CSS para estilos personalizados
 import { Button } from "@mui/material";
 
 const images = [
-  "https://via.placeholder.com/240x180/FF5733/FFFFFF?text=Image+1",
-  "https://via.placeholder.com/240x180/33FF57/FFFFFF?text=Image+2",
-  "https://via.placeholder.com/240x180/3357FF/FFFFFF?text=Image+3",
-  "https://via.placeholder.com/240x180/FF33A1/FFFFFF?text=Image+4",
-  "https://via.placeholder.com/240x180/33FFF5/FFFFFF?text=Image+5",
-  "https://via.placeholder.com/240x180/F5FF33/FFFFFF?text=Image+6",
-  "https://via.placeholder.com/240x180/FF5733/FFFFFF?text=Image+7",
-  "https://via.placeholder.com/240x180/33FF57/FFFFFF?text=Image+8",
-  "https://via.placeholder.com/240x180/FF5733/FFFFFF?text=Image+1",
-  "https://via.placeholder.com/240x180/33FF57/FFFFFF?text=Image+2",
-  "https://via.placeholder.com/240x180/3357FF/FFFFFF?text=Image+3",
-  "https://via.placeholder.com/240x180/FF33A1/FFFFFF?text=Image+4",
-  "https://via.placeholder.com/240x180/33FFF5/FFFFFF?text=Image+5",
-  "https://via.placeholder.com/240x180/F5FF33/FFFFFF?text=Image+6",
-  "https://via.placeholder.com/240x180/FF5733/FFFFFF?text=Image+7",
-  "https://via.placeholder.com/240x180/33FF57/FFFFFF?text=Image+8",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202311/26/443651821/original/(m=eafTGgaaaa)(mh=Ym60x9sZcJzvznEB)7.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
 ];
 
 const Classification = () => {

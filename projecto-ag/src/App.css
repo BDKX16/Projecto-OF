@@ -11,15 +11,16 @@
   width: 100%;
   height: fit-content;
   margin: 0 auto;
-  background-color: #d8d8d8;
+  background-color: #0c0000;
 }
 
 nav {
-  background-color: rgb(162, 35, 35);
+  background-color: rgb(35 0 0);
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
 }
 nav ul {
   width: 100%;
+  margin: 0;
   list-style: none;
   display: flex;
   justify-content: flex-end;

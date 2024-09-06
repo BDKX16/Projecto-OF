@@ -6,9 +6,9 @@ import "slick-carousel/slick/slick-theme.css";
 import "../content.css"; // Archivo CSS para estilos personalizados
 
 const images = [
-  "https://via.placeholder.com/800x400?text=Image+1",
-  "https://via.placeholder.com/800x400?text=Image+2",
-  "https://via.placeholder.com/800x400?text=Image+3",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)10.jpg",
+  "https://ei.phncdn.com/videos/202311/26/443651821/original/(m=eafTGgaaaa)(mh=Ym60x9sZcJzvznEB)7.jpg",
+  "https://ei.phncdn.com/videos/202002/25/287592862/original/(m=eafTGgaaaa)(mh=2_k5dRgwxSFTL4Sf)6.jpg",
 ];
 
 const Carousel = () => {
@@ -27,7 +27,7 @@ const Carousel = () => {
     <div className="carousel-container">
       <Slider {...settings} className="slider">
         {images.map((img, index) => (
-          <div key={index}>
+          <div key={img}>
             <img
               src={img}
               alt={`Slide ${index + 1}`}
