@@ -33,11 +33,12 @@ nav li {
 }
 nav a {
   height: 100%;
-  padding: 0 30px;
+  padding: 0 10px;
+  margin: 0 10px;
   text-decoration: none;
   display: flex;
   align-items: center;
-  color: #ffffff;
+  color: #e6e6e6;
 }
 nav ul li a {
   font-family: poppins;

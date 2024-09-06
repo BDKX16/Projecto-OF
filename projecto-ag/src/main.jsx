@@ -14,11 +14,11 @@ import LoadingSpinner from "./pages/content/components/LoadingSpinner.jsx";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#ee0b0b",
+      main: "#9e0d0d",
       light: "#ff5f52",
     },
     secondary: {
-      main: "#dc004e",
+      main: "#270000",
     },
   },
 });
