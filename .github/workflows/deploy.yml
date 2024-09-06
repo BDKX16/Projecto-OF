@@ -17,23 +17,14 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y-%m-%d_%H:%M:%S')" >> $GITHUB_OUTPUT
 
-      - name: Clone the repository
+      - name: Pull latest changes from the repository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: git clone https://BDKX16:${{ secrets.GITHUB_TOKEN }}@github.com/BDKX16/Projecto-OF.git
-
-      - name: "Set up Docker Compose"
-        uses: docker/compose-action@v2
-        with:
-          compose-file: docker-compose.yml
-
-      - name: "Build and push Docker images"
         run: |
-          docker build -t your-api-image ./ampi
-          docker build -t your-frontend-image ./frontend
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push your-api-image
-          docker push your-frontend-image
+          git config --global user.email "xaveeg@gmail.com"
+          git config --global user.name "BDKX16"
+          git remote set-url origin https://BDKX16:${{ secrets.GITHUB_TOKEN }}@github.com/BDKX16/Projecto-OF.git
+          git pull origin main
 
       - name: "Deploy to server"
         uses: appleboy/ssh-action@master
@@ -42,6 +33,15 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           password: ${{ secrets.SERVER_PASSWORD }}
           script: |
-            cd /path/to/project
-            docker-compose pull
-            docker-compose up -d
+            cd /srv/repositories/Projecto-OF/projecto-ag
+            git pull
+            npm run build
+            cp -r dist/ /var/www/almendragala.com/html
+            cd /var/www/almendragala.com/html
+            cp -r /var/www/almendragala.com/html/dist/* .
+            rm -r dist/
+
+      - name: "Set up Docker Compose"
+        uses: docker/compose-action@v2
+        with:
+          compose-file: docker-compose.yml

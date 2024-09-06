@@ -5,6 +5,8 @@ services:
     container_name: mongo
     image: mongo:5.0.18
     restart: always
+    env_file:
+      - ./api-ag/.env
     environment:
       TZ: "${TZ}"
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
@@ -13,3 +15,16 @@ services:
       - ./mongodata:/data/db
     ports:
       - "${MONGO_EXT_PORT}:27017"
+
+  backend:
+    container_name: nodesv
+    restart: always
+    build: ./api-ag
+    env_file:
+      - ./api-ag/.env
+    ports:
+      - "3001:3001"
+    links:
+      - mongo
+    depends_on:
+      - mongo
