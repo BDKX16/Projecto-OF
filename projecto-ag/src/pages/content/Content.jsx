@@ -43,7 +43,6 @@ const Content = () => {
     <div>
       <Carousel />
       <Classification />
-      m
       <Classification />
       <Classification />
     </div>
