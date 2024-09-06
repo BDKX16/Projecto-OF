@@ -1,24 +1,33 @@
-const jwt = require('jsonwebtoken'); 
+const jwt = require("jsonwebtoken");
 
 let checkAuth = (req, res, next) => {
+  let token = req.get("token");
 
-    let token = req.get('token');
+  jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({
+        status: "error",
+        error: err,
+      });
+    }
 
-    jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
+    req.userData = decoded.userData;
 
-        if (err){
-            return res.status(401).json({
-              status: "error",
-              error: err  
-            });
-        }
+    next();
+  });
+};
 
-        req.userData = decoded.userData;
+let checkRole = (role) => {
+  return (req, res, next) => {
+    if (req.userData.role !== role) {
+      return res.status(401).json({
+        status: "error",
+        error: "Unauthorized",
+      });
+    }
 
-        next();
+    next();
+  };
+};
 
-    });
-
-}
-
-module.exports = {checkAuth}
+module.exports = { checkAuth, checkRole };

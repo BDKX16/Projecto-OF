@@ -1,8 +1,11 @@
 import { useState } from "react";
 import "./App.css";
 import { Twirl as Hamburger } from "hamburger-react";
+import Content from "./pages/content/Content";
 import Lupa from "./utils/icons/Lupa";
 
+import { Route, Routes } from "react-router-dom";
+import ContentPage from "./pages/content/contentpage/ContentPage";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
 
@@ -76,7 +79,13 @@ function App() {
         </ul>
       </nav>
 
-      <div className="container">{/*<Modal></Modal>*/}</div>
+      <div className="container">
+        <Routes>
+          <Route path={`/`} element={<Content />} />
+          <Route path="/video" element={<ContentPage />} />
+          <Route path={`/video/:id`} element={<ContentPage />} />
+        </Routes>
+      </div>
 
       <footer>
         <div className="redes-sociales">

@@ -21,14 +21,10 @@ app.use(
 app.use(cors());
 
 //express
-app.use("/api", require("./routes/devices.js"));
 app.use("/api", require("./routes/users.js"));
-app.use("/api", require("./routes/templates.js"));
-app.use("/api", require("./routes/seriales.js"));
-app.use("/api", require("./routes/webhooks.js"));
-app.use("/api", require("./routes/emqxapi.js"));
-app.use("/api", require("./routes/alarms.js"));
-app.use("/api", require("./routes/dataprovider.js"));
+app.use("/api", require("./routes/content.js"));
+app.use("/api", require("./routes/payments.js"));
+app.use("/api/admin", require("./routes/admin-actions.js"));
 
 module.exports = app;
 
@@ -72,7 +68,6 @@ mongoose.connect(uri, options).then(
     console.log("✔ Mongo Successfully Connected!".green);
     console.log("*******************************".green);
     console.log("\n");
-    global.check_mqtt_superuser();
   },
   (err) => {
     console.log("\n");
