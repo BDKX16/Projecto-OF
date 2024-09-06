@@ -76,7 +76,7 @@ function App() {
         </ul>
       </nav>
 
-      <div className="container"> </div>
+      <div className="container">{/*<Modal></Modal>*/}</div>
 
       <footer>
         <div className="redes-sociales">
