@@ -7,15 +7,18 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+mongodata
 node_modules
+api-ag/node_modules
+dist
+dist-ssr
+*.local
+mongodata
 dist
 dist-ssr
 *.local
 
 # Editor directories and files
-projecto-ag/node_modules
-projecto-ag/dist
-mongodata
 .vscode/*
 !.vscode/extensions.json
 .idea

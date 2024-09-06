@@ -7,8 +7,6 @@ const { checkAuth } = require("../middlewares/authentication.js");
 //models import
 
 const User = require("../models/user.js");
-const EmqxAuthRule = require("../models/emqx_auth.js");
-
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
@@ -80,6 +78,8 @@ router.post("/register", async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    console.log(req.body);
+
     const encryptedPassword = encryptPass(password);
 
     const newUser = {
@@ -87,10 +87,10 @@ router.post("/register", async (req, res) => {
       email: email,
       password: encryptedPassword,
     };
-
+    /** 
     try {
       const info = await transporter.sendMail({
-        from: '"Confi Plant 👻" <confiplant@gmail.com>', // sender address
+        from: '"Almengala👻" <almengala@gmail.com>', // sender address
         to: newUser.email, // list of receivers
         subject: "Confirmacion de correo ✔", // Subject line
         text:
@@ -103,8 +103,8 @@ router.post("/register", async (req, res) => {
     } catch (error) {
       console.error(error);
     }
-
-    var user = await User.create(newUser);
+*/
+    await User.create(newUser);
 
     const response = {
       status: "success",
