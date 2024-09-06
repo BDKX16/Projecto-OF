@@ -17,25 +17,15 @@ jobs:
         id: date
         run: echo "date=$(date +'%Y-%m-%d_%H:%M:%S')" >> $GITHUB_OUTPUT
 
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y-%m-%d_%H:%M:%S')" >> $GITHUB_OUTPUT
-
       - name: Clone the repository
-        run: git clone https://github.com/your-repo/your-project.git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git clone https://BDKX16:${{ secrets.GITHUB_TOKEN }}@github.com/BDKX16/Projecto-OF.git
 
       - name: "Set up Docker Compose"
         uses: docker/compose-action@v2
         with:
           compose-file: docker-compose.yml
-
-      - name: "Build and push Docker images"
-        run: |
-          docker build -t your-api-image ./ampi
-          docker build -t your-frontend-image ./frontend
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push your-api-image
-          docker push your-frontend-image
 
       - name: "Deploy to server"
         uses: appleboy/ssh-action@master

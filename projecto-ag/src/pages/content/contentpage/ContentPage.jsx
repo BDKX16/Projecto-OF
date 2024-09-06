@@ -11,7 +11,6 @@ import NotFound from "./NotFound.jsx";
 import { enqueueSnackbar } from "notistack";
 import PendingPayment from "./PendingPayment.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
-import CheckoutMP from "../checkout/CheckoutMP.jsx";
 
 const ContentPage = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
@@ -58,7 +57,7 @@ const ContentPage = () => {
       </div>
     );
   } else if (data.videoUrl == null) {
-    return <CheckoutMP />;
+    return <Checkout />;
   } else {
     return <VideoPage />;
   }
