@@ -5,7 +5,7 @@ export const login = (username, password) => {
   const controller = loadAbort();
   return {
     call: axios.post(
-      "http://localhost:3001/api/login",
+      process.env.REACT_APP_BASE_URL + "/api/login",
       { email: username, password },
       { signal: controller.signal }
     ),
@@ -18,7 +18,7 @@ export const register = (name, username, password) => {
   return {
     call: axios
       .post(
-        "http://localhost:3001/api/register",
+        process.env.REACT_APP_BASE_URL + "/api/register",
         { name: name, email: username, password: password },
         { signal: controller.signal }
       )
@@ -32,7 +32,7 @@ export const register = (name, username, password) => {
 export const getContent = () => {
   const controller = loadAbort();
   return {
-    call: axios.get("http://localhost:3001/api/content", {
+    call: axios.get(process.env.REACT_APP_BASE_URL + "/api/content", {
       signal: controller.signal,
     }),
     controller,
@@ -42,7 +42,7 @@ export const getContent = () => {
 export const addContent = (data) => {
   const controller = loadAbort();
   return {
-    call: axios.post("http://localhost:3001/api/content", data, {
+    call: axios.post(process.env.REACT_APP_BASE_URL + "/api/content", data, {
       signal: controller.signal,
     }),
     controller,
@@ -52,7 +52,7 @@ export const addContent = (data) => {
 export const getTemplates = () => {
   const controller = loadAbort();
   return {
-    call: axios.get("http://localhost:3001/api/templates", {
+    call: axios.get(process.env.REACT_APP_BASE_URL + "/api/templates", {
       signal: controller.signal,
     }),
     controller,
@@ -62,7 +62,7 @@ export const getTemplates = () => {
 export const getTemplate = () => {
   const controller = loadAbort();
   return {
-    call: axios.get("http://localhost:3001/api/template", {
+    call: axios.get(process.env.REACT_APP_BASE_URL + "/api/template", {
       signal: controller.signal,
     }),
     controller,
@@ -72,7 +72,7 @@ export const getTemplate = () => {
 export const getVideo = (id) => {
   const controller = loadAbort();
   return {
-    call: axios.get("http://localhost:3001/api/content/" + id, {
+    call: axios.get(process.env.REACT_APP_BASE_URL + "/api/content/" + id, {
       signal: controller.signal,
     }),
     controller,
@@ -83,7 +83,9 @@ export const getPendingPayments = () => {
   const controller = loadAbort();
   return {
     call: axios.get(
-      "http://localhost:3001/api/payments?id=" + "66ce67d9a743bd281f1e804b",
+      process.env.REACT_APP_BASE_URL +
+        "/api/payments?id=" +
+        "66ce67d9a743bd281f1e804b",
       {
         signal: controller.signal,
       }

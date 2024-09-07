@@ -5,8 +5,6 @@ services:
     container_name: mongodb
     image: mongo:5.0.18
     restart: always
-    env_file:
-      - ./api-ag/.env
     environment:
       TZ: "${TZ}"
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
