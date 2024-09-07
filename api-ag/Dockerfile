@@ -1,24 +1,16 @@
-FROM node:18.16.0-alpine AS builder
+FROM 14.17.3-alpine3.14
 
-WORKDIR /app
+WORKDIR /api
 
-COPY package*.json ./
+# Copiar solo los archivos de dependencias primero
+COPY package.json package-lock.json ./
 
+# Instalar las dependencias
 RUN npm install
 
+# Copiar el resto del código de la aplicación
 COPY . .
 
-RUN npm run build
+EXPOSE 3001
 
-# Cambiamos a una imagen Nginx para servir los archivos estáticos
-FROM nginx:alpine
-
-# Copiamos los archivos estáticos generados por la compilación de la aplicación en el contenedor de Nginx
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Copiamos los certificados SSL de Certbot al contenedor
-# COPY /etc/letsencrypt/live/leawebpage.com /etc/nginx/certs
-
-# Exponemos el puerto 80 y 443 (HTTP y HTTPS) en los que Nginx estará escuchando
-EXPOSE 80
-EXPOSE 443
+CMD ["node", "index.js"]
