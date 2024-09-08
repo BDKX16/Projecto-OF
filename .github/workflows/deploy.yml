@@ -36,10 +36,12 @@ jobs:
             cd /srv/repositories/Projecto-OF/projecto-ag
             git pull
             npm run build
+            rm -r /var/www/almendragala.com/html
+            mkdir /var/www/almendragala.com/html
             cp -r dist/ /var/www/almendragala.com/html
             cd /var/www/almendragala.com/html
             cp -r /var/www/almendragala.com/html/dist/* .
-            rm -r dist/
+            rm -r /var/www/almendragala.com/html/dist/
 
       - name: "Set up Docker Compose"
         uses: docker/compose-action@v2
