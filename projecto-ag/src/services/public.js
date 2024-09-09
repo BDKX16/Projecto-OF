@@ -3,7 +3,6 @@ import axios from "axios";
 
 export const login = (username, password) => {
   const controller = loadAbort();
-  console.log(import.meta.env.VITE_BASE_URL);
   return {
     call: axios.post(
       import.meta.env.VITE_BASE_URL + "/login",
