@@ -3,6 +3,7 @@ import axios from "axios";
 
 export const login = (username, password) => {
   const controller = loadAbort();
+  console.log(process.env.REACT_APP_BASE_URL);
   return {
     call: axios.post(
       process.env.REACT_APP_BASE_URL + "/login",
