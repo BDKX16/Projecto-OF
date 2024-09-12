@@ -11,13 +11,15 @@
   width: 100%;
   height: fit-content;
   margin: 0 auto;
+  padding: 50px 100px;
   background-color: #0c0000;
 }
 
 nav {
-  background-color: rgb(35 0 0);
+  background-color: rgb(0, 0, 0);
   box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.1);
 }
+
 nav ul {
   width: 100%;
   margin: 0;
@@ -93,6 +95,7 @@ nav li:first-child {
   border: 2px solid rgb(92, 28, 28);
   border-radius: 30px;
   transition: all 0.6s ease;
+  margin-right: 10px;
 }
 .buscar:hover input {
   width: 240px;
@@ -138,10 +141,17 @@ nav li:first-child {
   .sidebar {
     display: block;
   }
+
+  .container {
+    padding: 10px 50px;
+  }
 }
 @media (max-width: 400px) {
   .sidebar {
     width: 100%;
+  }
+  .container {
+    padding: 10px 5px;
   }
 }
 
