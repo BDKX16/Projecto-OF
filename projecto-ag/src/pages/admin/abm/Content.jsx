@@ -226,7 +226,7 @@ const ABMTable = () => {
             <TableBody>
               {data &&
                 data.map((row) => (
-                  <TableRow key={row.id}>
+                  <TableRow key={row.date}>
                     <TableCell>{row.title}</TableCell>
                     <TableCell>{row.description}</TableCell>
                     <TableCell>{row.price}</TableCell>

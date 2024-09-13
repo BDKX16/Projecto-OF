@@ -6,9 +6,10 @@ import Lupa from "./utils/icons/Lupa";
 
 import { Route, Routes } from "react-router-dom";
 import ContentPage from "./pages/content/contentpage/ContentPage";
+import { useTheme } from "@mui/material";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
-
+  const theme = useTheme();
   const toggleSidebar = () => {
     if (sidebarState) {
       const sidebar = document.querySelector(".sidebar");
@@ -20,10 +21,14 @@ function App() {
       setSidebarState(true);
     }
   };
+
   return (
     <>
-      <nav>
-        <ul className="sidebar">
+      <nav style={{ backgroundColor: theme.palette.background.topbar }}>
+        <ul
+          className="sidebar"
+          style={{ backgroundColor: theme.palette.background.sidebar }}
+        >
           <li onClick={toggleSidebar}>
             <a href="#">XXXX</a>
           </li>
@@ -64,12 +69,12 @@ function App() {
             <a href="#">Carrito</a>
           </li>
           <li className="hideOnMobile">
-            <a className="buscar">
+            <div className="buscar">
               <input type="text" placeholder="buscar" required></input>
               <a className="btn-lupa">
                 <Lupa className="Lupa2"></Lupa>
               </a>
-            </a>
+            </div>
           </li>
           <li className="menu-button" onClick={() => toggleSidebar()}>
             <a href="#">
@@ -87,7 +92,7 @@ function App() {
         </Routes>
       </div>
 
-      <footer>
+      <footer style={{ backgroundColor: theme.palette.background.footer }}>
         <div className="redes-sociales">
           <div className="red-principalmn">
             <h1> Canal Telegram </h1>

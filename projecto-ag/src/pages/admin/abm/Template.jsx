@@ -50,6 +50,7 @@ const Templates = () => {
             variant: "warning",
           });
         } else {
+          console.log(result.data);
           setData(result.data.map((item) => createContentAdapter(item)));
         }
       }
@@ -81,7 +82,7 @@ const Templates = () => {
 
   return (
     <Box>
-      <h1>Telplates</h1>
+      <h1>Templates</h1>
       <Button
         style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
         startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}

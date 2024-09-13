@@ -25,6 +25,8 @@ app.use("/api", require("./routes/users.js"));
 app.use("/api", require("./routes/content.js"));
 app.use("/api", require("./routes/payments.js"));
 app.use("/api/admin", require("./routes/admin-actions.js"));
+app.use("/api", require("./routes/template.js"));
+app.use("/api", require("./routes/configuration.js"));
 
 module.exports = app;
 

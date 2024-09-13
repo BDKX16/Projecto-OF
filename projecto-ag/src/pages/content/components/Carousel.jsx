@@ -40,25 +40,4 @@ const Carousel = () => {
   );
 };
 
-const NextArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <Button
-      className={`${className} custom-arrow slick-next `}
-      onClick={onClick}
-    ></Button>
-  );
-};
-
-const PrevArrow = (props) => {
-  const { className, style, onClick } = props;
-  return (
-    <Button
-      className={`${className} custom-arrow slick-prev `}
-      style={{ ...style }}
-      onClick={onClick}
-    ></Button>
-  );
-};
-
 export default Carousel;

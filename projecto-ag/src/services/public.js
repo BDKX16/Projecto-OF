@@ -93,3 +93,43 @@ export const getPendingPayments = () => {
     controller,
   };
 };
+
+export const getTheme = () => {
+  const controller = loadAbort();
+  return {
+    call: axios.get(import.meta.env.VITE_BASE_URL + "/theme", {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const addTheme = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.post(import.meta.env.VITE_BASE_URL + "/admin/theme", data, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const editTheme = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/theme", data, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const deleteTheme = (id) => {
+  const controller = loadAbort();
+  return {
+    call: axios.delete(import.meta.env.VITE_BASE_URL + "/admin/theme/" + id, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
