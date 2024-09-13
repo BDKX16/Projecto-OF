@@ -23,8 +23,7 @@ import {
   getTheme,
   editTheme,
 } from "../../../services/public";
-import { createContentAdapter } from "../../../adapters/content";
-import { formatDateToString } from "../../../utils/format-date-to-string";
+import { RgbaStringColorPicker } from "react-colorful";
 
 const Personalization = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
@@ -66,11 +65,7 @@ const Personalization = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    setData([...data, { ...formData, _id: Date.now() }]);
     setIsAddOpen(false);
-
-    //handle submit form
-
     const result = await callEndpoint(addTheme(formData));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -78,7 +73,6 @@ const Personalization = () => {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
       setData([...data, result.data]);
     }
-
     setFormData({ clave: "", valor: "" });
     setIsAddOpen(false);
   };
@@ -122,13 +116,20 @@ const Personalization = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleColorChange = (e) => {
+    setFormData({ ...formData, valor: e });
+  };
+
   return (
     <Box>
       <h1>Templates</h1>
       <Button
         style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
         startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
-        onClick={() => setIsAddOpen(!isAddOpen)}
+        onClick={() => {
+          setIsEditOpen(false);
+          setIsAddOpen(!isAddOpen);
+        }}
       >
         Agregar nuevo valor
       </Button>
@@ -153,14 +154,34 @@ const Personalization = () => {
               margin="normal"
               type="text"
             />
-            <TextField
-              label="Valor"
-              name="valor"
-              value={formData.valor}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-around",
+                alignContent: "center",
+                marginTop: 30,
+              }}
+            >
+              <div style={{ width: "50%" }}>
+                <TextField
+                  label="Valor"
+                  name="valor"
+                  value={formData.valor}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <p style={{ color: "grey" }}>
+                  Formatos disponibles: HEX (#333), RGBA (rgba(255, 255, 255,
+                  0.5))
+                </p>
+              </div>
+
+              <RgbaStringColorPicker
+                color={formData.valor}
+                onChange={handleColorChange}
+              />
+            </div>
 
             <Button variant="contained" color="primary" onClick={handleAdd}>
               Add
@@ -192,6 +213,7 @@ const Personalization = () => {
                           setCurrentEdit(row);
                           setFormData(row);
                           setIsEditOpen(true);
+                          setIsAddOpen(false);
                         }}
                       >
                         <Edit />
@@ -218,14 +240,35 @@ const Personalization = () => {
             margin="normal"
             type="text"
           />
-          <TextField
-            label="Valor"
-            name="valor"
-            value={formData.valor}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignContent: "center",
+              marginTop: 30,
+            }}
+          >
+            <div style={{ width: "50%" }}>
+              <TextField
+                label="Valor"
+                name="valor"
+                value={formData.valor}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <p style={{ color: "grey" }}>
+                Formatos disponibles: HEX (#333), RGBA (rgba(255, 255, 255,
+                0.5))
+              </p>
+            </div>
+
+            <RgbaStringColorPicker
+              color={formData.valor}
+              onChange={handleColorChange}
+            />
+          </div>
+
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Save
           </Button>

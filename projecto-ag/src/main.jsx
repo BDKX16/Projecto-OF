@@ -54,7 +54,7 @@ const App = () => {
             variant: "warning",
           });
         } else {
-          console.log(createThemeAdapter(result.data));
+          console.log(result.data);
           setTheme(createTheme(createThemeAdapter(result.data)));
         }
       }
