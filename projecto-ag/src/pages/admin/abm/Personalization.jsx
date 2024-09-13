@@ -87,7 +87,7 @@ const Personalization = () => {
 
     const result = await callEndpoint(editTheme(toSend));
     if (result.status !== 200) {
-      enqueueSnackbar("Error", { variant: "error" });
+      enqueueSnackbar("Error en la edicion", { variant: "error" });
     } else {
       enqueueSnackbar("Configuracion editada", { variant: "success" });
       setData([...data, result.data]);
