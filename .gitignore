@@ -33,3 +33,5 @@ dist-ssr
 .env
 docker-compose.yml
 api-ag/.env
+projecto-ag/.env
+projecto-ag/package-lock.json
