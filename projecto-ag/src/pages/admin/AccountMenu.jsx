@@ -12,6 +12,7 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import ContrastIcon from "@mui/icons-material/Contrast";
+import { Navigate } from "react-router-dom";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -86,7 +87,12 @@ export default function AccountMenu() {
           <Avatar /> My account
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            window.location.href = "/admin/user-managment";
+          }}
+        >
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
@@ -98,7 +104,12 @@ export default function AccountMenu() {
           </ListItemIcon>
           Page settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            handleClose();
+            window.location.href = "/admin/personalization";
+          }}
+        >
           <ListItemIcon>
             <ContrastIcon fontSize="small" />
           </ListItemIcon>

@@ -18,17 +18,17 @@ const App = () => {
     createTheme({
       palette: {
         primary: {
-          main: "#9e0d0d",
-          light: "#ff5f52",
+          main: "rgba(198, 198, 198, 1)",
+          light: "rgba(198, 198, 198, 1)",
         },
         secondary: {
-          main: "#270000",
+          main: "rgba(198, 198, 198, 1)",
         },
         background: {
-          default: "#140000",
-          topbar: "#ff0000",
-          sidebar: "#00000028",
-          footer: "#0400ff",
+          default: "rgba(198, 198, 198, 1)",
+          topbar: "rgba(198, 198, 198, 1)",
+          sidebar: "rgba(198, 198, 198, 1)",
+          footer: "rgba(198, 198, 198, 1)",
         },
       },
     })
@@ -83,7 +83,22 @@ const App = () => {
         >
           <Provider store={store}>
             <ThemeProvider theme={theme}>
-              <Layout />
+              {loading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    alignSelf: "center",
+                    flexDirection: "column",
+                  }}
+                >
+                  <p>Cargando contenido</p>
+                  <LoadingSpinner />
+                </div>
+              ) : (
+                <Layout />
+              )}
             </ThemeProvider>
           </Provider>
         </Suspense>

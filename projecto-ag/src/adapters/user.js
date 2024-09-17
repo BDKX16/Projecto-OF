@@ -1,6 +1,17 @@
-export const createUserAdapter = (user) => ({
+const createUserAdapter = (user) => ({
   name: user.data.userData.name,
   token: user.data.token,
   email: user.data.userData.email,
   confirmed: user.data.userData.confirmed,
 });
+
+const createUserManagmentAdapter = (user) => ({
+  confirmed: user.confirmed,
+  email: user.email,
+  name: user.name,
+  role: user.role,
+  nullDate: user.nullDate,
+  createdAt: user.createdAt,
+});
+
+export { createUserAdapter, createUserManagmentAdapter };

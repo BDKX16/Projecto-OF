@@ -39,30 +39,10 @@ export const getContent = () => {
   };
 };
 
-export const addContent = (data) => {
-  const controller = loadAbort();
-  return {
-    call: axios.post(import.meta.env.VITE_BASE_URL + "/content", data, {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
 export const getTemplates = () => {
   const controller = loadAbort();
   return {
     call: axios.get(import.meta.env.VITE_BASE_URL + "/templates", {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const getTemplate = () => {
-  const controller = loadAbort();
-  return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/template", {
       signal: controller.signal,
     }),
     controller,
@@ -130,6 +110,102 @@ export const deleteTheme = (id) => {
     call: axios.delete(import.meta.env.VITE_BASE_URL + "/admin/theme/" + id, {
       signal: controller.signal,
     }),
+    controller,
+  };
+};
+
+export const getCarousel = () => {
+  const controller = loadAbort();
+  return {
+    call: axios.get(import.meta.env.VITE_BASE_URL + "/admin/carousel", {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const editCarousel = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/carousel/", data, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const addCarousel = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.post(import.meta.env.VITE_BASE_URL + "/admin/carousel", data, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const deleteCarousel = (id) => {
+  const controller = loadAbort();
+  return {
+    call: axios.delete(
+      import.meta.env.VITE_BASE_URL + "/admin/carousel/" + id,
+      {
+        signal: controller.signal,
+      }
+    ),
+    controller,
+  };
+};
+
+export const getTemplate = () => {
+  const controller = loadAbort();
+  return {
+    call: axios.get(import.meta.env.VITE_BASE_URL + "/template", {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const addTemplate = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.post(import.meta.env.VITE_BASE_URL + "/admin/template", data, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const editTemplate = (id, data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/template", data, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const selectTemplate = (id) => {
+  const controller = loadAbort();
+  return {
+    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/template/" + id, {
+      signal: controller.signal,
+    }),
+    controller,
+  };
+};
+
+export const deleteTemplate = (id) => {
+  const controller = loadAbort();
+  return {
+    call: axios.delete(
+      import.meta.env.VITE_BASE_URL + "/admin/template/" + id,
+      {
+        signal: controller.signal,
+      }
+    ),
     controller,
   };
 };

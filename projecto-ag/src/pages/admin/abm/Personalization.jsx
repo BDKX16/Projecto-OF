@@ -122,7 +122,7 @@ const Personalization = () => {
 
   return (
     <Box>
-      <h1>Templates</h1>
+      <h1>Page theme</h1>
       <Button
         style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
         startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}

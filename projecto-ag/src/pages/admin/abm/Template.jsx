@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
 import { getTemplates } from "../../../services/public";
-import { createContentAdapter } from "../../../adapters/content";
+import { createTemplateAdapter } from "../../../adapters/template";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 
 const Templates = () => {
@@ -51,7 +51,7 @@ const Templates = () => {
           });
         } else {
           console.log(result.data);
-          setData(result.data.map((item) => createContentAdapter(item)));
+          setData(result.data.map((item) => createTemplateAdapter(item)));
         }
       }
     };

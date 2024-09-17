@@ -10,6 +10,7 @@ import { Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AdminLayout from "./pages/admin/AdminLayout.jsx";
 import Content from "./pages/admin/abm/Content.jsx";
+import ABMUsuarios from "./pages/admin/abm/Users.jsx";
 import Template from "./pages/admin/abm/Template.jsx";
 import Carousels from "./pages/admin/abm/Carousels.jsx";
 import Personalization from "./pages/admin/abm/Personalization.jsx";
@@ -36,6 +37,7 @@ const Layout = () => {
                 <Route path={`/content`} element={<Content />} />
                 <Route path={`/template`} element={<Template />} />
                 <Route path={`/carousels`} element={<Carousels />} />
+                <Route path={`/user-managment`} element={<ABMUsuarios />} />
                 <Route
                   path={`/personalization`}
                   element={<Personalization />}

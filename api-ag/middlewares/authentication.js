@@ -17,9 +17,13 @@ let checkAuth = (req, res, next) => {
   });
 };
 
-let checkRole = (role) => {
+let checkRole = (roles) => {
+  if (typeof roles === "string") {
+    roles = [roles]; // Convert the string to an array
+  }
+
   return (req, res, next) => {
-    if (req.userData.role !== role) {
+    if (!roles.includes(req.userData.role)) {
       return res.status(401).json({
         status: "error",
         error: "Unauthorized",

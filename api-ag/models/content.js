@@ -33,6 +33,10 @@ const contentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  state: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const Content = mongoose.model("Content", contentSchema);

@@ -4,6 +4,7 @@ const { checkAuth, checkRole } = require("../middlewares/authentication");
 const router = express.Router();
 const Template = require("../models/template.js");
 const Configuration = require("../models/configuration.js");
+const User = require("../models/user.js");
 /*
 Page personalization:
 logo 128x128
@@ -95,14 +96,14 @@ router.delete("/payments/:id", checkAuth, checkRole("admin"), (req, res) => {
 });
 
 // CREATE a new template
-router.post("/templates", (req, res) => {
+router.post("/templates", checkAuth, checkRole("admin"), (req, res) => {
   const templateData = req.body;
   // Logic to create a new template in the database using the provided data
   // Send the created template as a response
 });
 
 // UPDATE an existing template
-router.put("/templates/:id", (req, res) => {
+router.put("/templates/:id", checkAuth, checkRole("admin"), (req, res) => {
   const templateId = req.params.id;
   const templateData = req.body;
   // Logic to update the template with the given ID in the database using the provided data
@@ -110,14 +111,14 @@ router.put("/templates/:id", (req, res) => {
 });
 
 // DELETE a template
-router.delete("/templates/:id", (req, res) => {
+router.delete("/templates/:id", checkAuth, checkRole("admin"), (req, res) => {
   const templateId = req.params.id;
   // Logic to delete the template with the given ID from the database
   // Send a success message as a response
 });
 
 // PUT public configuration
-router.post("/theme", async (req, res) => {
+router.post("/theme", checkAuth, checkRole("admin"), async (req, res) => {
   try {
     // Logic to update the public configuration
     const config = req.body;
@@ -130,7 +131,7 @@ router.post("/theme", async (req, res) => {
 });
 
 // DELETE a theme
-router.delete("/theme/:id", async (req, res) => {
+router.delete("/theme/:id", checkAuth, checkRole("admin"), async (req, res) => {
   const id = req.params.id;
   try {
     const deleted = await Configuration.deleteOne({ _id: id });
@@ -142,7 +143,7 @@ router.delete("/theme/:id", async (req, res) => {
 });
 
 // PUT public configuration
-router.put("/theme", async (req, res) => {
+router.put("/theme", checkAuth, checkRole("admin"), async (req, res) => {
   // Logic to update the public configuration
   // ...
   const config = req.body;
@@ -154,6 +155,70 @@ router.put("/theme", async (req, res) => {
 
     // Send a success message as response
     res.json(values).status(200);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// GET /admin/content - Get all content
+router.get("/users", checkAuth, checkRole("admin"), async (req, res) => {
+  // Logic to fetch all user from the database
+  const users = await User.find({});
+
+  users.map((user) => {
+    user.password = undefined;
+  });
+  res.status(200).json(users);
+});
+
+// GET /admin/user/:id - Get data of a specific user by ID
+router.get("/user/:id", checkAuth, checkRole("admin"), async (req, res) => {
+  const { id } = req.params;
+  // Logic to fetch user by ID from the database
+  try {
+    const user = await User.findOne({ _id: id });
+
+    //BUSCAR VIDEOS COMPRADOS DEL USUARIO
+    //cantidad de visitas a la pagina
+    //cantidad de videos comprados
+    //cantidad de videos vistos
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// PUT /admin/user/:id - Update existing user
+router.put("/user/:id", checkAuth, checkRole(["owner"]), async (req, res) => {
+  const { id } = req.params;
+  const { role, nullDate } = req.body;
+  try {
+    const user = await User.findOneAndUpdate({ _id: id }, { role, nullDate });
+
+    if (user) {
+      res.status(200).json({ message: "Success" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+// DELETE /admin/user/:id - Delete existing user
+router.delete("/user/:id", checkAuth, checkRole("admin"), async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findOneAndUpdate(
+      { _id: id },
+      { nullDate: new Date() }
+    );
+
+    if (user) {
+      res.status(200).json({ message: "Success" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }

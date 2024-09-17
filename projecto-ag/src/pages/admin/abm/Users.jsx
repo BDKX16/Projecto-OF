@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   Table,
+  Tooltip,
   TableBody,
   TableCell,
   TableContainer,
@@ -12,9 +13,18 @@ import {
   TextField,
   IconButton,
   Box,
+  Avatar,
   Switch,
 } from "@mui/material";
-import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
+import {
+  Add,
+  Edit,
+  Delete,
+  ExpandMore,
+  ExpandLess,
+  ViewAgenda,
+  Visibility,
+} from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
@@ -24,21 +34,25 @@ import {
   deleteContent,
   addContent,
   contentState,
+  editUser,
+  deleteUser,
+  getUsers,
+  getUser,
 } from "../../../services/private";
-import { createContentAdapter } from "../../../adapters/content";
+import { createUserManagmentAdapter } from "../../../adapters/user";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 import LoadingSpinner from "../../content/components/LoadingSpinner";
 
 const initialFormData = {
-  title: "",
-  description: "",
-  price: 0,
-  coverUrl: "",
-  videoUrl: "",
-  date: new Date(),
+  confirmed: false,
+  email: "",
+  name: "",
+  role: "",
+  nullDate: "",
+  createdAt: "",
 };
 
-const ABMTable = () => {
+const ABMUsuarios = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
 
   const [data, setData] = useState([]);
@@ -50,7 +64,7 @@ const ABMTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       console.log("fetching");
-      const result = await callEndpoint(getContent());
+      const result = await callEndpoint(getUsers());
 
       if (Object.keys(result).length === 0) {
         return;
@@ -68,7 +82,7 @@ const ABMTable = () => {
             variant: "warning",
           });
         } else {
-          setData(result.data.map((item) => createContentAdapter(item)));
+          setData(result.data.map((item) => createUserManagmentAdapter(item)));
         }
       }
     };
@@ -95,13 +109,12 @@ const ABMTable = () => {
   };
 
   const handleEdit = async () => {
-    const result = await callEndpoint(editContent(formData));
+    console.log(formData);
+    const result = await callEndpoint(editUser(formData));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
-      enqueueSnackbar("Contenido editado correctamente", {
-        variant: "success",
-      });
+      enqueueSnackbar("Usuario editado", { variant: "success" });
       setFormData(initialFormData);
       setData(
         data.map((item) => (item.id === currentEdit.id ? formData : item))
@@ -112,13 +125,24 @@ const ABMTable = () => {
   };
 
   const handleDelete = async (id) => {
-    const result = await callEndpoint(deleteContent(id));
+    const result = await callEndpoint(deleteUser(id));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
       console.log(result);
       setData(data.filter((item) => item.id !== id));
+    }
+  };
+
+  const handleViewUser = async (id) => {
+    const result = await callEndpoint(getUser(id));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error", { variant: "error" });
+    } else {
+      enqueueSnackbar("Contenido eliminado", { variant: "success" });
+      console.log(result);
+      //show modal
     }
   };
 
@@ -148,125 +172,79 @@ const ABMTable = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const colorRole = (role) => {
+    switch (role) {
+      case "admin":
+        return (
+          <span
+            style={{
+              backgroundColor: "#ffdbdb",
+              border: "solid",
+              borderWidth: 2,
+              borderColor: "#ef4c4c",
+              color: "#ef4c4c",
+              borderRadius: 20,
+              paddingLeft: 8,
+              paddingRight: 8,
+              paddingTop: 4,
+              paddingBottom: 3,
+              textTransform: "capitalize",
+            }}
+          >
+            {role}
+          </span>
+        );
+      case "owner":
+        return (
+          <span
+            style={{
+              backgroundColor: "#dfdbff",
+              border: "solid",
+              borderWidth: 2,
+              borderColor: "#574cef",
+              color: "#644cef",
+              borderRadius: 20,
+              paddingLeft: 8,
+              paddingRight: 8,
+              paddingTop: 4,
+              paddingBottom: 3,
+              fontWeight: "bold",
+              textTransform: "capitalize",
+            }}
+          >
+            {role}
+          </span>
+        );
+      case "user":
+        return (
+          <span
+            style={{
+              backgroundColor: "#dbffdb",
+              border: "solid",
+              borderWidth: 2,
+              borderColor: "#39c958",
+              color: "#39c958",
+              borderRadius: 20,
+              paddingLeft: 8,
+              paddingRight: 8,
+              paddingTop: 4,
+              paddingBottom: 3,
+              textTransform: "capitalize",
+              fontWeight: "bold",
+            }}
+          >
+            {role}
+          </span>
+        );
+      default:
+        return <span>{role}</span>;
+    }
+  };
+
   return (
     <Box>
-      <h1>Contenido</h1>
-      <Button
-        style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
-        startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
-        onClick={() => {
-          setIsEditOpen(false);
-          setIsAddOpen(!isAddOpen);
-        }}
-      >
-        Agregar nuevo video
-      </Button>
-      <Collapse in={isAddOpen}>
-        <Box
-          component={Paper}
-          p={2}
-          mb={2}
-          style={{ display: "flex", flexDirection: "row" }}
-        >
-          <Box
-            style={{
-              width: "50%",
-            }}
-          >
-            <TextField
-              label="Title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
+      <h1>User managment</h1>
 
-            <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              multiline
-              rows={8}
-            />
-            <TextField
-              label="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="number"
-            />
-            <TextField
-              helperText="Url de la imagen de portada en jpeg o jpg"
-              name="coverUrl"
-              value={formData.coverUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              helperText="Url del video"
-              label="Video URL"
-              name="videoUrl"
-              value={formData.videoUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAdd}
-              disabled={loading}
-            >
-              Add
-            </Button>
-          </Box>
-          <Box
-            style={{
-              width: "50%",
-              justifyContent: "center",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            {formData.coverUrl ? (
-              <img
-                src={formData.coverUrl}
-                alt="cover"
-                style={{ width: 300, height: 200, borderRadius: 5 }}
-              />
-            ) : (
-              <div
-                style={{
-                  backgroundColor: "lightgrey",
-                  borderRadius: 10,
-                  width: 200,
-                  height: 200,
-                }}
-              ></div>
-            )}
-            {formData.title ? (
-              <h3 style={{ margin: 2 }}>{formData.title}</h3>
-            ) : (
-              <div style={{ padding: 20 }}></div>
-            )}
-
-            {formData.description ? (
-              <p style={{ margin: 2, maxWidth: 300 }}>{formData.description}</p>
-            ) : (
-              <div style={{ padding: 20 }}></div>
-            )}
-          </Box>
-        </Box>
-        {/* video cover preview */}
-      </Collapse>
       {loading ? (
         <div className="main-container">
           <LoadingSpinner />
@@ -280,37 +258,49 @@ const ABMTable = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Precio</TableCell>
-                <TableCell>Fecha de subida</TableCell>
-                <TableCell>Portada</TableCell>
-                <TableCell>Video</TableCell>
+                <TableCell></TableCell>
+                <TableCell>User</TableCell>
+                <TableCell>Rol</TableCell>
+                <TableCell>Fecha de creacion</TableCell>
+                <TableCell>Fecha de baja</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
-                  <TableRow key={row.date}>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                    <TableCell>{formatDateToString(row.date)}</TableCell>
+                  <TableRow key={row.id}>
                     <TableCell>
-                      {row.coverUrl
-                        ? row.coverUrl.substring(0, 20) + "..."
-                        : " - "}
+                      <div>
+                        <Tooltip title="Account settings">
+                          <IconButton
+                            size="small"
+                            sx={{ ml: 2 }}
+                            aria-haspopup="true"
+                          >
+                            <Avatar sx={{ width: 42, height: 42 }}>M</Avatar>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
                     </TableCell>
                     <TableCell>
-                      {row.videoUrl
-                        ? row.videoUrl.substring(0, 20) + "..."
-                        : " - "}
+                      <p
+                        style={{
+                          fontWeight: "600",
+                          lineHeight: ".2rem", // Use lineHeight property to control the height of a single line of text
+                          fontSize: ".8rem",
+                        }}
+                      >
+                        {row.name}
+                      </p>
+                      <p style={{ lineHeight: ".2rem", fontSize: ".8rem" }}>
+                        {row.email}
+                      </p>
                     </TableCell>
+                    <TableCell>{colorRole(row.role)}</TableCell>
+                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
+                    <TableCell>{formatDateToString(row.nullDate)}</TableCell>
                     <TableCell>
-                      <Switch
-                        checked={row.status}
-                        onClick={() => changeState(row.id, row.status)}
-                      ></Switch>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);
@@ -323,6 +313,9 @@ const ABMTable = () => {
                       </IconButton>
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
+                      </IconButton>
+                      <IconButton onClick={() => handleViewUser(row.id)}>
+                        <Visibility />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -393,4 +386,4 @@ const ABMTable = () => {
   );
 };
 
-export default ABMTable;
+export default ABMUsuarios;

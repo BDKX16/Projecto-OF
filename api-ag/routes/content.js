@@ -74,27 +74,61 @@ router.get("/content", async (req, res) => {
     const content = await Content.find({});
     return res.status(200).json(content);
   } catch (error) {
-    returnres.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
-router.post("/content", async (req, res) => {
+router.post("/admin/content", async (req, res) => {
   try {
     const content = req.body;
+
+    content.state = true;
+    content.categorys = [];
+    content.price = parseFloat(content.price);
+
     await Content.create(content);
     return res.status(200).json(content);
   } catch (error) {
-    returnres.status(500).json({ message: "Internal server error" });
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 
-router.put("/content", async (req, res) => {
+router.put("/admin/content", async (req, res) => {
   try {
     const content = req.body;
-    await Content.updateOne({ _id: content._id }, content);
+    await Content.updateOne({ _id: content.id }, content);
     return res.status(200).json(content);
   } catch (error) {
-    returnres.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.delete("/admin/content/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Content.deleteOne({ _id: id });
+    return res.status(200).message({ message: "Content deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.put("/admin/content-state", async (req, res) => {
+  try {
+    const body = req.body;
+
+    await Content.findOneAndUpdate(
+      { _id: body.id },
+      { $set: { state: body.status } },
+      { new: true }
+    );
+
+    return res.status(200).json({ message: "Content state updated" });
+  } catch (error) {
+    console.log(error);
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 });
 

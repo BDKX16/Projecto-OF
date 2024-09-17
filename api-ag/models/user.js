@@ -9,6 +9,8 @@ const userSchema = new Schema({
   password: { type: String, required: [true] },
   confirmed: { type: Boolean, required: [true], default: false },
   role: { type: String, required: [true], default: "user" },
+  nullDate: { type: Date, required: false },
+  createdAt: { type: Date, required: false },
 });
 
 //Validator
