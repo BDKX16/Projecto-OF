@@ -15,7 +15,9 @@ const drawerWidth = 105;
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {
+  AutoAwesomeMotion,
   DashboardOutlined,
+  NotificationsRounded,
   Settings,
   SpaceDashboard,
   Videocam,
@@ -23,7 +25,9 @@ import {
   ViewCarouselOutlined,
 } from "@mui/icons-material";
 import AccountMenu from "./AccountMenu";
+import NotificationsMenu from "./NotificationsMenu";
 
+import { useSelector } from "react-redux";
 const Root = styled.div`
   display: flex;
   flex-direction: row;
@@ -43,6 +47,7 @@ const Content = styled.div`
 `;
 
 const AdminLayout = (props) => {
+  const userState = useSelector((store) => store.user);
   return (
     <Root style={{ backgroundColor: "#e9e9e9", padding: 5 }}>
       <div
@@ -107,6 +112,12 @@ const AdminLayout = (props) => {
             ></ViewCarouselOutlined>
             <ListItemText primary="Carousels" />
           </ListItemButton>
+          <ListItemButton component={Link} to="/admin/category">
+            <AutoAwesomeMotion
+              sx={{ width: 27, height: 27, marginRight: 1 }}
+            ></AutoAwesomeMotion>
+            <ListItemText primary="Categorys" />
+          </ListItemButton>
         </List>
       </div>
       <Content
@@ -121,6 +132,7 @@ const AdminLayout = (props) => {
             justifyContent: "flex-end",
           }}
         >
+          <NotificationsMenu />
           <AccountMenu />
         </Toolbar>
         <div> {props.children}</div>

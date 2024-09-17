@@ -3,6 +3,7 @@ const createUserAdapter = (user) => ({
   token: user.data.token,
   email: user.data.userData.email,
   confirmed: user.data.userData.confirmed,
+  role: user.data.userData.role,
 });
 
 const createUserManagmentAdapter = (user) => ({

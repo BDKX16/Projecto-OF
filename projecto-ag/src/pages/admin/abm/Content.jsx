@@ -49,7 +49,6 @@ const ABMTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("fetching");
       const result = await callEndpoint(getContent());
 
       if (Object.keys(result).length === 0) {

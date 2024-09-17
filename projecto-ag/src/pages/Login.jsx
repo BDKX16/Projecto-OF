@@ -21,6 +21,8 @@ import { createUser } from "./../redux/states/user";
 import { useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import useAuth from "../hooks/useAuth";
+
 function Copyright(props) {
   return (
     <Typography
@@ -44,6 +46,7 @@ export default function Login() {
   const dispatch = useDispatch();
   const userState = useSelector((store) => store.user);
   const [newUser, setNewUser] = useState(false);
+  const { setUserData } = useAuth();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -61,10 +64,9 @@ export default function Login() {
       enqueueSnackbar("Login success", {
         variant: "success",
       });
-      dispatch(createUser(createUserAdapter(result)));
+      console.log(result);
+      setUserData(createUserAdapter(result));
     }
-
-    console.log(result);
   };
 
   const handleSubmitRegister = async (event) => {

@@ -12,27 +12,40 @@ import {
   TextField,
   IconButton,
   Box,
+  Switch,
 } from "@mui/material";
 import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { addTheme, deleteTheme, editTheme } from "../../../services/private";
-import { getTheme } from "../../../services/public";
-import { RgbaStringColorPicker } from "react-colorful";
+import {
+  getCategorys,
+  editCategory,
+  deleteCategory,
+  addCategory,
+} from "../../../services/private";
+import { createCategoryAdapter } from "../../../adapters/categorys";
+import { formatDateToString } from "../../../utils/format-date-to-string";
+import LoadingSpinner from "../../content/components/LoadingSpinner";
 
-const Personalization = () => {
+import { RgbaStringColorPicker } from "react-colorful";
+const initialFormData = {
+  name: "",
+  color: "",
+};
+
+const ABMCategorys = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
 
   const [data, setData] = useState([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
-  const [formData, setFormData] = useState({ clave: "", valor: "" });
+  const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await callEndpoint(getTheme());
+      const result = await callEndpoint(getCategorys());
 
       if (Object.keys(result).length === 0) {
         return;
@@ -50,8 +63,7 @@ const Personalization = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data);
-          setData(result.data);
+          setData(result.data.map((item) => createCategoryAdapter(item)));
         }
       }
     };
@@ -61,50 +73,46 @@ const Personalization = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    setIsAddOpen(false);
-    const result = await callEndpoint(addTheme(formData));
+    setData([...data, { ...formData, id: Math.random() * 10000 }]);
+
+    //handle submit form
+    const result = await callEndpoint(addCategory(formData));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
+      console.log(result.data);
       setData([...data, result.data]);
+      setFormData(initialFormData);
     }
-    setFormData({ clave: "", valor: "" });
     setIsAddOpen(false);
   };
 
   const handleEdit = async () => {
-    console.log(currentEdit._id);
-    var toSend = {
-      clave: formData.clave,
-      valor: formData.valor,
-      _id: currentEdit._id,
-    };
-
-    const result = await callEndpoint(editTheme(toSend));
+    const result = await callEndpoint(editCategory(formData));
     if (result.status !== 200) {
-      enqueueSnackbar("Error en la edicion", { variant: "error" });
+      enqueueSnackbar("Error", { variant: "error" });
     } else {
-      enqueueSnackbar("Configuracion editada", { variant: "success" });
-      setData([...data, result.data]);
+      enqueueSnackbar("Contenido editado correctamente", {
+        variant: "success",
+      });
+      setFormData(initialFormData);
+      setData(
+        data.map((item) => (item.id === currentEdit.id ? formData : item))
+      );
+      setIsEditOpen(false);
     }
-
-    setData(
-      data.map((item) => (item._id === currentEdit._id ? formData : item))
-    );
-    setFormData({ clave: "", valor: "" });
-    setIsEditOpen(false);
     setCurrentEdit(null);
   };
 
   const handleDelete = async (id) => {
-    const clave = data.find((item) => item._id === id).clave;
-    setData(data.filter((item) => item._id !== id));
-    const result = await callEndpoint(deleteTheme(id));
+    const result = await callEndpoint(deleteCategory(id));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
-      enqueueSnackbar(clave + " borrado", { variant: "success" });
+      enqueueSnackbar("Contenido eliminado", { variant: "success" });
+      console.log(result);
+      setData(data.filter((item) => item.id !== id));
     }
   };
 
@@ -113,12 +121,12 @@ const Personalization = () => {
   };
 
   const handleColorChange = (e) => {
-    setFormData({ ...formData, valor: e });
+    setFormData({ ...formData, color: e });
   };
 
   return (
     <Box>
-      <h1>Page theme</h1>
+      <h1>Categorias</h1>
       <Button
         style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
         startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
@@ -127,7 +135,7 @@ const Personalization = () => {
           setIsAddOpen(!isAddOpen);
         }}
       >
-        Agregar nuevo valor
+        Agregar nuevo video
       </Button>
       <Collapse in={isAddOpen}>
         <Box
@@ -142,9 +150,9 @@ const Personalization = () => {
             }}
           >
             <TextField
-              label="Clave"
-              name="clave"
-              value={formData.clave}
+              label="Nombre"
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               fullWidth
               margin="normal"
@@ -160,9 +168,9 @@ const Personalization = () => {
             >
               <div style={{ width: "50%" }}>
                 <TextField
-                  label="Valor"
-                  name="valor"
-                  value={formData.valor}
+                  label="Color"
+                  name="color"
+                  value={formData.color}
                   onChange={handleChange}
                   fullWidth
                   margin="normal"
@@ -174,63 +182,75 @@ const Personalization = () => {
               </div>
 
               <RgbaStringColorPicker
-                color={formData.valor}
+                color={formData.color}
                 onChange={handleColorChange}
               />
             </div>
-
-            <Button variant="contained" color="primary" onClick={handleAdd}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+              disabled={loading}
+            >
               Add
             </Button>
           </Box>
         </Box>
         {/* video cover preview */}
       </Collapse>
-      {data.length === 0 ? (
-        <p>No hay datos</p>
+      {loading ? (
+        <div className="main-container">
+          <LoadingSpinner />
+        </div>
+      ) : data.length === 0 ? (
+        <div className="main-container">
+          <p>No hay datos</p>
+        </div>
       ) : (
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Clave</TableCell>
-                <TableCell>Valor</TableCell>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Color</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
-                  <TableRow key={row._id}>
-                    <TableCell
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        alignItems: "center",
-                      }}
-                    >
-                      <div
+                  <TableRow key={row.id}>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>
+                      <IconButton
                         style={{
-                          backgroundColor: row.valor || "grey",
+                          backgroundColor: row.color || "grey",
+                          width: 35,
                           padding: 20,
                           borderRadius: 20,
                           marginRight: 10,
                         }}
-                      ></div>
-                      {row.clave}
+                        onClick={() => {
+                          setCurrentEdit(row);
+                          setFormData(row);
+                          setIsAddOpen(false);
+                          setIsEditOpen(!isEditOpen);
+                        }}
+                      ></IconButton>
                     </TableCell>
-                    <TableCell>{row.valor}</TableCell>
+
                     <TableCell>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);
                           setFormData(row);
-                          setIsEditOpen(true);
                           setIsAddOpen(false);
+                          setIsEditOpen(!isEditOpen);
                         }}
                       >
                         <Edit />
                       </IconButton>
-                      <IconButton onClick={() => handleDelete(row._id)}>
+                      <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
                       </IconButton>
                     </TableCell>
@@ -244,9 +264,9 @@ const Personalization = () => {
       <Collapse in={isEditOpen}>
         <Box component={Paper} p={2} mt={2}>
           <TextField
-            label="Clave"
-            name="clave"
-            value={formData.clave}
+            label="Nombre"
+            name="name"
+            value={formData.name}
             onChange={handleChange}
             fullWidth
             margin="normal"
@@ -262,9 +282,9 @@ const Personalization = () => {
           >
             <div style={{ width: "50%" }}>
               <TextField
-                label="Valor"
-                name="valor"
-                value={formData.valor}
+                label="Color"
+                name="color"
+                value={formData.color}
                 onChange={handleChange}
                 fullWidth
                 margin="normal"
@@ -280,8 +300,12 @@ const Personalization = () => {
               onChange={handleColorChange}
             />
           </div>
-
-          <Button variant="contained" color="primary" onClick={handleEdit}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEdit}
+            disabled={loading}
+          >
             Save
           </Button>
         </Box>
@@ -290,4 +314,4 @@ const Personalization = () => {
   );
 };
 
-export default Personalization;
+export default ABMCategorys;

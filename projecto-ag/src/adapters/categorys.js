@@ -1,9 +1,5 @@
-export const createContentAdapter = (content) => ({
-  title: content.title,
-  description: content.description,
-  videoUrl: content.videoUrl,
-  coverUrl: content.coverUrl,
-  price: content.price,
-  date: content.createdAt,
-  id: content.id,
+export const createCategoryAdapter = (content) => ({
+  color: content.color,
+  name: content.name,
+  id: content._id,
 });

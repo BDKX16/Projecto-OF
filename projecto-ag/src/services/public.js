@@ -1,5 +1,19 @@
 import { loadAbort } from "../utils/load-abort-controller";
 import axios from "axios";
+import store from "../redux/store";
+//import { useSelector } from "react-redux";
+
+const getAxiosHeaders = () => {
+  //const userState = useSelector((store) => store.user);
+  const state = store.getState();
+  //const token = state.userState.token;
+  return {
+    headers: {
+      token: state.user.token,
+      "Content-Type": "application/json",
+    },
+  };
+};
 
 export const login = (username, password) => {
   const controller = loadAbort();
@@ -78,36 +92,6 @@ export const getTheme = () => {
   const controller = loadAbort();
   return {
     call: axios.get(import.meta.env.VITE_BASE_URL + "/theme", {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const addTheme = (data) => {
-  const controller = loadAbort();
-  return {
-    call: axios.post(import.meta.env.VITE_BASE_URL + "/admin/theme", data, {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const editTheme = (data) => {
-  const controller = loadAbort();
-  return {
-    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/theme", data, {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const deleteTheme = (id) => {
-  const controller = loadAbort();
-  return {
-    call: axios.delete(import.meta.env.VITE_BASE_URL + "/admin/theme/" + id, {
       signal: controller.signal,
     }),
     controller,

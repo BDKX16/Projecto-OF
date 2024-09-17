@@ -63,7 +63,6 @@ const ABMUsuarios = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("fetching");
       const result = await callEndpoint(getUsers());
 
       if (Object.keys(result).length === 0) {

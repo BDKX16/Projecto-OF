@@ -5,6 +5,8 @@ const router = express.Router();
 const Template = require("../models/template.js");
 const Configuration = require("../models/configuration.js");
 const User = require("../models/user.js");
+const Category = require("../models/category.js");
+
 /*
 Page personalization:
 logo 128x128
@@ -23,170 +25,255 @@ router.get("/content", checkAuth, (req, res) => {
 });
 
 // GET /admin/content/:id - Get a specific content by ID
-router.get("/content/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const { id } = req.params;
-  // Logic to fetch content by ID from the database
-  // ...
-  res.send(`Get content with ID ${id}`);
-});
+router.get(
+  "/content/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { id } = req.params;
+    // Logic to fetch content by ID from the database
+    // ...
+    res.send(`Get content with ID ${id}`);
+  }
+);
 
 // POST /admin/content - Create new content
-router.post("/content", checkAuth, checkRole("admin"), (req, res) => {
-  const { title, body } = req.body;
-  // Logic to create new content in the database
-  // ...
-  res.send(`Create new content: ${title}`);
-});
+router.post(
+  "/content",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { title, body } = req.body;
+    // Logic to create new content in the database
+    // ...
+    res.send(`Create new content: ${title}`);
+  }
+);
 
 // PUT /admin/content/:id - Update existing content
-router.put("/content/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const { id } = req.params;
-  const { title, body } = req.body;
-  // Logic to update content by ID in the database
-  // ...
-  res.send(`Update content with ID ${id}`);
-});
+router.put(
+  "/content/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { id } = req.params;
+    const { title, body } = req.body;
+    // Logic to update content by ID in the database
+    // ...
+    res.send(`Update content with ID ${id}`);
+  }
+);
 
 // DELETE /admin/content/:id - Delete existing content
-router.delete("/content/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const { id } = req.params;
-  // Logic to delete content by ID from the database
-  // ...
-  res.send(`Delete content with ID ${id}`);
-});
+router.delete(
+  "/content/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { id } = req.params;
+    // Logic to delete content by ID from the database
+    // ...
+    res.send(`Delete content with ID ${id}`);
+  }
+);
 
 // GET /admin/payments - Get all payments
-router.get("/payments", checkAuth, checkRole("admin"), (req, res) => {
-  // Logic to fetch all payments from the database
-  // ...
-  res.send("Get all payments");
-});
+router.get(
+  "/payments",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    // Logic to fetch all payments from the database
+    // ...
+    res.send("Get all payments");
+  }
+);
 
 // GET /admin/payments/:id - Get a specific payment by ID
-router.get("/payments/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const { id } = req.params;
-  // Logic to fetch payment by ID from the database
-  // ...
-  res.send(`Get payment with ID ${id}`);
-});
+router.get(
+  "/payments/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { id } = req.params;
+    // Logic to fetch payment by ID from the database
+    // ...
+    res.send(`Get payment with ID ${id}`);
+  }
+);
 
 // POST /admin/payments - Create new payment
-router.post("/payments", checkAuth, checkRole("admin"), (req, res) => {
-  const { amount, description } = req.body;
-  // Logic to create new payment in the database
-  // ...
-  res.send(`Create new payment: ${description}`);
-});
+router.post(
+  "/payments",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { amount, description } = req.body;
+    // Logic to create new payment in the database
+    // ...
+    res.send(`Create new payment: ${description}`);
+  }
+);
 
 // PUT /admin/payments/:id - Update existing payment
-router.put("/payments/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const { id } = req.params;
-  const { amount, description } = req.body;
-  // Logic to update payment by ID in the database
-  // ...
-  res.send(`Update payment with ID ${id}`);
-});
+router.put(
+  "/payments/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { id } = req.params;
+    const { amount, description } = req.body;
+    // Logic to update payment by ID in the database
+    // ...
+    res.send(`Update payment with ID ${id}`);
+  }
+);
 
 // DELETE /admin/payments/:id - Delete existing payment
-router.delete("/payments/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const { id } = req.params;
-  // Logic to delete payment by ID from the database
-  // ...
-  res.send(`Delete payment with ID ${id}`);
-});
+router.delete(
+  "/payments/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const { id } = req.params;
+    // Logic to delete payment by ID from the database
+    // ...
+    res.send(`Delete payment with ID ${id}`);
+  }
+);
 
 // CREATE a new template
-router.post("/templates", checkAuth, checkRole("admin"), (req, res) => {
-  const templateData = req.body;
-  // Logic to create a new template in the database using the provided data
-  // Send the created template as a response
-});
+router.post(
+  "/templates",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const templateData = req.body;
+    // Logic to create a new template in the database using the provided data
+    // Send the created template as a response
+  }
+);
 
 // UPDATE an existing template
-router.put("/templates/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const templateId = req.params.id;
-  const templateData = req.body;
-  // Logic to update the template with the given ID in the database using the provided data
-  // Send the updated template as a response
-});
+router.put(
+  "/templates/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const templateId = req.params.id;
+    const templateData = req.body;
+    // Logic to update the template with the given ID in the database using the provided data
+    // Send the updated template as a response
+  }
+);
 
 // DELETE a template
-router.delete("/templates/:id", checkAuth, checkRole("admin"), (req, res) => {
-  const templateId = req.params.id;
-  // Logic to delete the template with the given ID from the database
-  // Send a success message as a response
-});
+router.delete(
+  "/templates/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  (req, res) => {
+    const templateId = req.params.id;
+    // Logic to delete the template with the given ID from the database
+    // Send a success message as a response
+  }
+);
 
 // PUT public configuration
-router.post("/theme", checkAuth, checkRole("admin"), async (req, res) => {
-  try {
-    // Logic to update the public configuration
-    const config = req.body;
-    await Configuration.create(config);
-    // Send a success message as response
-    res.json({ message: "Public configuration updated successfully" });
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+router.post(
+  "/theme",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    try {
+      // Logic to update the public configuration
+      const config = req.body;
+      await Configuration.create(config);
+      // Send a success message as response
+      res.json({ message: "Public configuration updated successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
-});
+);
 
 // DELETE a theme
-router.delete("/theme/:id", checkAuth, checkRole("admin"), async (req, res) => {
-  const id = req.params.id;
-  try {
-    const deleted = await Configuration.deleteOne({ _id: id });
+router.delete(
+  "/theme/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const id = req.params.id;
+    try {
+      const deleted = await Configuration.deleteOne({ _id: id });
 
-    return res.json({ message: "Theme deleted successfully" }).status(200);
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+      return res.json({ message: "Theme deleted successfully" }).status(200);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
-});
+);
 
 // PUT public configuration
-router.put("/theme", checkAuth, checkRole("admin"), async (req, res) => {
-  // Logic to update the public configuration
-  // ...
-  const config = req.body;
+router.put(
+  "/theme",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    // Logic to update the public configuration
+    // ...
+    const config = req.body;
 
-  try {
-    const edited = await Configuration.updateOne({ _id: config._id }, config);
+    try {
+      const edited = await Configuration.updateOne({ _id: config._id }, config);
 
-    const values = await Configuration.find({});
+      const values = await Configuration.find({});
 
-    // Send a success message as response
-    res.json(values).status(200);
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
+      // Send a success message as response
+      res.json(values).status(200);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
   }
-});
+);
 
 // GET /admin/content - Get all content
-router.get("/users", checkAuth, checkRole("admin"), async (req, res) => {
-  // Logic to fetch all user from the database
-  const users = await User.find({});
+router.get(
+  "/users",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    // Logic to fetch all user from the database
+    const users = await User.find({});
 
-  users.map((user) => {
-    user.password = undefined;
-  });
-  res.status(200).json(users);
-});
+    users.map((user) => {
+      user.password = undefined;
+    });
+    res.status(200).json(users);
+  }
+);
 
 // GET /admin/user/:id - Get data of a specific user by ID
-router.get("/user/:id", checkAuth, checkRole("admin"), async (req, res) => {
-  const { id } = req.params;
-  // Logic to fetch user by ID from the database
-  try {
-    const user = await User.findOne({ _id: id });
+router.get(
+  "/user/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const { id } = req.params;
+    // Logic to fetch user by ID from the database
+    try {
+      const user = await User.findOne({ _id: id });
 
-    //BUSCAR VIDEOS COMPRADOS DEL USUARIO
-    //cantidad de visitas a la pagina
-    //cantidad de videos comprados
-    //cantidad de videos vistos
-    return res.status(200).json(user);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
+      //BUSCAR VIDEOS COMPRADOS DEL USUARIO
+      //cantidad de visitas a la pagina
+      //cantidad de videos comprados
+      //cantidad de videos vistos
+      return res.status(200).json(user);
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
-});
+);
 
 // PUT /admin/user/:id - Update existing user
 router.put("/user/:id", checkAuth, checkRole(["owner"]), async (req, res) => {
@@ -206,22 +293,99 @@ router.put("/user/:id", checkAuth, checkRole(["owner"]), async (req, res) => {
 });
 
 // DELETE /admin/user/:id - Delete existing user
-router.delete("/user/:id", checkAuth, checkRole("admin"), async (req, res) => {
-  const { id } = req.params;
-  try {
-    const user = await User.findOneAndUpdate(
-      { _id: id },
-      { nullDate: new Date() }
-    );
+router.delete(
+  "/user/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const { id } = req.params;
+    try {
+      const user = await User.findOneAndUpdate(
+        { _id: id },
+        { nullDate: new Date() }
+      );
 
-    if (user) {
-      res.status(200).json({ message: "Success" });
-    } else {
-      res.status(404).json({ message: "User not found" });
+      if (user) {
+        res.status(200).json({ message: "Success" });
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
     }
-  } catch (error) {
-    res.status(500).json({ message: "Internal server error" });
   }
-});
+);
+
+// GET /admin/content - Get all content
+router.get(
+  "/categorys",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    try {
+      const categorys = await Category.find({});
+      res.status(200).json(categorys);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// CREATE a new template
+router.post(
+  "/category",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const categoryData = req.body;
+    console.log(categoryData);
+    categoryData.id = null;
+    try {
+      const categorys = await Category.create(categoryData);
+      return res.status(200).json(categorys);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+router.put(
+  "/category",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    // Logic to update the public configuration
+    // ...
+    const config = req.body;
+
+    try {
+      await Category.updateOne({ _id: config.id }, config);
+
+      const values = await Category.find({});
+
+      // Send a success message as response
+      res.json(values).status(200);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// DELETE a theme
+router.delete(
+  "/category/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const id = req.params.id;
+    try {
+      const deleted = await Category.deleteOne({ _id: id });
+
+      return res.json({ message: "Category deleted successfully" }).status(200);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
 
 module.exports = router;

@@ -5,6 +5,7 @@ let checkAuth = (req, res, next) => {
 
   jwt.verify(token, process.env.TOKEN_SECRET, (err, decoded) => {
     if (err) {
+      console.log("ERROR JWT");
       return res.status(401).json({
         status: "error",
         error: err,
@@ -21,9 +22,9 @@ let checkRole = (roles) => {
   if (typeof roles === "string") {
     roles = [roles]; // Convert the string to an array
   }
-
   return (req, res, next) => {
     if (!roles.includes(req.userData.role)) {
+      console.log("ERROR ROLE");
       return res.status(401).json({
         status: "error",
         error: "Unauthorized",

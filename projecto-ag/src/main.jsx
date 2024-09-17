@@ -12,6 +12,7 @@ import LoadingSpinner from "./pages/content/components/LoadingSpinner.jsx";
 import useFetchAndLoad from "./hooks/useFetchAndLoad";
 import { getTheme } from "./services/public.js";
 import { createThemeAdapter } from "./adapters/theme.js";
+import { AuthProvider } from "./redux/AuthProvider";
 const App = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
   const [theme, setTheme] = useState(
@@ -54,7 +55,6 @@ const App = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data);
           setTheme(createTheme(createThemeAdapter(result.data)));
         }
       }
@@ -82,24 +82,26 @@ const App = () => {
           }
         >
           <Provider store={store}>
-            <ThemeProvider theme={theme}>
-              {loading ? (
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignSelf: "center",
-                    flexDirection: "column",
-                  }}
-                >
-                  <p>Cargando contenido</p>
-                  <LoadingSpinner />
-                </div>
-              ) : (
-                <Layout />
-              )}
-            </ThemeProvider>
+            <AuthProvider>
+              <ThemeProvider theme={theme}>
+                {loading ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignSelf: "center",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <p>Cargando contenido</p>
+                    <LoadingSpinner />
+                  </div>
+                ) : (
+                  <Layout />
+                )}
+              </ThemeProvider>
+            </AuthProvider>
           </Provider>
         </Suspense>
       </SnackbarProvider>

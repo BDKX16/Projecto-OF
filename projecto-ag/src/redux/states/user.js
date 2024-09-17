@@ -4,7 +4,10 @@ export const UserEmptyState = {
   name: "",
   token: "",
   email: "",
+  role: "",
+  confirmed: false,
 };
+
 export const userSlice = createSlice({
   name: "user",
   initialState: UserEmptyState,
