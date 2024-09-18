@@ -16,6 +16,9 @@ import {
   Switch,
   Select,
   MenuItem,
+  Tab,
+  Autocomplete,
+  Chip,
 } from "@mui/material";
 import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
@@ -26,8 +29,10 @@ import {
   deleteCarousel,
   addCarousel,
   getCarousels,
+  getCategorys,
 } from "../../../services/private";
 import { createCarouselAdapter } from "../../../adapters/carousels";
+import { createCategoryAdapter } from "../../../adapters/categorys";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 import LoadingSpinner from "../../content/components/LoadingSpinner";
 
@@ -35,7 +40,7 @@ import { RgbaStringColorPicker } from "react-colorful";
 const initialFormData = {
   title: "",
   description: "",
-  imagesURL: "",
+  imagesURL: [],
   link: "",
   type: "",
   createdAt: "",
@@ -49,38 +54,26 @@ const ABMCarousel = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
+  const [categorys, setCategorys] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const result = await callEndpoint(getCarousels());
 
-      if (Object.keys(result).length === 0) {
+      if (!result || Object.keys(result)?.length === 0) {
         return;
-      } else if (result.status === 401) {
-        enqueueSnackbar("No autorizado", {
-          variant: "error",
-        });
-      } else if (result.status !== 200) {
-        enqueueSnackbar("Error", {
-          variant: "error",
-        });
       } else {
-        if (result.data.length === 0) {
-          enqueueSnackbar("No hay datos", {
-            variant: "warning",
-          });
-        } else {
-          setData(result.data.map((item) => createCarouselAdapter(item)));
-        }
+        setData(result.data.map((item) => createCarouselAdapter(item)));
+        console.log(result.data);
       }
     };
 
     fetchData();
+    fetchCategorys();
   }, []);
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    setData([...data, { ...formData, id: Math.random() * 10000 }]);
 
     //handle submit form
     const result = await callEndpoint(addCarousel(formData));
@@ -88,8 +81,7 @@ const ABMCarousel = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
-      console.log(result.data);
-      setData([...data, result.data]);
+      setData([...data, createCarouselAdapter(result.data)]);
       setFormData(initialFormData);
     }
     setIsAddOpen(false);
@@ -127,8 +119,216 @@ const ABMCarousel = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImagesUrlChange = (e) => {
+    setFormData({ ...formData, imagesURL: e });
+  };
+
   const handleColorChange = (e) => {
     setFormData({ ...formData, color: e });
+  };
+
+  const fetchCategorys = async () => {
+    const result = await callEndpoint(getCategorys());
+    if (!result || Object.keys(result)?.length === 0) {
+      return;
+    } else {
+      if (result.data.length !== 0) {
+        setCategorys(result.data.map((item) => createCategoryAdapter(item)));
+      }
+    }
+  };
+
+  const formDataByType = () => {
+    if (formData.type === "static") {
+      return (
+        <>
+          <TextField
+            label="Titulo"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <TextField
+            label="Descripcion"
+            name="description"
+            value={formData.desctiption}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <TextField
+            label="Imagen URL"
+            name="imagesURL"
+            value={formData.imagesURL}
+            onChange={(e) => handleImagesUrlChange([e.target.value])}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <TextField
+            label="Link adonde redirigira al darle click. Ej: https://www.google.com"
+            name="link"
+            value={formData.link}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAdd}
+            disabled={loading}
+          >
+            Add
+          </Button>
+        </>
+      );
+    } else if (formData.type === "category") {
+      return (
+        <>
+          <Select
+            label="Categoria"
+            title="title"
+            name="title"
+            value={formData.title}
+            type="text"
+            disabled={categorys.length === 0}
+            onChange={handleChange}
+            style={{ width: "300px", marginLeft: 40, marginRight: 40 }}
+          >
+            {categorys ? (
+              categorys.map((item) => (
+                <MenuItem key={item.id} value={item.name}>
+                  {item.name}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem value="0">No hay categorias</MenuItem>
+            )}
+          </Select>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAdd}
+            disabled={loading}
+          >
+            Add
+          </Button>
+        </>
+      );
+    } else if (formData.type === "banner") {
+      return (
+        <>
+          <TextField
+            label="Titulo"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+
+          <Autocomplete
+            multiple
+            name="imagesURL"
+            id="imagesURL"
+            options={formData.imagesURL}
+            freeSolo
+            onChange={(e, value) => {
+              handleImagesUrlChange(value);
+            }}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => {
+                const { key, ...tagProps } = getTagProps({ index });
+                return (
+                  <Chip
+                    variant="outlined"
+                    label={option}
+                    key={key}
+                    {...tagProps}
+                  />
+                );
+              })
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Urls de las imagenes"
+                placeholder="URLs"
+              />
+            )}
+          />
+
+          <TextField
+            label="Descripcion"
+            name="description"
+            value={formData.desctiption}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAdd}
+            disabled={loading}
+          >
+            Add
+          </Button>
+        </>
+      );
+    } else if (formData.type === "button") {
+      return (
+        <>
+          <TextField
+            label="Titulo"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <TextField
+            label="Descripcion"
+            name="description"
+            value={formData.desctiption}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <TextField
+            label="Link adonde redirigira al darle click. Ej: https://www.google.com"
+            name="link"
+            value={formData.link}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            type="text"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleAdd}
+            disabled={loading}
+          >
+            Add
+          </Button>
+        </>
+      );
+    }
+
+    return <></>;
   };
 
   return (
@@ -153,7 +353,7 @@ const ABMCarousel = () => {
               fontSize: 30,
               fontWeight: "700",
               lineHeight: 1,
-              marginRight: 6,
+              marginRight: 7,
             }}
           >
             Carousels
@@ -166,7 +366,7 @@ const ABMCarousel = () => {
               lineHeight: 1,
             }}
           >
-            11
+            {!loading && data.length}
           </p>
         </div>
 
@@ -204,58 +404,20 @@ const ABMCarousel = () => {
               name="type"
               value={formData.type}
               type="text"
-              onChange={handleChange}
+              onChange={(e) => {
+                setFormData(initialFormData);
+                handleChange(e);
+              }}
               style={{ width: "300px" }}
             >
-              <MenuItem value="video">Video</MenuItem>
-              <MenuItem value="categorias">Categorias</MenuItem>
-              <MenuItem value="banners">Banners</MenuItem>
+              <MenuItem value="static">Imagen Estatica</MenuItem>
+              <MenuItem value="category" disabled>
+                Categorias
+              </MenuItem>
+              <MenuItem value="banner">Banner</MenuItem>
+              <MenuItem value="button">Button</MenuItem>
             </Select>
-            <TextField
-              label="Nombre"
-              name="name"
-              value={formData.title}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="text"
-            />
-            <TextField
-              label="Nombre"
-              name="name"
-              value={formData.desctiption}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="text"
-            />
-            <TextField
-              label="Nombre"
-              name="name"
-              value={formData.imagesURL}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="text"
-            />
-            <TextField
-              label="Nombre"
-              name="name"
-              value={formData.link}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="text"
-            />
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleAdd}
-              disabled={loading}
-            >
-              Add
-            </Button>
+            {formDataByType()}
           </Box>
         </Box>
         {/* video cover preview */}
@@ -265,8 +427,31 @@ const ABMCarousel = () => {
           <LoadingSpinner />
         </div>
       ) : data.length === 0 ? (
-        <div className="main-container">
-          <p>No hay datos</p>
+        <div style={{}}>
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Images</TableCell>
+                  <TableCell>Link</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Fecha de creación</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                  <TableCell>No hay datos</TableCell>
+                  <TableCell></TableCell>
+                  <TableCell></TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       ) : (
         <TableContainer component={Paper}>

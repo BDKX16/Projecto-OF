@@ -53,16 +53,6 @@ export const getContent = () => {
   };
 };
 
-export const getTemplates = () => {
-  const controller = loadAbort();
-  return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/templates", {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
 export const getVideo = (id) => {
   const controller = loadAbort();
   return {
@@ -133,59 +123,6 @@ export const deleteCarousel = (id) => {
   return {
     call: axios.delete(
       import.meta.env.VITE_BASE_URL + "/admin/carousel/" + id,
-      {
-        signal: controller.signal,
-      }
-    ),
-    controller,
-  };
-};
-
-export const getTemplate = () => {
-  const controller = loadAbort();
-  return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/template", {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const addTemplate = (data) => {
-  const controller = loadAbort();
-  return {
-    call: axios.post(import.meta.env.VITE_BASE_URL + "/admin/template", data, {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const editTemplate = (id, data) => {
-  const controller = loadAbort();
-  return {
-    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/template", data, {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const selectTemplate = (id) => {
-  const controller = loadAbort();
-  return {
-    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/template/" + id, {
-      signal: controller.signal,
-    }),
-    controller,
-  };
-};
-
-export const deleteTemplate = (id) => {
-  const controller = loadAbort();
-  return {
-    call: axios.delete(
-      import.meta.env.VITE_BASE_URL + "/admin/template/" + id,
       {
         signal: controller.signal,
       }

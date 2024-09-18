@@ -17,7 +17,14 @@ import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { getTemplates } from "../../../services/public";
+import {
+  getTemplates,
+  getTemplate,
+  addTemplate,
+  editTemplate,
+  deleteTemplate,
+  selectTemplate,
+} from "../../../services/private";
 import { createTemplateAdapter } from "../../../adapters/template";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 
@@ -34,16 +41,8 @@ const Templates = () => {
     const fetchData = async () => {
       const result = await callEndpoint(getTemplates());
 
-      if (Object.keys(result).length === 0) {
+      if (!result || Object.keys(result)?.length === 0) {
         return;
-      } else if (result.status === 401) {
-        enqueueSnackbar("No autorizado", {
-          variant: "error",
-        });
-      } else if (result.status !== 200) {
-        enqueueSnackbar("Error", {
-          variant: "error",
-        });
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {
@@ -51,7 +50,7 @@ const Templates = () => {
           });
         } else {
           console.log(result.data);
-          setData(result.data.map((item) => createTemplateAdapter(item)));
+          //setData(result.data.map((item) => createTemplateAdapter(item)));
         }
       }
     };
@@ -103,7 +102,7 @@ const Templates = () => {
               fontSize: 30,
               fontWeight: "700",
               lineHeight: 1,
-              marginRight: 6,
+              marginRight: 7,
             }}
           >
             Templates
@@ -116,7 +115,7 @@ const Templates = () => {
               lineHeight: 1,
             }}
           >
-            11
+            {!loading && data.length}
           </p>
         </div>
 

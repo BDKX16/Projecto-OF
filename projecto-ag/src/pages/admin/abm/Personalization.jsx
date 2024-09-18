@@ -34,16 +34,8 @@ const Personalization = () => {
     const fetchData = async () => {
       const result = await callEndpoint(getTheme());
 
-      if (Object.keys(result).length === 0) {
+      if (!result || Object.keys(result)?.length === 0) {
         return;
-      } else if (result.status === 401) {
-        enqueueSnackbar("No autorizado", {
-          variant: "error",
-        });
-      } else if (result.status !== 200) {
-        enqueueSnackbar("Error", {
-          variant: "error",
-        });
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {
@@ -119,10 +111,11 @@ const Personalization = () => {
   return (
     <Box>
       <h1 style={{ textAlign: "start", lineHeight: 0, fontSize: 45 }}>
-        Gestor de contenido
+        Paleta de colores
       </h1>
       <p style={{ textAlign: "start" }}>
-        En esta sección se pueden agregar, editar y eliminar videos.
+        En esta seccion podras agregar, editar y borrar colores de la paleta de
+        colores y propiedades de la pagina.
       </p>
       <div
         style={{
@@ -137,10 +130,10 @@ const Personalization = () => {
               fontSize: 30,
               fontWeight: "700",
               lineHeight: 1,
-              marginRight: 6,
+              marginRight: 7,
             }}
           >
-            Contenido
+            Colores
           </p>
           <p
             style={{
@@ -150,7 +143,7 @@ const Personalization = () => {
               lineHeight: 1,
             }}
           >
-            11
+            {!loading && data.length}
           </p>
         </div>
 

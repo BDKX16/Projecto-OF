@@ -5,6 +5,7 @@ const useFetchAndLoad = () => {
   let controller;
 
   const callEndpoint = async (axiosCall) => {
+    if (!axiosCall) return;
     if (axiosCall.controller) controller = axiosCall.controller;
     setLoading(true);
     let result = {};

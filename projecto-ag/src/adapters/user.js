@@ -7,6 +7,7 @@ const createUserAdapter = (user) => ({
 });
 
 const createUserManagmentAdapter = (user) => ({
+  id: user._id,
   confirmed: user.confirmed,
   email: user.email,
   name: user.name,

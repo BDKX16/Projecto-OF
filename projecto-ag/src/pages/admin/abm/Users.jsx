@@ -65,16 +65,8 @@ const ABMUsuarios = () => {
     const fetchData = async () => {
       const result = await callEndpoint(getUsers());
 
-      if (Object.keys(result).length === 0) {
+      if (!result || Object.keys(result)?.length === 0) {
         return;
-      } else if (result.status === 401) {
-        enqueueSnackbar("No autorizado", {
-          variant: "error",
-        });
-      } else if (result.status !== 200) {
-        enqueueSnackbar("Error", {
-          variant: "error",
-        });
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {
@@ -261,7 +253,7 @@ const ABMUsuarios = () => {
               fontSize: 30,
               fontWeight: "700",
               lineHeight: 1,
-              marginRight: 6,
+              marginRight: 7,
             }}
           >
             Usuarios
@@ -274,7 +266,7 @@ const ABMUsuarios = () => {
               lineHeight: 1,
             }}
           >
-            11
+            {!loading && data.length}
           </p>
         </div>
 
@@ -314,7 +306,7 @@ const ABMUsuarios = () => {
                             aria-haspopup="true"
                           >
                             <Avatar sx={{ width: 42, height: 42 }}>
-                              {row.name.charAt(0).toUpperCase()}mn
+                              {row.name.charAt(0).toUpperCase()}
                             </Avatar>
                           </IconButton>
                         </Tooltip>

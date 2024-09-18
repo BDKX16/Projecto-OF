@@ -51,16 +51,8 @@ const ABMTable = () => {
     const fetchData = async () => {
       const result = await callEndpoint(getContent());
 
-      if (Object.keys(result).length === 0) {
+      if (!result || Object.keys(result)?.length === 0) {
         return;
-      } else if (result.status === 401) {
-        enqueueSnackbar("No autorizado", {
-          variant: "error",
-        });
-      } else if (result.status !== 200) {
-        enqueueSnackbar("Error", {
-          variant: "error",
-        });
       } else {
         if (result.data.length === 0) {
           enqueueSnackbar("No hay datos", {
@@ -168,7 +160,7 @@ const ABMTable = () => {
               fontSize: 30,
               fontWeight: "700",
               lineHeight: 1,
-              marginRight: 6,
+              marginRight: 7,
             }}
           >
             Contenido
@@ -181,7 +173,7 @@ const ABMTable = () => {
               lineHeight: 1,
             }}
           >
-            11
+            {!loading && data.length}
           </p>
         </div>
 

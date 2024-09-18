@@ -1,5 +1,9 @@
 export const createCarouselAdapter = (content) => ({
-  color: content.color,
-  name: content.name,
   id: content._id,
+  createdAt: content.createdAt,
+  description: content.description,
+  imagesURL: content.imagesURL,
+  link: content.link,
+  title: content.title,
+  type: content.type,
 });
