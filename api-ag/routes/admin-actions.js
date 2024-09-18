@@ -6,6 +6,7 @@ const Template = require("../models/template.js");
 const Configuration = require("../models/configuration.js");
 const User = require("../models/user.js");
 const Category = require("../models/category.js");
+const Carousel = require("../models/carousel.js");
 
 /*
 Page personalization:
@@ -16,108 +17,86 @@ logo 30x30
 
 */
 
-// GET /admin/content - Get all content
-router.get("/content", checkAuth, (req, res) => {
-  // Logic to fetch all content from the database
-
-  // ...
-  res.send("Get all content");
-});
-
-// GET /admin/content/:id - Get a specific content by ID
-router.get(
-  "/content/:id",
-  checkAuth,
-  checkRole(["admin", "owner"]),
-  (req, res) => {
-    const { id } = req.params;
-    // Logic to fetch content by ID from the database
-    // ...
-    res.send(`Get content with ID ${id}`);
-  }
-);
-
 // POST /admin/content - Create new content
+
 router.post(
   "/content",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
-    const { title, body } = req.body;
-    // Logic to create new content in the database
-    // ...
-    res.send(`Create new content: ${title}`);
+  async (req, res) => {
+    try {
+      const content = req.body;
+
+      content.state = true;
+      content.categorys = [];
+      content.price = parseFloat(content.price);
+
+      await Content.create(content);
+      return res.status(200).json(content);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 
 // PUT /admin/content/:id - Update existing content
 router.put(
-  "/content/:id",
+  "/content",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
-    const { id } = req.params;
-    const { title, body } = req.body;
-    // Logic to update content by ID in the database
-    // ...
-    res.send(`Update content with ID ${id}`);
+  async (req, res) => {
+    try {
+      const content = req.body;
+      await Content.updateOne({ _id: content.id }, content);
+      return res.status(200).json(content);
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 
 // DELETE /admin/content/:id - Delete existing content
 router.delete(
-  "/content/:id",
+  "/admin/content/:id",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
-    const { id } = req.params;
-    // Logic to delete content by ID from the database
-    // ...
-    res.send(`Delete content with ID ${id}`);
+  async (req, res) => {
+    try {
+      const id = req.params.id;
+      await Content.deleteOne({ _id: id });
+      return res.status(200).message({ message: "Content deleted" });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
-
-// GET /admin/payments - Get all payments
-router.get(
-  "/payments",
+router.put(
+  "/content-state",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
-    // Logic to fetch all payments from the database
-    // ...
-    res.send("Get all payments");
-  }
-);
+  async (req, res) => {
+    try {
+      const body = req.body;
 
-// GET /admin/payments/:id - Get a specific payment by ID
-router.get(
-  "/payments/:id",
-  checkAuth,
-  checkRole(["admin", "owner"]),
-  (req, res) => {
-    const { id } = req.params;
-    // Logic to fetch payment by ID from the database
-    // ...
-    res.send(`Get payment with ID ${id}`);
-  }
-);
+      await Content.findOneAndUpdate(
+        { _id: body.id },
+        { $set: { state: body.status } },
+        { new: true }
+      );
 
-// POST /admin/payments - Create new payment
-router.post(
-  "/payments",
-  checkAuth,
-  checkRole(["admin", "owner"]),
-  (req, res) => {
-    const { amount, description } = req.body;
-    // Logic to create new payment in the database
-    // ...
-    res.send(`Create new payment: ${description}`);
+      return res.status(200).json({ message: "Content state updated" });
+    } catch (error) {
+      console.log(error);
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 
 // PUT /admin/payments/:id - Update existing payment
 router.put(
-  "/payments/:id",
+  "/payment/:id",
   checkAuth,
   checkRole(["admin", "owner"]),
   (req, res) => {
@@ -131,7 +110,7 @@ router.put(
 
 // DELETE /admin/payments/:id - Delete existing payment
 router.delete(
-  "/payments/:id",
+  "/payment/:id",
   checkAuth,
   checkRole(["admin", "owner"]),
   (req, res) => {
@@ -380,6 +359,77 @@ router.delete(
     const id = req.params.id;
     try {
       const deleted = await Category.deleteOne({ _id: id });
+
+      return res.json({ message: "Category deleted successfully" }).status(200);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// GET /admin/content - Get all content
+router.get(
+  "/carousels",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    try {
+      const carousels = await Carousel.find({});
+      res.status(200).json(carousels);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// CREATE a new carousel
+router.post(
+  "/carousel",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const carouselData = req.body;
+    carouselData.id = null;
+    try {
+      const carousels = await Carousel.create(carouselData);
+      return res.status(200).json(carousels);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+router.put(
+  "/carousel",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    // Logic to update the public configuration
+    // ...
+    const config = req.body;
+
+    try {
+      await Carousel.updateOne({ _id: config.id }, config);
+
+      const values = await Carousel.find({});
+
+      // Send a success message as response
+      res.json(values).status(200);
+    } catch (error) {
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
+// DELETE a theme
+router.delete(
+  "/carousel/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const id = req.params.id;
+    try {
+      const deleted = await Carousel.deleteOne({ _id: id });
 
       return res.json({ message: "Category deleted successfully" }).status(200);
     } catch (error) {

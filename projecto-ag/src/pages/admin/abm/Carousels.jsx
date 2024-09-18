@@ -11,28 +11,48 @@ import {
   Collapse,
   TextField,
   IconButton,
+  InputLabel,
   Box,
+  Switch,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { getContent } from "../../../services/public";
-import { createContentAdapter } from "../../../adapters/content";
+import {
+  editCarousel,
+  deleteCarousel,
+  addCarousel,
+  getCarousels,
+} from "../../../services/private";
+import { createCarouselAdapter } from "../../../adapters/carousels";
 import { formatDateToString } from "../../../utils/format-date-to-string";
+import LoadingSpinner from "../../content/components/LoadingSpinner";
 
-const Carousels = () => {
+import { RgbaStringColorPicker } from "react-colorful";
+const initialFormData = {
+  title: "",
+  description: "",
+  imagesURL: "",
+  link: "",
+  type: "",
+  createdAt: "",
+};
+
+const ABMCarousel = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
 
   const [data, setData] = useState([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
-  const [formData, setFormData] = useState({ name: "", age: "" });
+  const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await callEndpoint(getContent());
+      const result = await callEndpoint(getCarousels());
 
       if (Object.keys(result).length === 0) {
         return;
@@ -50,7 +70,7 @@ const Carousels = () => {
             variant: "warning",
           });
         } else {
-          setData(result.data.map((item) => createContentAdapter(item)));
+          setData(result.data.map((item) => createCarouselAdapter(item)));
         }
       }
     };
@@ -58,37 +78,114 @@ const Carousels = () => {
     fetchData();
   }, []);
 
-  const handleAdd = () => {
-    setData([...data, { ...formData, id: Date.now() }]);
-    setFormData({ name: "", age: "" });
+  const handleAdd = async (e) => {
+    e.preventDefault();
+    setData([...data, { ...formData, id: Math.random() * 10000 }]);
+
+    //handle submit form
+    const result = await callEndpoint(addCarousel(formData));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error", { variant: "error" });
+    } else {
+      enqueueSnackbar("Contenido agregado", { variant: "success" });
+      console.log(result.data);
+      setData([...data, result.data]);
+      setFormData(initialFormData);
+    }
     setIsAddOpen(false);
   };
 
-  const handleEdit = () => {
-    setData(data.map((item) => (item.id === currentEdit.id ? formData : item)));
-    setFormData({ name: "", age: "" });
-    setIsEditOpen(false);
+  const handleEdit = async () => {
+    const result = await callEndpoint(editCarousel(formData));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error", { variant: "error" });
+    } else {
+      enqueueSnackbar("Contenido editado correctamente", {
+        variant: "success",
+      });
+      setFormData(initialFormData);
+      setData(
+        data.map((item) => (item.id === currentEdit.id ? formData : item))
+      );
+      setIsEditOpen(false);
+    }
     setCurrentEdit(null);
   };
 
-  const handleDelete = (id) => {
-    setData(data.filter((item) => item.id !== id));
+  const handleDelete = async (id) => {
+    const result = await callEndpoint(deleteCarousel(id));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error", { variant: "error" });
+    } else {
+      enqueueSnackbar("Contenido eliminado", { variant: "success" });
+      console.log(result);
+      setData(data.filter((item) => item.id !== id));
+    }
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleColorChange = (e) => {
+    setFormData({ ...formData, color: e });
+  };
+
   return (
     <Box>
-      <h1>Publicidad</h1>
-      <Button
-        style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
-        startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
-        onClick={() => setIsAddOpen(!isAddOpen)}
+      <h1 style={{ textAlign: "start", lineHeight: 0, fontSize: 45 }}>
+        Gestor de publicidades
+      </h1>
+      <p style={{ textAlign: "start" }}>
+        En esta sección podes gestionar las publicidades que se muestran en la
+        web.
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
       >
-        Agregar nuevo video
-      </Button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p
+            style={{
+              fontSize: 30,
+              fontWeight: "700",
+              lineHeight: 1,
+              marginRight: 6,
+            }}
+          >
+            Carousels
+          </p>
+          <p
+            style={{
+              fontSize: 30,
+              fontWeight: "700",
+              color: "#969696",
+              lineHeight: 1,
+            }}
+          >
+            11
+          </p>
+        </div>
+
+        <div>
+          <Button
+            style={{
+              backgroundColor: "#4CAF50",
+              color: "white",
+            }}
+            startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
+            onClick={() => {
+              setIsEditOpen(false);
+              setIsAddOpen(!isAddOpen);
+            }}
+          >
+            Agregar nuevo carousel
+          </Button>
+        </div>
+      </div>
       <Collapse in={isAddOpen}>
         <Box
           component={Paper}
@@ -98,100 +195,79 @@ const Carousels = () => {
         >
           <Box
             style={{
-              width: "50%",
+              width: "100%",
             }}
           >
+            <Select
+              label="Tipo"
+              title="Tipo"
+              name="type"
+              value={formData.type}
+              type="text"
+              onChange={handleChange}
+              style={{ width: "300px" }}
+            >
+              <MenuItem value="video">Video</MenuItem>
+              <MenuItem value="categorias">Categorias</MenuItem>
+              <MenuItem value="banners">Banners</MenuItem>
+            </Select>
             <TextField
-              label="Title"
-              name="title"
+              label="Nombre"
+              name="name"
               value={formData.title}
               onChange={handleChange}
               fullWidth
               margin="normal"
+              type="text"
+            />
+            <TextField
+              label="Nombre"
+              name="name"
+              value={formData.desctiption}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              type="text"
+            />
+            <TextField
+              label="Nombre"
+              name="name"
+              value={formData.imagesURL}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              type="text"
+            />
+            <TextField
+              label="Nombre"
+              name="name"
+              value={formData.link}
+              onChange={handleChange}
+              fullWidth
+              margin="normal"
+              type="text"
             />
 
-            <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              multiline
-              rows={8}
-            />
-            <TextField
-              label="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="number"
-            />
-            <TextField
-              helperText="Url de la imagen de portada en jpeg o jpg"
-              name="coverUrl"
-              value={formData.coverUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              helperText="Url del video"
-              label="Video URL"
-              name="videoUrl"
-              value={formData.videoUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Button variant="contained" color="primary" onClick={handleAdd}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+              disabled={loading}
+            >
               Add
             </Button>
-          </Box>
-          <Box
-            style={{
-              width: "50%",
-              justifyContent: "center",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-            }}
-          >
-            {formData.coverUrl ? (
-              <img
-                src={formData.coverUrl}
-                alt="cover"
-                style={{ width: 300, height: 200, borderRadius: 5 }}
-              />
-            ) : (
-              <div
-                style={{
-                  backgroundColor: "lightgrey",
-                  borderRadius: 10,
-                  width: 200,
-                  height: 200,
-                }}
-              ></div>
-            )}
-            {formData.title ? (
-              <h3 style={{ margin: 2 }}>{formData.title}</h3>
-            ) : (
-              <div style={{ padding: 20 }}></div>
-            )}
-
-            {formData.description ? (
-              <p style={{ margin: 2, maxWidth: 300 }}>{formData.description}</p>
-            ) : (
-              <div style={{ padding: 20 }}></div>
-            )}
           </Box>
         </Box>
         {/* video cover preview */}
       </Collapse>
-      {data.length === 0 ? (
-        <p>No hay datos</p>
+      {loading ? (
+        <div className="main-container">
+          <LoadingSpinner />
+        </div>
+      ) : data.length === 0 ? (
+        <div className="main-container">
+          <p>No hay datos</p>
+        </div>
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -199,10 +275,10 @@ const Carousels = () => {
               <TableRow>
                 <TableCell>Title</TableCell>
                 <TableCell>Description</TableCell>
-                <TableCell>Precio</TableCell>
-                <TableCell>Fecha de subida</TableCell>
-                <TableCell>Portada</TableCell>
-                <TableCell>Video</TableCell>
+                <TableCell>Images</TableCell>
+                <TableCell>Link</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Fecha de creación</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -211,24 +287,17 @@ const Carousels = () => {
                   <TableRow key={row.id}>
                     <TableCell>{row.title}</TableCell>
                     <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                    <TableCell>{formatDateToString(row.date)}</TableCell>
-                    <TableCell>
-                      {row.coverUrl
-                        ? row.coverUrl.substring(0, 20) + "..."
-                        : " - "}
-                    </TableCell>
-                    <TableCell>
-                      {row.videoUrl
-                        ? row.videoUrl.substring(0, 20) + "..."
-                        : " - "}
-                    </TableCell>
+                    <TableCell>{row.imagesURL}</TableCell>
+                    <TableCell>{row.link}</TableCell>
+                    <TableCell>{row.type}</TableCell>
+                    <TableCell>{formatDateToString(row.createdAt)} </TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);
                           setFormData(row);
-                          setIsEditOpen(true);
+                          setIsAddOpen(false);
+                          setIsEditOpen(!isEditOpen);
                         }}
                       >
                         <Edit />
@@ -247,51 +316,48 @@ const Carousels = () => {
       <Collapse in={isEditOpen}>
         <Box component={Paper} p={2} mt={2}>
           <TextField
-            label="Name"
+            label="Nombre"
             name="name"
-            value={formData.title}
+            value={formData.name}
             onChange={handleChange}
             fullWidth
             margin="normal"
+            type="text"
           />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-around",
+              alignContent: "center",
+              marginTop: 30,
+            }}
+          >
+            <div style={{ width: "50%" }}>
+              <TextField
+                label="Color"
+                name="color"
+                value={formData.color}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <p style={{ color: "grey" }}>
+                Formatos disponibles: HEX (#333), RGBA (rgba(255, 255, 255,
+                0.5))
+              </p>
+            </div>
 
-          <TextField
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            multiline
-            rows={8}
-          />
-          <TextField
-            label="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            type="number"
-          />
-          <TextField
-            helperText="Url de la imagen de portada en jpeg o jpg"
-            name="coverUrl"
-            value={formData.coverUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            helperText="Url del video"
-            label="Video URL"
-            name="videoUrl"
-            value={formData.videoUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <Button variant="contained" color="primary" onClick={handleEdit}>
+            <RgbaStringColorPicker
+              color={formData.valor}
+              onChange={handleColorChange}
+            />
+          </div>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleEdit}
+            disabled={loading}
+          >
             Save
           </Button>
         </Box>
@@ -300,4 +366,4 @@ const Carousels = () => {
   );
 };
 
-export default Carousels;
+export default ABMCarousel;

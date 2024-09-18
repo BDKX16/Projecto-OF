@@ -15,6 +15,10 @@ const getAxiosHeaders = () => {
   };
 };
 
+/**********
+ * CONTENT
+ ************/
+
 export const addContent = (data) => {
   const controller = loadAbort();
 
@@ -76,6 +80,10 @@ export const contentState = (id, status) => {
   };
 };
 
+/**********
+ * USERS
+ ************/
+
 export const getUsers = () => {
   const controller = loadAbort();
   return {
@@ -133,6 +141,10 @@ export const deleteUser = (id) => {
   };
 };
 
+/**********
+ * THEMES
+ ************/
+
 export const addTheme = (data) => {
   const controller = loadAbort();
   return {
@@ -176,6 +188,10 @@ export const deleteTheme = (id) => {
     controller,
   };
 };
+
+/**********
+ * CATEGORIES
+ ************/
 
 export const getCategorys = () => {
   const controller = loadAbort();
@@ -226,6 +242,68 @@ export const deleteCategory = (id) => {
   return {
     call: axios.delete(
       import.meta.env.VITE_BASE_URL + "/admin/category/" + id,
+      getAxiosHeaders(),
+      {
+        signal: controller.signal,
+      }
+    ),
+    controller,
+  };
+};
+
+/**********
+ * CAROUSELS
+ ************/
+
+export const getCarousels = () => {
+  const controller = loadAbort();
+  return {
+    call: axios.get(
+      import.meta.env.VITE_BASE_URL + "/admin/carousels",
+      getAxiosHeaders(),
+      {
+        signal: controller.signal,
+      }
+    ),
+    controller,
+  };
+};
+
+export const addCarousel = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.post(
+      import.meta.env.VITE_BASE_URL + "/admin/carousel",
+      data,
+      getAxiosHeaders(),
+      {
+        signal: controller.signal,
+      }
+    ),
+    controller,
+  };
+};
+
+export const editCarousel = (data) => {
+  const controller = loadAbort();
+  return {
+    call: axios.put(
+      import.meta.env.VITE_BASE_URL + "/admin/carousel",
+      data,
+      getAxiosHeaders(),
+      {
+        signal: controller.signal,
+      }
+    ),
+    controller,
+  };
+};
+
+export const deleteCarousel = (id) => {
+  const controller = loadAbort();
+  return {
+    call: axios.delete(
+      import.meta.env.VITE_BASE_URL + "/admin/carousel/" + id,
       getAxiosHeaders(),
       {
         signal: controller.signal,

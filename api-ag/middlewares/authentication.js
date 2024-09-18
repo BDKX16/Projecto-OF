@@ -23,7 +23,7 @@ let checkRole = (roles) => {
     roles = [roles]; // Convert the string to an array
   }
   return (req, res, next) => {
-    if (!roles.includes(req.userData.role)) {
+    if (req.userData.confirmed == true && !roles.includes(req.userData.role)) {
       console.log("ERROR ROLE");
       return res.status(401).json({
         status: "error",

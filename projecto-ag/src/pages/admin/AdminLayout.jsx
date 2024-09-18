@@ -15,7 +15,9 @@ const drawerWidth = 105;
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import {
+  AccountBalanceRounded,
   AutoAwesomeMotion,
+  CreditScoreRounded,
   DashboardOutlined,
   NotificationsRounded,
   Settings,
@@ -118,11 +120,65 @@ const AdminLayout = (props) => {
             ></AutoAwesomeMotion>
             <ListItemText primary="Categorys" />
           </ListItemButton>
+          <ListItemButton
+            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
+            component={Link}
+            to="/admin/category"
+          >
+            <AutoAwesomeMotion
+              sx={{ width: 27, height: 27, marginRight: 1 }}
+            ></AutoAwesomeMotion>
+            <ListItemText primary="Navbar" />
+          </ListItemButton>
+          <ListItemButton
+            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
+            component={Link}
+            to="/admin/category"
+          >
+            <AutoAwesomeMotion
+              sx={{ width: 27, height: 27, marginRight: 1 }}
+            ></AutoAwesomeMotion>
+            <ListItemText primary="Footer" />
+          </ListItemButton>
+
+          <p
+            style={{
+              fontSize: 11,
+              fontWeight: "500",
+              textAlign: "start",
+              marginLeft: 19,
+              color: "#333",
+              lineHeight: 0,
+            }}
+          >
+            BILLING
+          </p>
+          <ListItemButton
+            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
+            component={Link}
+            to="/admin/category"
+          >
+            <CreditScoreRounded
+              sx={{ width: 27, height: 27, marginRight: 1 }}
+            ></CreditScoreRounded>
+            <ListItemText primary="Payments" />
+          </ListItemButton>
+          <ListItemButton
+            component={Link}
+            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
+            to="/admin/category"
+          >
+            <AccountBalanceRounded
+              sx={{ width: 27, height: 27, marginRight: 1 }}
+            ></AccountBalanceRounded>
+            <ListItemText primary="Payment Methods" />
+          </ListItemButton>
         </List>
       </div>
       <Content
         style={{
           borderRadius: 18,
+          boxShadow: "0px 0px 6px rgba(0, 0, 0, 0.25)",
         }}
       >
         <Toolbar
@@ -135,7 +191,7 @@ const AdminLayout = (props) => {
           <NotificationsMenu />
           <AccountMenu />
         </Toolbar>
-        <div> {props.children}</div>
+        <div style={{ padding: 30 }}> {props.children}</div>
       </Content>
     </Root>
   );

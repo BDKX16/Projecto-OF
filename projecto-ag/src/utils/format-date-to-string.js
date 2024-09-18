@@ -1,4 +1,7 @@
 export function formatDateToString(dateString) {
+  if (!dateString) {
+    return "Sin fecha";
+  }
   const months = [
     "Enero",
     "Febrero",

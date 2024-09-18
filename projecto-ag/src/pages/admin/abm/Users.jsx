@@ -242,8 +242,44 @@ const ABMUsuarios = () => {
 
   return (
     <Box>
-      <h1>User managment</h1>
+      <h1 style={{ textAlign: "start", lineHeight: 0, fontSize: 45 }}>
+        Gestor de usuarios
+      </h1>
+      <p style={{ textAlign: "start" }}>
+        En esta sección se pueden agregar, editar y eliminar usuarios.
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p
+            style={{
+              fontSize: 30,
+              fontWeight: "700",
+              lineHeight: 1,
+              marginRight: 6,
+            }}
+          >
+            Usuarios
+          </p>
+          <p
+            style={{
+              fontSize: 30,
+              fontWeight: "700",
+              color: "#969696",
+              lineHeight: 1,
+            }}
+          >
+            11
+          </p>
+        </div>
 
+        <div></div>
+      </div>
       {loading ? (
         <div className="main-container">
           <LoadingSpinner />
@@ -271,13 +307,15 @@ const ABMUsuarios = () => {
                   <TableRow key={row.id}>
                     <TableCell>
                       <div>
-                        <Tooltip title="Account settings">
+                        <Tooltip title={row.name}>
                           <IconButton
                             size="small"
                             sx={{ ml: 2 }}
                             aria-haspopup="true"
                           >
-                            <Avatar sx={{ width: 42, height: 42 }}>M</Avatar>
+                            <Avatar sx={{ width: 42, height: 42 }}>
+                              {row.name.charAt(0).toUpperCase()}mn
+                            </Avatar>
                           </IconButton>
                         </Tooltip>
                       </div>
@@ -286,7 +324,7 @@ const ABMUsuarios = () => {
                       <p
                         style={{
                           fontWeight: "600",
-                          lineHeight: ".2rem", // Use lineHeight property to control the height of a single line of text
+                          lineHeight: ".2rem",
                           fontSize: ".8rem",
                         }}
                       >

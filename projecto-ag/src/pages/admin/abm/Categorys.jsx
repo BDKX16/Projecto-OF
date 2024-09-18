@@ -126,17 +126,59 @@ const ABMCategorys = () => {
 
   return (
     <Box>
-      <h1>Categorias</h1>
-      <Button
-        style={{ backgroundColor: "#4CAF50", color: "white", marginBottom: 20 }}
-        startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
-        onClick={() => {
-          setIsEditOpen(false);
-          setIsAddOpen(!isAddOpen);
+      <h1 style={{ textAlign: "start", lineHeight: 0, fontSize: 45 }}>
+        Gestor de categorias
+      </h1>
+      <p style={{ textAlign: "start" }}>
+        En esta sección podras agregar, editar y eliminar categorias/grupos de
+        videos
+      </p>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        Agregar nuevo video
-      </Button>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <p
+            style={{
+              fontSize: 30,
+              fontWeight: "700",
+              lineHeight: 1,
+              marginRight: 6,
+            }}
+          >
+            Categorias
+          </p>
+          <p
+            style={{
+              fontSize: 30,
+              fontWeight: "700",
+              color: "#969696",
+              lineHeight: 1,
+            }}
+          >
+            11
+          </p>
+        </div>
+
+        <div>
+          <Button
+            style={{
+              backgroundColor: "#4CAF50",
+              color: "white",
+            }}
+            startIcon={isAddOpen ? <ExpandLess /> : <ExpandMore />}
+            onClick={() => {
+              setIsEditOpen(false);
+              setIsAddOpen(!isAddOpen);
+            }}
+          >
+            Agregar nuevo video
+          </Button>
+        </div>
+      </div>
       <Collapse in={isAddOpen}>
         <Box
           component={Paper}

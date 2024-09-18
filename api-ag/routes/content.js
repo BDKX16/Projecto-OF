@@ -4,12 +4,13 @@ const router = express.Router();
 
 const mongoose = require("mongoose");
 
+const { checkAuth, checkRole } = require("../middlewares/authentication");
 const Content = require("../models/content.js");
 const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
 const Payment = require("../models/payment.js");
 // GET /api/content/:videoId
-router.get("/content/:videoId", async (req, res) => {
+router.get("/content/:videoId", checkAuth, async (req, res) => {
   const videoId = req.params.videoId;
 
   if (videoId === "undefined") {
@@ -78,56 +79,15 @@ router.get("/content", async (req, res) => {
   }
 });
 
-router.post("/admin/content", async (req, res) => {
-  try {
-    const content = req.body;
-
-    content.state = true;
-    content.categorys = [];
-    content.price = parseFloat(content.price);
-
-    await Content.create(content);
-    return res.status(200).json(content);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-router.put("/admin/content", async (req, res) => {
-  try {
-    const content = req.body;
-    await Content.updateOne({ _id: content.id }, content);
-    return res.status(200).json(content);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-router.delete("/admin/content/:id", async (req, res) => {
+// GET /api/content
+router.get("/content-search/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    await Content.deleteOne({ _id: id });
-    return res.status(200).message({ message: "Content deleted" });
+    const content = await Content.find({
+      title: { $regex: id, $options: "i" },
+    }).limit(5);
+    return res.status(200).json(content);
   } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-router.put("/admin/content-state", async (req, res) => {
-  try {
-    const body = req.body;
-
-    await Content.findOneAndUpdate(
-      { _id: body.id },
-      { $set: { state: body.status } },
-      { new: true }
-    );
-
-    return res.status(200).json({ message: "Content state updated" });
-  } catch (error) {
-    console.log(error);
-    console.error(error);
     return res.status(500).json({ message: "Internal server error" });
   }
 });

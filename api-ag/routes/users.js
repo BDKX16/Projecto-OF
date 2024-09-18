@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { checkAuth } = require("../middlewares/authentication.js");
+const { checkAuth } = require("../middlewares/authentication");
 
 //models import
 
