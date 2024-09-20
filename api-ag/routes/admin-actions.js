@@ -123,13 +123,37 @@ router.delete(
 
 // CREATE a new template
 router.post(
-  "/templates",
+  "/template",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
+  async (req, res) => {
     const templateData = req.body;
+    const userId = req.userData._id;
     // Logic to create a new template in the database using the provided data
     // Send the created template as a response
+    //create the template with mongo
+    try {
+      console.log(templateData);
+      const toSave = {
+        userId: userId,
+        name: templateData.name,
+        createdAt: new Date(),
+        validityFrom: templateData.validityFrom,
+        validityTo: templateData.validityTo,
+        nullDate: null,
+        components: templateData.components.map((component) => ({
+          componentName: component.title,
+          componentType: component.type,
+          componentId: component.id,
+        })),
+      };
+      const template = await Template.create(toSave);
+
+      return res.status(200).json(template);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 
@@ -151,10 +175,21 @@ router.delete(
   "/templates/:id",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
+  async (req, res) => {
     const templateId = req.params.id;
     // Logic to delete the template with the given ID from the database
     // Send a success message as a response
+
+    try {
+      const template = await Template.findOneAndUpdate(
+        { _id: templateId },
+        { nullDate: new Date() }
+      );
+
+      return res.status(200).json({ message: "Template deleted" });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 

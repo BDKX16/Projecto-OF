@@ -12,8 +12,18 @@ import {
   TextField,
   IconButton,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
-import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
+import {
+  Add,
+  Edit,
+  Delete,
+  ExpandMore,
+  ExpandLess,
+  Label,
+  Visibility,
+} from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
@@ -24,10 +34,20 @@ import {
   editTemplate,
   deleteTemplate,
   selectTemplate,
+  getCarousels,
 } from "../../../services/private";
 import { createTemplateAdapter } from "../../../adapters/template";
+import { createCarouselAdapter } from "../../../adapters/carousels";
 import { formatDateToString } from "../../../utils/format-date-to-string";
+import { DatePicker } from "@mui/x-date-pickers";
 
+const initialFormData = {
+  name: "",
+  createdAt: new Date(),
+  validityFrom: "",
+  validityTo: "",
+  components: [],
+};
 const Templates = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
 
@@ -35,8 +55,9 @@ const Templates = () => {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
-  const [formData, setFormData] = useState({ name: "", age: "" });
-
+  const [formData, setFormData] = useState(initialFormData);
+  const [carousels, setCarousels] = useState([]);
+  const [selectedComponent, setSelectedComponent] = useState("");
   useEffect(() => {
     const fetchData = async () => {
       const result = await callEndpoint(getTemplates());
@@ -44,29 +65,37 @@ const Templates = () => {
       if (!result || Object.keys(result)?.length === 0) {
         return;
       } else {
-        if (result.data.length === 0) {
-          enqueueSnackbar("No hay datos", {
-            variant: "warning",
-          });
-        } else {
-          console.log(result.data);
-          //setData(result.data.map((item) => createTemplateAdapter(item)));
-        }
+        setData(result.data.map((item) => createTemplateAdapter(item)));
       }
     };
-
+    fetchCarousels();
     fetchData();
   }, []);
 
-  const handleAdd = () => {
-    setData([...data, { ...formData, id: Date.now() }]);
-    setFormData({ name: "", age: "" });
-    setIsAddOpen(false);
+  const handleAdd = async (e) => {
+    e.preventDefault();
+
+    const result = await callEndpoint(addTemplate(formData));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error", { variant: "error" });
+    } else {
+      enqueueSnackbar("Contenido agregado", { variant: "success" });
+      setData([...data, createTemplateAdapter(result.data)]);
+      setFormData(initialFormData);
+      setIsAddOpen(false);
+    }
   };
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
+    const result = await callEndpoint(editTemplate(formData));
+    if (result.status !== 200) {
+      enqueueSnackbar("Contenido agregado", { variant: "success" });
+      setData([...data, createTemplateAdapter(result.data)]);
+      setFormData(initialFormData);
+      setIsAddOpen(false);
+    }
     setData(data.map((item) => (item.id === currentEdit.id ? formData : item)));
-    setFormData({ name: "", age: "" });
+    setFormData(initialFormData);
     setIsEditOpen(false);
     setCurrentEdit(null);
   };
@@ -76,7 +105,37 @@ const Templates = () => {
   };
 
   const handleChange = (e) => {
+    console.log(e);
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const fetchCarousels = async () => {
+    const result = await callEndpoint(getCarousels());
+    if (!result || Object.keys(result)?.length === 0) {
+      return;
+    } else {
+      if (result.data.length !== 0) {
+        console.log("fetched carousels");
+        setCarousels(result.data.map((item) => createCarouselAdapter(item)));
+      }
+    }
+  };
+
+  const addComponentToTemplate = (e) => {
+    const component = carousels.find((item) => item.id === selectedComponent);
+    setFormData({
+      ...formData,
+      components: [...formData.components, component],
+    });
+  };
+
+  const handlePrevoew = async (id) => {
+    const result = await callEndpoint(getTemplate(id));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error loading preview", { variant: "error" });
+    } else {
+      console.log(result.data);
+    }
   };
 
   return (
@@ -140,7 +199,7 @@ const Templates = () => {
           component={Paper}
           p={2}
           mb={2}
-          style={{ display: "flex", flexDirection: "row" }}
+          style={{ display: "flex", flexDirection: "row", gap: 50 }}
         >
           <Box
             style={{
@@ -149,92 +208,85 @@ const Templates = () => {
           >
             <TextField
               label="Title"
-              name="title"
-              value={formData.title}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               fullWidth
               margin="normal"
             />
+            <div style={{ display: "flex", gap: 50, marginBottom: 40 }}>
+              <div>
+                <p style={{ color: "grey" }}>Fecha de validez desde</p>
+                <DatePicker
+                  format="dd/MM/yyyy"
+                  helperText="Fecha de validez desde"
+                  value={formData.validitFrom}
+                  onChange={(value) =>
+                    handleChange({
+                      target: { name: "validityFrom", value: value },
+                    })
+                  }
+                />
+              </div>
+              <div>
+                <p style={{ color: "grey" }}>Fecha de validez hasta</p>
+                <DatePicker
+                  helperText="Fecha de validez hasta"
+                  value={formData.validitTo}
+                  onChange={(value) =>
+                    handleChange({
+                      target: { name: "validityTo", value: value },
+                    })
+                  }
+                />
+              </div>
+            </div>
 
-            <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              multiline
-              rows={8}
-            />
-            <TextField
-              label="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="number"
-            />
-            <TextField
-              helperText="Url de la imagen de portada en jpeg o jpg"
-              name="coverUrl"
-              value={formData.coverUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              helperText="Url del video"
-              label="Video URL"
-              name="videoUrl"
-              value={formData.videoUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Button variant="contained" color="primary" onClick={handleAdd}>
-              Add
+            <Select
+              label="Componentes"
+              title="components"
+              name="components"
+              value={selectedComponent}
+              type="text"
+              disabled={carousels.length === 0}
+              onChange={(e) => setSelectedComponent(e.target.value)}
+              style={{ width: "300px", marginLeft: 40, marginRight: 40 }}
+            >
+              {carousels ? (
+                carousels.map((item) => (
+                  <MenuItem key={item.id} value={item.id}>
+                    {item.title}
+                  </MenuItem>
+                ))
+              ) : (
+                <MenuItem value="">No hay carousels</MenuItem>
+              )}
+            </Select>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={addComponentToTemplate}
+              style={{ marginRight: 40 }}
+            >
+              +
+            </Button>
+            <Button
+              style={{ width: "100%", marginTop: 30, height: 50 }}
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+            >
+              Create
             </Button>
           </Box>
           <Box
             style={{
               width: "50%",
-              justifyContent: "center",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
             }}
           >
-            {formData.coverUrl ? (
-              <img
-                src={formData.coverUrl}
-                alt="cover"
-                style={{ width: 300, height: 200, borderRadius: 5 }}
-              />
-            ) : (
-              <div
-                style={{
-                  backgroundColor: "lightgrey",
-                  borderRadius: 10,
-                  width: 200,
-                  height: 200,
-                }}
-              ></div>
-            )}
-            {formData.title ? (
-              <h3 style={{ margin: 2 }}>{formData.title}</h3>
-            ) : (
-              <div style={{ padding: 20 }}></div>
-            )}
-
-            {formData.description ? (
-              <p style={{ margin: 2, maxWidth: 300 }}>{formData.description}</p>
-            ) : (
-              <div style={{ padding: 20 }}></div>
-            )}
+            {JSON.stringify(formData.components.map((item) => item.title))}
           </Box>
         </Box>
-        {/* video cover preview */}
       </Collapse>
       {data.length === 0 ? (
         <p>No hay datos</p>
@@ -243,32 +295,23 @@ const Templates = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Precio</TableCell>
-                <TableCell>Fecha de subida</TableCell>
-                <TableCell>Portada</TableCell>
-                <TableCell>Video</TableCell>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Fecha de creacion</TableCell>
+                <TableCell>Valido desde</TableCell>
+                <TableCell>Valido hasta</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                    <TableCell>{formatDateToString(row.date)}</TableCell>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
                     <TableCell>
-                      {row.coverUrl
-                        ? row.coverUrl.substring(0, 20) + "..."
-                        : " - "}
+                      {formatDateToString(row.validityFrom)}
                     </TableCell>
-                    <TableCell>
-                      {row.videoUrl
-                        ? row.videoUrl.substring(0, 20) + "..."
-                        : " - "}
-                    </TableCell>
+                    <TableCell>{formatDateToString(row.validityTo)}</TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => {
@@ -281,6 +324,9 @@ const Templates = () => {
                       </IconButton>
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
+                      </IconButton>
+                      <IconButton onClick={() => handlePrevoew(row.id)}>
+                        <Visibility />
                       </IconButton>
                     </TableCell>
                   </TableRow>
@@ -295,48 +341,44 @@ const Templates = () => {
           <TextField
             label="Name"
             name="name"
-            value={formData.title}
+            value={formData.name}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
-
-          <TextField
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            multiline
-            rows={8}
-          />
-          <TextField
-            label="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            type="number"
-          />
-          <TextField
-            helperText="Url de la imagen de portada en jpeg o jpg"
-            name="coverUrl"
-            value={formData.coverUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            helperText="Url del video"
-            label="Video URL"
-            name="videoUrl"
-            value={formData.videoUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
+          <div
+            style={{
+              display: "flex",
+              gap: 50,
+              marginBottom: 40,
+            }}
+          >
+            <div>
+              <p style={{ color: "grey" }}>Fecha de validez desde</p>
+              <DatePicker
+                format="dd/MM/yyyy"
+                helperText="Fecha de validez desde"
+                value={formData.validitFrom}
+                onChange={(value) =>
+                  handleChange({
+                    target: { name: "validityFrom", value: value },
+                  })
+                }
+              />
+            </div>
+            <div>
+              <p style={{ color: "grey" }}>Fecha de validez hasta</p>
+              <DatePicker
+                helperText="Fecha de validez hasta"
+                value={formData.validitTo}
+                onChange={(value) =>
+                  handleChange({
+                    target: { name: "validityTo", value: value },
+                  })
+                }
+              />
+            </div>
+          </div>
           <Button variant="contained" color="primary" onClick={handleEdit}>
             Save
           </Button>

@@ -13,6 +13,9 @@ import useFetchAndLoad from "./hooks/useFetchAndLoad";
 import { getTheme } from "./services/public.js";
 import { createThemeAdapter } from "./adapters/theme.js";
 import { AuthProvider } from "./redux/AuthProvider";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+
 const App = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
   const [theme, setTheme] = useState(
@@ -83,24 +86,26 @@ const App = () => {
         >
           <Provider store={store}>
             <AuthProvider>
-              <ThemeProvider theme={theme}>
-                {loading ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      alignSelf: "center",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <p>Cargando contenido</p>
-                    <LoadingSpinner />
-                  </div>
-                ) : (
-                  <Layout />
-                )}
-              </ThemeProvider>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <ThemeProvider theme={theme}>
+                  {loading ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        alignSelf: "center",
+                        flexDirection: "column",
+                      }}
+                    >
+                      <p>Cargando contenido</p>
+                      <LoadingSpinner />
+                    </div>
+                  ) : (
+                    <Layout />
+                  )}
+                </ThemeProvider>
+              </LocalizationProvider>
             </AuthProvider>
           </Provider>
         </Suspense>

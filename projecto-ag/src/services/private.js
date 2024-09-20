@@ -432,13 +432,13 @@ export const getTemplate = (id) => {
     return;
   }
   return {
-    call: axios
-      .get(import.meta.env.VITE_BASE_URL + "/template/" + id, headers, {
+    call: axios.get(
+      import.meta.env.VITE_BASE_URL + "/template/" + id,
+      headers,
+      {
         signal: controller.signal,
-      })
-      .catch((error) => {
-        notifyError(error);
-      }),
+      }
+    ),
     controller,
   };
 };

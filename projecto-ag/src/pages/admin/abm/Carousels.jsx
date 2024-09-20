@@ -64,7 +64,6 @@ const ABMCarousel = () => {
         return;
       } else {
         setData(result.data.map((item) => createCarouselAdapter(item)));
-        console.log(result.data);
       }
     };
 
@@ -178,14 +177,16 @@ const ABMCarousel = () => {
             margin="normal"
             type="text"
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAdd}
-            disabled={loading}
-          >
-            Add
-          </Button>
+          {!isEditOpen && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+              disabled={loading}
+            >
+              Add
+            </Button>
+          )}
         </>
       );
     } else if (formData.type === "category") {
@@ -212,14 +213,16 @@ const ABMCarousel = () => {
             )}
           </Select>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAdd}
-            disabled={loading}
-          >
-            Add
-          </Button>
+          {!isEditOpen && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+              disabled={loading}
+            >
+              Add
+            </Button>
+          )}
         </>
       );
     } else if (formData.type === "banner") {
@@ -276,14 +279,16 @@ const ABMCarousel = () => {
             type="text"
           />
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAdd}
-            disabled={loading}
-          >
-            Add
-          </Button>
+          {!isEditOpen && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+              disabled={loading}
+            >
+              Add
+            </Button>
+          )}
         </>
       );
     } else if (formData.type === "button") {
@@ -316,14 +321,16 @@ const ABMCarousel = () => {
             margin="normal"
             type="text"
           />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleAdd}
-            disabled={loading}
-          >
-            Add
-          </Button>
+          {!isEditOpen && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleAdd}
+              disabled={loading}
+            >
+              Add
+            </Button>
+          )}
         </>
       );
     }
@@ -500,43 +507,33 @@ const ABMCarousel = () => {
 
       <Collapse in={isEditOpen}>
         <Box component={Paper} p={2} mt={2}>
-          <TextField
-            label="Nombre"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            type="text"
-          />
-          <div
+          <Box
             style={{
-              display: "flex",
-              justifyContent: "space-around",
-              alignContent: "center",
-              marginTop: 30,
+              width: "100%",
             }}
           >
-            <div style={{ width: "50%" }}>
-              <TextField
-                label="Color"
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-                fullWidth
-                margin="normal"
-              />
-              <p style={{ color: "grey" }}>
-                Formatos disponibles: HEX (#333), RGBA (rgba(255, 255, 255,
-                0.5))
-              </p>
-            </div>
-
-            <RgbaStringColorPicker
-              color={formData.valor}
-              onChange={handleColorChange}
-            />
-          </div>
+            <Select
+              label="Tipo"
+              title="Tipo"
+              name="type"
+              value={formData.type}
+              type="text"
+              disabled
+              onChange={(e) => {
+                setFormData(initialFormData);
+                handleChange(e);
+              }}
+              style={{ width: "300px" }}
+            >
+              <MenuItem value="static">Imagen Estatica</MenuItem>
+              <MenuItem value="category" disabled>
+                Categorias
+              </MenuItem>
+              <MenuItem value="banner">Banner</MenuItem>
+              <MenuItem value="button">Button</MenuItem>
+            </Select>
+            {formDataByType()}
+          </Box>
           <Button
             variant="contained"
             color="primary"

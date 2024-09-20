@@ -1,3 +1,8 @@
 export const createTemplateAdapter = (template) => ({
-  title: template.title,
+  id: template._id,
+  name: template.name,
+  createdAt: template.createdAt,
+  validityFrom: template.validityFrom,
+  validityTo: template.validityTo,
+  components: template.components.map((component) => ({ ...component })),
 });
