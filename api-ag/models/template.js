@@ -9,9 +9,13 @@ const componentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  componentId: {
+    type: String,
+    required: true,
+  },
   componentData: {
     type: Object,
-    required: true,
+    required: false,
   },
 });
 
@@ -20,13 +24,33 @@ const templateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
   components: {
     type: [componentSchema],
     required: true,
   },
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
+    required: true,
+  },
+  validityFrom: {
+    type: Date,
+    required: true,
+    default: null,
+  },
+  validityTo: {
+    type: Date,
+    required: false,
+    default: null,
+  },
+  nullDate: {
+    type: Date,
+    required: false,
+    default: null,
   },
 });
 
