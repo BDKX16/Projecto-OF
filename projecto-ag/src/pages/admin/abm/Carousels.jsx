@@ -73,7 +73,7 @@ const ABMCarousel = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-
+    console.log(formData);
     //handle submit form
     const result = await callEndpoint(addCarousel(formData));
     if (result.status !== 200) {
@@ -418,9 +418,7 @@ const ABMCarousel = () => {
               style={{ width: "300px" }}
             >
               <MenuItem value="static">Imagen Estatica</MenuItem>
-              <MenuItem value="category" disabled>
-                Categorias
-              </MenuItem>
+              <MenuItem value="category">Categorias</MenuItem>
               <MenuItem value="banner">Banner</MenuItem>
               <MenuItem value="button">Button</MenuItem>
             </Select>

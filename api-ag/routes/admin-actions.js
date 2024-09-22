@@ -430,12 +430,9 @@ router.post(
     } else if (carouselData.type === "banner") {
       //carouselData.link = null;
     } else if (carouselData.type === "category") {
+      carouselData.description = null;
+      carouselData.link = null;
       //get mongo category
-      const category = await Category.findOne({ _id: carouselData.category });
-      if (!category) {
-        return res.status(500).json({ message: "Category not found" });
-      }
-      carouselData.imagesUrl = category.imagesUrl;
     } else if (carouselData.type === "button") {
       carouselData.imagesUrl = null;
     } else {
@@ -444,7 +441,6 @@ router.post(
 
     try {
       const carousels = await Carousel.create(carouselData);
-      console.log(carouselsm);
       return res.status(200).json(carousels);
     } catch (error) {
       res.status(500).json({ message: "Internal server error" });

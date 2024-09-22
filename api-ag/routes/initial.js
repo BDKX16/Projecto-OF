@@ -12,6 +12,13 @@ const Content = require("../models/content.js");
 router.get("/webcontent", async (req, res) => {
   try {
     let template = await Template.findOne({});
+    //quiero que no retorne los campos nullDate, validityFrom, validityTo y userId
+    template = template.toObject();
+    delete template.nullDate;
+    delete template.validityFrom;
+    delete template.validityTo;
+    delete template.userId;
+    delete template._id;
 
     let componentIds = template.components.map(
       (component) => component.componentId

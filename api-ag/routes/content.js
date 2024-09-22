@@ -10,7 +10,7 @@ const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
 const Payment = require("../models/payment.js");
 // GET /api/content/:videoId
-router.get("/content/:videoId", checkAuth, async (req, res) => {
+router.get("/content/:videoId", async (req, res) => {
   const videoId = req.params.videoId;
 
   if (videoId === "undefined") {

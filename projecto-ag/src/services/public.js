@@ -15,14 +15,32 @@ const getAxiosHeaders = () => {
   };
 };
 
+export const getWebContent = () => {
+  const controller = loadAbort();
+  return {
+    call: axios
+      .get(import.meta.env.VITE_BASE_URL + "/webcontent", {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
 export const login = (username, password) => {
   const controller = loadAbort();
   return {
-    call: axios.post(
-      import.meta.env.VITE_BASE_URL + "/login",
-      { email: username, password },
-      { signal: controller.signal }
-    ),
+    call: axios
+      .post(
+        import.meta.env.VITE_BASE_URL + "/login",
+        { email: username, password },
+        { signal: controller.signal }
+      )
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -36,8 +54,8 @@ export const register = (name, username, password) => {
         { name: name, email: username, password: password },
         { signal: controller.signal }
       )
-      .catch((reason) => {
-        //console.log(reason);
+      .catch((error) => {
+        notifyError(error);
       }),
     controller,
   };
@@ -46,9 +64,13 @@ export const register = (name, username, password) => {
 export const getContent = () => {
   const controller = loadAbort();
   return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/content", {
-      signal: controller.signal,
-    }),
+    call: axios
+      .get(import.meta.env.VITE_BASE_URL + "/content", {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -56,9 +78,13 @@ export const getContent = () => {
 export const getVideo = (id) => {
   const controller = loadAbort();
   return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/content/" + id, {
-      signal: controller.signal,
-    }),
+    call: axios
+      .get(import.meta.env.VITE_BASE_URL + "/content/" + id, {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -66,14 +92,18 @@ export const getVideo = (id) => {
 export const getPendingPayments = () => {
   const controller = loadAbort();
   return {
-    call: axios.get(
-      import.meta.env.VITE_BASE_URL +
-        "/payments?id=" +
-        "66ce67d9a743bd281f1e804b",
-      {
-        signal: controller.signal,
-      }
-    ),
+    call: axios
+      .get(
+        import.meta.env.VITE_BASE_URL +
+          "/payments?id=" +
+          "66ce67d9a743bd281f1e804b",
+        {
+          signal: controller.signal,
+        }
+      )
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -81,9 +111,13 @@ export const getPendingPayments = () => {
 export const getTheme = () => {
   const controller = loadAbort();
   return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/theme", {
-      signal: controller.signal,
-    }),
+    call: axios
+      .get(import.meta.env.VITE_BASE_URL + "/theme", {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -91,9 +125,13 @@ export const getTheme = () => {
 export const getCarousel = () => {
   const controller = loadAbort();
   return {
-    call: axios.get(import.meta.env.VITE_BASE_URL + "/admin/carousel", {
-      signal: controller.signal,
-    }),
+    call: axios
+      .get(import.meta.env.VITE_BASE_URL + "/admin/carousel", {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -101,9 +139,13 @@ export const getCarousel = () => {
 export const editCarousel = (data) => {
   const controller = loadAbort();
   return {
-    call: axios.put(import.meta.env.VITE_BASE_URL + "/admin/carousel/", data, {
-      signal: controller.signal,
-    }),
+    call: axios
+      .put(import.meta.env.VITE_BASE_URL + "/admin/carousel/", data, {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -111,9 +153,13 @@ export const editCarousel = (data) => {
 export const addCarousel = (data) => {
   const controller = loadAbort();
   return {
-    call: axios.post(import.meta.env.VITE_BASE_URL + "/admin/carousel", data, {
-      signal: controller.signal,
-    }),
+    call: axios
+      .post(import.meta.env.VITE_BASE_URL + "/admin/carousel", data, {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
 };
@@ -121,12 +167,29 @@ export const addCarousel = (data) => {
 export const deleteCarousel = (id) => {
   const controller = loadAbort();
   return {
-    call: axios.delete(
-      import.meta.env.VITE_BASE_URL + "/admin/carousel/" + id,
-      {
+    call: axios
+      .delete(import.meta.env.VITE_BASE_URL + "/admin/carousel/" + id, {
         signal: controller.signal,
-      }
-    ),
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
     controller,
   };
+};
+
+/**********
+ * FUNCTIONS
+ ************/
+
+const notifyError = (error) => {
+  if (error.status === 401) {
+    enqueueSnackbar("No autorizado", {
+      variant: "error",
+    });
+  } else if (error.status !== 200) {
+    enqueueSnackbar(error.response.data.error.message, {
+      variant: "error",
+    });
+  }
 };
