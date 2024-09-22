@@ -7,6 +7,7 @@ import Lupa from "./utils/icons/Lupa";
 import { Route, Routes } from "react-router-dom";
 import ContentPage from "./pages/content/contentpage/ContentPage";
 import { useTheme } from "@mui/material";
+import BasesYCondiciones from "./pages/BasesYCondiciones";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
   const theme = useTheme();
@@ -89,6 +90,10 @@ function App() {
           <Route path={`/`} element={<Content />} />
           <Route path="/video" element={<ContentPage />} />
           <Route path={`/video/:id`} element={<ContentPage />} />
+          <Route
+            path={"/bases"}
+            element={<BasesYCondiciones></BasesYCondiciones>}
+          ></Route>
         </Routes>
       </div>
 
@@ -104,7 +109,7 @@ function App() {
         </div>
         <div className="terminos-condiciones">
           <h4>C 2024 - ALMEN GALARRETA</h4>
-          <p>Términos y condiciones</p>
+          <a href="/bases">Términos y condiciones</a>
         </div>
       </footer>
     </>
