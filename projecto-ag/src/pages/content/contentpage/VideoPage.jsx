@@ -10,10 +10,10 @@ const VideoPage = ({ video }) => {
           width="560"
           height="315"
           src={
+            data.videoUrl ||
             "https://s3.almendragala.com/api/v1/buckets/almen/objects/download?preview=true&prefix=video-test.mp4&version_id=null"
           }
           title="Video Player"
-          frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         ></iframe>

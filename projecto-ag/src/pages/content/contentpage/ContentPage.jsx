@@ -59,7 +59,7 @@ const ContentPage = () => {
   } else if (data.videoUrl == null) {
     return <Checkout />;
   } else {
-    return <VideoPage />;
+    return <VideoPage video={data} />;
   }
 };
 
