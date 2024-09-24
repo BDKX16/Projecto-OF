@@ -14,6 +14,7 @@ import {
   Box,
   Select,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import {
   Add,
@@ -23,6 +24,7 @@ import {
   ExpandLess,
   Label,
   Visibility,
+  Scale,
 } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
@@ -40,6 +42,8 @@ import { createTemplateAdapter } from "../../../adapters/template";
 import { createCarouselAdapter } from "../../../adapters/carousels";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 import { DatePicker } from "@mui/x-date-pickers";
+import Carousel from "../../content/components/Carousel";
+import Classification from "../../content/components/Classification";
 
 const initialFormData = {
   name: "",
@@ -135,6 +139,55 @@ const Templates = () => {
       enqueueSnackbar("Error loading preview", { variant: "error" });
     } else {
       console.log(result.data);
+    }
+  };
+
+  const printPreview = () => {
+    const component = carousels.find((item) => item.id === selectedComponent);
+    console.log(component);
+    if (component.type === "banner") {
+      return (
+        <>
+          <h3>Bannernnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</h3>
+          <Carousel
+            key={component.id}
+            demo={true}
+            data={{
+              componentData: component,
+              componentTitle: component.title,
+            }}
+            style={{ transform: "scale(0.2)" }}
+          />
+        </>
+      );
+    } else if (component.type === "button") {
+      return (
+        <>
+          <h3>Boton</h3>
+          <Button variant="contained" style={{ marginBottom: 9, marginop: 17 }}>
+            {component.title}
+          </Button>
+          <Typography color={"white"}>{component.description}</Typography>
+        </>
+      );
+      //return <Carousel key={component._id} data={component} />;
+    } else if (component.type === "category") {
+      return (
+        <>
+          <h3>Categoria</h3>
+          <Classification
+            key={component.id}
+            demo={true}
+            data={{
+              componentData: component,
+              componentTitle: component.title,
+            }}
+            style={{ transform: "scale(0.1)" }}
+          />
+        </>
+      );
+    } else {
+      return null;
     }
   };
 
@@ -255,7 +308,7 @@ const Templates = () => {
               {carousels ? (
                 carousels.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
-                    {item.title}
+                    {item.title + " - " + item.type}
                   </MenuItem>
                 ))
               ) : (
@@ -284,10 +337,59 @@ const Templates = () => {
               width: "50%",
             }}
           >
-            {JSON.stringify(formData.components.map((item) => item.title))}
+            {selectedComponent && printPreview()}
           </Box>
         </Box>
       </Collapse>
+      <Box mt={2}>
+        {formData.components &&
+          formData.components.map((component) => {
+            if (component.type === "banner") {
+              return (
+                <Carousel
+                  key={component.id}
+                  demo={true}
+                  data={{
+                    componentData: component,
+                    componentName: component.title,
+                  }}
+                  style={{ transform: "scale(0.2)" }}
+                />
+              );
+            } else if (component.type === "button") {
+              return (
+                <>
+                  <Button
+                    key={component.id}
+                    variant="contained"
+                    style={{ marginBottom: 9, marginop: 17 }}
+                  >
+                    {component.title}
+                  </Button>
+                  <Typography color={"white"}>
+                    {component.description}
+                  </Typography>
+                </>
+              );
+              //return <Carousel key={component._id} data={component} />;
+            } else if (component.type === "category") {
+              console.log("category");
+              return (
+                <Classification
+                  key={component.id}
+                  demo={true}
+                  data={{
+                    componentData: component,
+                    componentName: component.title,
+                  }}
+                />
+              );
+            } else {
+              return null;
+            }
+            return null;
+          })}
+      </Box>
       {data.length === 0 ? (
         <p>No hay datos</p>
       ) : (

@@ -37,11 +37,11 @@ const settings = {
   ],
 };
 
-const Classification = ({ data }) => {
+const Classification = ({ data, demo }) => {
   const [component, setComponent] = useState(data.componentData);
   const [imagesUrl, setImagesUrl] = useState([]);
   useEffect(() => {
-    if (component.imagesUrl.length < 5) {
+    if (component.imagesUrl.length < 5 && component.imagesUrl.length > 1) {
       let newImagesUrl = [...component.imagesUrl];
       while (newImagesUrl.length < 5) {
         newImagesUrl = newImagesUrl.concat(component.imagesUrl);
@@ -51,8 +51,39 @@ const Classification = ({ data }) => {
 
     //console.log(component);
   }, [component]);
-  if (component.imagesUrl.length < 2) {
-    return <></>;
+  if (component.imagesUrl.length < 3 || demo === true) {
+    return (
+      <>
+        {demo === true && (
+          <div className="carousel-container-classification">
+            <h2 className="classification-title">{data.componentName}</h2>
+            <Slider {...settings}>
+              {[...Array(5)].map((img, index) => (
+                <div key={index}>
+                  <div className="carousel-image-container">
+                    <img
+                      src={"https://via.placeholder.com/150"}
+                      alt={`Slide ${index + 1}`}
+                      className="carousel-image"
+                    />
+                    <h3 className="carousel-image-title">Title {index + 1}</h3>
+
+                    <Button
+                      type="submit"
+                      color="primary"
+                      variant="contained"
+                      className="carousel-image-button"
+                    >
+                      Ver mas
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </Slider>
+          </div>
+        )}
+      </>
+    );
   } else {
     return (
       <div className="carousel-container-classification">

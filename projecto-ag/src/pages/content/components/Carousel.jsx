@@ -16,19 +16,37 @@ const settings = {
   autoplaySpeed: 3000,
 };
 
-const Carousel = ({ data }) => {
+const Carousel = ({ data, demo }) => {
   const [component, setComponent] = useState(data.componentData);
 
-  if (component.imagesUrl.length < 3) {
-    return <></>;
+  if (component.imagesUrl.length < 3 || demo === true) {
+    return (
+      <>
+        {demo && (
+          <div className="carousel-container">
+            <Slider {...settings} className="slider">
+              {[...Array(3)].map((img, index) => (
+                <div key={img}>
+                  <img
+                    src={"https://via.placeholder.com/800x600"}
+                    alt={`Slide ${index + 1}`}
+                    className="carousel-image"
+                  />
+                </div>
+              ))}
+            </Slider>
+          </div>
+        )}
+      </>
+    );
   } else {
     return (
       <div className="carousel-container">
         <Slider {...settings} className="slider">
           {component.imagesUrl.map((img, index) => (
-            <div key={img._id}>
+            <div key={img}>
               <img
-                src={img.coverUrl}
+                src={img}
                 alt={`Slide ${index + 1}`}
                 className="carousel-image"
               />

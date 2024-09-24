@@ -38,7 +38,7 @@ const Content = () => {
             variant: "warning",
           });
         } else {
-          //console.log(result.data.components);
+          console.log(result.data.components);
           setData(result.data.components);
         }
       }
@@ -59,9 +59,7 @@ const Content = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Sos mayor de 18 años?
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+
           <Button onClick={() => setPlusEighteen(false)}>
             Soy mayor de 18
           </Button>
@@ -80,7 +78,21 @@ const Content = () => {
             data.map((component) => {
               if (component.componentType === "banner") {
                 return <Carousel key={component._id} data={component} />;
-              } else if (component.componentType === "Carousel") {
+              } else if (component.componentType === "button") {
+                return (
+                  <>
+                    <Button
+                      key={component._id}
+                      variant="contained"
+                      style={{ marginBottom: 9, marginop: 17 }}
+                    >
+                      {component.componentData.title}
+                    </Button>
+                    <Typography color={"white"}>
+                      {component.componentData.description}
+                    </Typography>
+                  </>
+                );
                 //return <Carousel key={component._id} data={component} />;
               } else if (component.componentType === "category") {
                 return <Classification key={component._id} data={component} />;

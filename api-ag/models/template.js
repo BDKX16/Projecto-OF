@@ -39,7 +39,7 @@ const templateSchema = new mongoose.Schema({
   },
   validityFrom: {
     type: Date,
-    required: true,
+    required: false,
     default: null,
   },
   validityTo: {

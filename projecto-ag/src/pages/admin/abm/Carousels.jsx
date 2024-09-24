@@ -40,7 +40,7 @@ import { RgbaStringColorPicker } from "react-colorful";
 const initialFormData = {
   title: "",
   description: "",
-  imagesURL: [],
+  imagesUrl: [],
   link: "",
   type: "",
   createdAt: "",
@@ -119,7 +119,7 @@ const ABMCarousel = () => {
   };
 
   const handleImagesUrlChange = (e) => {
-    setFormData({ ...formData, imagesURL: e });
+    setFormData({ ...formData, imagesUrl: e });
   };
 
   const handleColorChange = (e) => {
@@ -161,8 +161,8 @@ const ABMCarousel = () => {
           />
           <TextField
             label="Imagen URL"
-            name="imagesURL"
-            value={formData.imagesURL}
+            name="imagesUrl"
+            value={formData.imagesUrl}
             onChange={(e) => handleImagesUrlChange([e.target.value])}
             fullWidth
             margin="normal"
@@ -240,9 +240,9 @@ const ABMCarousel = () => {
 
           <Autocomplete
             multiple
-            name="imagesURL"
-            id="imagesURL"
-            options={formData.imagesURL}
+            name="imagesUrl"
+            id="imagesUrl"
+            options={formData.imagesUrl}
             freeSolo
             onChange={(e, value) => {
               handleImagesUrlChange(value);
@@ -477,7 +477,9 @@ const ABMCarousel = () => {
                   <TableRow key={row.id}>
                     <TableCell>{row.title}</TableCell>
                     <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.imagesURL}</TableCell>
+                    <TableCell>
+                      {row.imagesUrl ? row.imagesUrl.length : 0}
+                    </TableCell>
                     <TableCell>{row.link}</TableCell>
                     <TableCell>{row.type}</TableCell>
                     <TableCell>{formatDateToString(row.createdAt)} </TableCell>
