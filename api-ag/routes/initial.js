@@ -20,7 +20,8 @@ router.get("/webcontent", async (req, res) => {
     if (!template) {
       return res.status(500).json({ message: "Template not found" });
     }
-    //quiero que no retorne los campos nullDate, validityFrom, validityTo y userId.
+    //quiero que no retorne los campos nullDate, validityFrom, validityTo y userId
+
     template = template.toObject();
     delete template.nullDate;
     delete template.validityFrom;
