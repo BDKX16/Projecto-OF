@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDateToString } from "../../../utils/format-date-to-string";
 
 const VideoPage = ({ video }) => {
   return (
@@ -18,7 +19,10 @@ const VideoPage = ({ video }) => {
           allowFullScreen
         ></iframe>
       </div>
-      <div className="video-info"></div>
+      <div className="video-info">
+        <h2>{video.title + " - " + formatDateToString(video.date)}</h2>
+        <p>{video.description}</p>
+      </div>
       <div className="video-comments"></div>
     </div>
   );
