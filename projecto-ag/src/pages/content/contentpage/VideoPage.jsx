@@ -9,11 +9,11 @@ const VideoPage = ({ video }) => {
       {/* Aquí puedes agregar el reproductor de video y otros elementos relacionados */}
       <div className="video-container">
         <iframe
-          width="989px"
+          width="100%"
           height="100%"
           src={
             video.videoUrl ||
-            "https://s3.almendragala.com/api/v1/buckets/almen/objects/download?preview=true&prefix=video-test.mp4&version_id=null"
+            "https://via.placeholder.com/989x556?text=Video+not+found"
           }
           title="Video Player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
