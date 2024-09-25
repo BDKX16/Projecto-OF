@@ -30,16 +30,21 @@ nav ul {
 }
 
 nav li {
-  height: 11vh;
+  height: 12vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
 }
 nav a {
-  height: 100%;
-  padding: 0 10px;
+  height: 50px;
+  padding: 0px 15px;
   margin: 0 10px;
+  border-radius: 30px;
   text-decoration: none;
   display: flex;
   align-items: center;
   color: #e6e6e6;
+  white-space: nowrap;
 }
 nav ul li a {
   font-family: poppins;
@@ -50,8 +55,12 @@ nav ul li a {
 
 nav a:hover {
   background-color: rgb(110, 14, 14);
-  color: #ffffff;
-  border-radius: 50px;
+  color: rgb(255, 255, 255);
+}
+
+.principal .logo:hover {
+  cursor: pointer;
+  background-color: transparent;
 }
 nav li:first-child {
   margin-right: auto;
@@ -60,6 +69,22 @@ nav li:first-child {
   display: flex;
   margin-left: 50px;
 }
+
+@media (max-width: 800px) {
+  .principal {
+    margin-left: 10px;
+  }
+}
+@media (max-width: 400px) {
+  .principal {
+    margin-left: 0px;
+    width: 40dvw;
+  }
+  .principal .logo {
+    transform: scale(0.7);
+  }
+}
+
 .sidebar {
   display: none;
   position: fixed;
@@ -181,16 +206,14 @@ footer {
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
   will-change: filter;
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #6b6b6baa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #7c7c7caa);
 }
 
 @keyframes logo-spin {
@@ -214,6 +237,13 @@ footer {
 
 .read-the-docs {
   color: #888;
+}
+
+.logos-redes {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  transform: scale(2);
 }
 
 @media screen and (min-width: 700px) {

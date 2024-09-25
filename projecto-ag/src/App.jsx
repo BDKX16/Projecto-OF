@@ -6,8 +6,9 @@ import Lupa from "./utils/icons/Lupa";
 
 import { Route, Routes } from "react-router-dom";
 import ContentPage from "./pages/content/contentpage/ContentPage";
-import { Box, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import BasesYCondiciones from "./pages/BasesYCondiciones";
+import { Facebook, Instagram, Telegram, Twitter } from "@mui/icons-material";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
   const theme = useTheme();
@@ -52,7 +53,12 @@ function App() {
 
         <ul className="topbar">
           <li className="principal">
-            <img src="https://static.vecteezy.com/system/resources/thumbnails/012/986/755/small/abstract-circle-logo-icon-free-png.png"></img>
+            <a href="/" className="logo">
+              <img
+                height="128"
+                src="https://static.vecteezy.com/system/resources/thumbnails/012/986/755/small/abstract-circle-logo-icon-free-png.png"
+              ></img>
+            </a>
           </li>
           <li className="hideOnMobile">
             <a href="#">Favoritos</a>
@@ -103,16 +109,34 @@ function App() {
       <footer style={{ backgroundColor: theme.palette.background.footer }}>
         <div className="redes-sociales">
           <div className="red-principalmn">
-            <h1> Canal Telegram </h1>
+            <Typography
+              variant="h3"
+              component="h3"
+              style={{ color: theme.palette.text.primary }}
+            >
+              {" "}
+              Canal Telegram{" "}
+            </Typography>
           </div>
           <div className="redes-varias">
-            <h4>Seguime en redes sociales:</h4>
-            <div className="logos-redes"></div>
+            <h3 style={{ color: theme.palette.text.primary }}>
+              Seguime en redes sociales:
+            </h3>
+            <div className="logos-redes">
+              <Instagram style={{ color: theme.palette.text.primary }} />
+              <Facebook style={{ color: theme.palette.text.primary }} />
+              <Twitter style={{ color: theme.palette.text.primary }} />
+              <Telegram style={{ color: theme.palette.text.primary }} />
+            </div>
           </div>
         </div>
         <div className="terminos-condiciones">
-          <h4>C 2024 - ALMEN GALARRETA</h4>
-          <a href="/bases">Términos y condiciones</a>
+          <h4 style={{ color: theme.palette.text.primary }}>
+            C 2024 - ALMEN GALARRETA
+          </h4>
+          <a style={{ color: theme.palette.text.primary }} href="/bases">
+            Términos y condiciones
+          </a>
         </div>
       </footer>
     </>
