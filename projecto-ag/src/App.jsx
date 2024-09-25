@@ -6,7 +6,7 @@ import Lupa from "./utils/icons/Lupa";
 
 import { Route, Routes } from "react-router-dom";
 import ContentPage from "./pages/content/contentpage/ContentPage";
-import { useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 import BasesYCondiciones from "./pages/BasesYCondiciones";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
@@ -85,7 +85,10 @@ function App() {
         </ul>
       </nav>
 
-      <div className="container">
+      <div
+        className="container"
+        style={{ backgroundColor: theme.palette.background.default }}
+      >
         <Routes>
           <Route path={`/`} element={<Content />} />
           <Route path="/video" element={<ContentPage />} />

@@ -44,6 +44,7 @@ import { formatDateToString } from "../../../utils/format-date-to-string";
 import { DatePicker } from "@mui/x-date-pickers";
 import Carousel from "../../content/components/Carousel";
 import Classification from "../../content/components/Classification";
+const black = { color: "#272727" };
 
 const initialFormData = {
   name: "",
@@ -148,7 +149,7 @@ const Templates = () => {
     if (component.type === "banner") {
       return (
         <>
-          <h3>Bannernnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</h3>
+          <h3>Banner</h3>
           <Carousel
             key={component.id}
             demo={true}
@@ -397,24 +398,28 @@ const Templates = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Fecha de creacion</TableCell>
-                <TableCell>Valido desde</TableCell>
-                <TableCell>Valido hasta</TableCell>
-                <TableCell>Acciones</TableCell>
+                <TableCell style={black}>Nombre</TableCell>
+                <TableCell style={black}>Fecha de creacion</TableCell>
+                <TableCell style={black}>Valido desde</TableCell>
+                <TableCell style={black}>Valido hasta</TableCell>
+                <TableCell style={black}>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
-                    <TableCell>
+                    <TableCell style={black}>{row.name}</TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.createdAt)}
+                    </TableCell>
+                    <TableCell style={black}>
                       {formatDateToString(row.validityFrom)}
                     </TableCell>
-                    <TableCell>{formatDateToString(row.validityTo)}</TableCell>
-                    <TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.validityTo)}
+                    </TableCell>
+                    <TableCell style={black}>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);

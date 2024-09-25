@@ -312,28 +312,38 @@ const ABMTable = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Precio</TableCell>
-                <TableCell>Fecha de subida</TableCell>
-                <TableCell>Portada</TableCell>
-                <TableCell>Video</TableCell>
+                <TableCell style={{ color: "#272727" }}>Title</TableCell>
+                <TableCell style={{ color: "#272727" }}>Description</TableCell>
+                <TableCell style={{ color: "#272727" }}>Precio</TableCell>
+                <TableCell style={{ color: "#272727" }}>
+                  Fecha de subida
+                </TableCell>
+                <TableCell style={{ color: "#272727" }}>Portada</TableCell>
+                <TableCell style={{ color: "#272727" }}>Video</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.date}>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                    <TableCell>{formatDateToString(row.date)}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.title}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.description}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.price}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {formatDateToString(row.date)}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
                       {row.coverUrl
                         ? row.coverUrl.substring(0, 20) + "..."
                         : " - "}
                     </TableCell>
-                    <TableCell>
+                    <TableCell style={{ color: "#272727" }}>
                       {row.videoUrl
                         ? row.videoUrl.substring(0, 20) + "..."
                         : " - "}

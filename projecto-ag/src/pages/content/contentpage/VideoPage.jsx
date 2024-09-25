@@ -35,6 +35,25 @@ const VideoPage = ({ video }) => {
         <Typography variant="body1" fontWeight={500} color="text.secondary">
           {video.description}
         </Typography>
+        {video.categorys && (
+          <>
+            <Typography variant="h6" mr={2} color="text.primary">
+              Categorías:
+            </Typography>{" "}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              {video.categorys.map((category) => (
+                <Button
+                  key={category}
+                  variant="contained"
+                  color="secondary"
+                  style={{ marginRight: 5, marginTop: 5, marginLeft: 5 }}
+                >
+                  {category}
+                </Button>
+              ))}{" "}
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

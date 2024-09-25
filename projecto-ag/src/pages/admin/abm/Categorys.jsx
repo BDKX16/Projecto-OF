@@ -245,17 +245,19 @@ const ABMCategorys = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Color</TableCell>
-                <TableCell>Acciones</TableCell>
+                <TableCell style={{ color: "#272727" }}>Nombre</TableCell>
+                <TableCell style={{ color: "#272727" }}>Color</TableCell>
+                <TableCell style={{ color: "#272727" }}>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.name}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
                       <IconButton
                         style={{
                           backgroundColor: row.color || "grey",

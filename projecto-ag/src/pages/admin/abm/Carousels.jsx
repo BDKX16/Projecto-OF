@@ -37,6 +37,8 @@ import { formatDateToString } from "../../../utils/format-date-to-string";
 import LoadingSpinner from "../../content/components/LoadingSpinner";
 
 import { RgbaStringColorPicker } from "react-colorful";
+const black = { color: "#272727" };
+
 const initialFormData = {
   title: "",
   description: "",
@@ -437,12 +439,12 @@ const ABMCarousel = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Images</TableCell>
-                  <TableCell>Link</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Fecha de creación</TableCell>
+                  <TableCell style={black}>Title</TableCell>
+                  <TableCell style={black}>Description</TableCell>
+                  <TableCell style={black}>Images</TableCell>
+                  <TableCell style={black}>Link</TableCell>
+                  <TableCell style={black}>Type</TableCell>
+                  <TableCell style={black}>Fecha de creación</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -463,27 +465,29 @@ const ABMCarousel = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Images</TableCell>
-                <TableCell>Link</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Fecha de creación</TableCell>
+                <TableCell style={black}>Title</TableCell>
+                <TableCell style={black}>Description</TableCell>
+                <TableCell style={black}>Images</TableCell>
+                <TableCell style={black}>Link</TableCell>
+                <TableCell style={black}>Type</TableCell>
+                <TableCell style={black}>Fecha de creación</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>
+                    <TableCell style={black}>{row.title}</TableCell>
+                    <TableCell style={black}>{row.description}</TableCell>
+                    <TableCell style={black}>
                       {row.imagesUrl ? row.imagesUrl.length : 0}
                     </TableCell>
-                    <TableCell>{row.link}</TableCell>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{formatDateToString(row.createdAt)} </TableCell>
-                    <TableCell>
+                    <TableCell style={black}>{row.link}</TableCell>
+                    <TableCell style={black}>{row.type}</TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.createdAt)}{" "}
+                    </TableCell>
+                    <TableCell style={black}>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);

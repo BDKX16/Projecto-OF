@@ -11,15 +11,17 @@ import LoadingSpinner from "./components/LoadingSpinner";
 
 const style = {
   position: "absolute",
-  borderRadius: 3,
+  borderRadius: 0,
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.footer",
-  border: "2px solid #000",
+  bgcolor: "background.default",
   boxShadow: 24,
   p: 4,
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
 };
 const Content = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
@@ -53,21 +55,37 @@ const Content = () => {
         open={plusEighteen}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
-        style={{ backgroundColor: "black" }}
+        style={{
+          backdropFilter: "blur(8px)",
+          backgroundColor: "rgba(37, 37, 37, 0.5)",
+        }}
       >
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            variant="h5"
+            fontWeight={600}
+            component="h2"
+            color="text.primary"
+            mb={5}
+          >
             Sos mayor de 18 años?
           </Typography>
-
-          <Button onClick={() => setPlusEighteen(false)}>
-            Soy mayor de 18
-          </Button>
-          <Button
-            onClick={() => (window.location.href = "https://www.google.com")}
-          >
-            Cerrar
-          </Button>
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginRight: 10, padding: 13 }}
+              onClick={() => setPlusEighteen(false)}
+            >
+              Soy mayor de 18
+            </Button>
+            <Button
+              variant="contained"
+              onClick={() => (window.location.href = "https://www.google.com")}
+            >
+              Cerrar
+            </Button>
+          </div>
         </Box>
       </Modal>
       {loading ? (

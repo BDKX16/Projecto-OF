@@ -70,7 +70,7 @@ const Classification = ({ data, demo }) => {
 
                     <Button
                       type="submit"
-                      color="primary"
+                      color="secondary"
                       variant="contained"
                       className="carousel-image-button"
                     >
@@ -103,7 +103,7 @@ const Classification = ({ data, demo }) => {
 
                 <Button
                   type="submit"
-                  color="primary"
+                  color="secondary"
                   variant="contained"
                   className="carousel-image-button"
                   href={"video?id=" + img._id}
