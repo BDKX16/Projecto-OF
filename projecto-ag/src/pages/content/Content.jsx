@@ -40,7 +40,6 @@ const Content = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data.components);
           setData(result.data.components);
         }
       }

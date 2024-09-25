@@ -73,7 +73,6 @@ const ABMCategorys = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
-      console.log(result.data);
       setData([...data, result.data]);
       setFormData(initialFormData);
     }
@@ -103,7 +102,6 @@ const ABMCategorys = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };

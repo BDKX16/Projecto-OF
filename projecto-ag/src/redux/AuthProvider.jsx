@@ -22,12 +22,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
       return false;
     }
-    console.log(
-      "authoriced - " +
-        JSON.parse(userData).name +
-        " - role: " +
-        JSON.parse(userData).role
-    );
+    //console.log(  "authoriced - " +  JSON.parse(userData).name +  " - role: " +   JSON.parse(userData).role );
     dispatch(createUser(JSON.parse(userData)));
     setAuth({ token: token, userData: JSON.parse(userData) });
     setLoading(false);

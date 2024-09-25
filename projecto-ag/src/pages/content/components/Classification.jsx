@@ -48,8 +48,6 @@ const Classification = ({ data, demo }) => {
       }
       setImagesUrl(newImagesUrl);
     }
-
-    //console.log(component);
   }, [component]);
   if (component.imagesUrl.length < 3 || demo === true) {
     return (

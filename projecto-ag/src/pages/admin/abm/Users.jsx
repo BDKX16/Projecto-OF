@@ -84,7 +84,6 @@ const ABMUsuarios = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log(formData);
     setData([...data, { ...formData, id: Math.random() * 10000 }]);
 
     //handle submit form
@@ -93,7 +92,6 @@ const ABMUsuarios = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
-      console.log(result.data);
       setData([...data, result.data]);
       setFormData(initialFormData);
     }
@@ -101,7 +99,6 @@ const ABMUsuarios = () => {
   };
 
   const handleEdit = async () => {
-    console.log(formData);
     const result = await callEndpoint(editUser(formData));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -122,7 +119,6 @@ const ABMUsuarios = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };
@@ -133,13 +129,11 @@ const ABMUsuarios = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       //show modal
     }
   };
 
   const changeState = async (id, status) => {
-    console.log(id);
     const result = await callEndpoint(contentState(id, !status));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -147,15 +141,6 @@ const ABMUsuarios = () => {
       enqueueSnackbar(
         status == true ? "Contenido desabilitado" : "Contenido visible",
         { variant: "success" }
-      );
-
-      console.log(
-        data.map((item) => {
-          if (item.id === id) {
-            item.status = !item.status;
-          }
-          return item;
-        })
       );
     }
   };

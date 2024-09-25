@@ -120,7 +120,6 @@ const Templates = () => {
       return;
     } else {
       if (result.data.length !== 0) {
-        console.log("fetched carousels");
         setCarousels(result.data.map((item) => createCarouselAdapter(item)));
       }
     }
@@ -145,7 +144,6 @@ const Templates = () => {
 
   const printPreview = () => {
     const component = carousels.find((item) => item.id === selectedComponent);
-    console.log(component);
     if (component.type === "banner") {
       return (
         <>
@@ -374,7 +372,6 @@ const Templates = () => {
               );
               //return <Carousel key={component._id} data={component} />;
             } else if (component.type === "category") {
-              console.log("category");
               return (
                 <Classification
                   key={component.id}

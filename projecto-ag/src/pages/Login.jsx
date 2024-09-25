@@ -64,7 +64,6 @@ export default function Login() {
       enqueueSnackbar("Login success", {
         variant: "success",
       });
-      console.log(result);
       setUserData(createUserAdapter(result));
     }
   };
@@ -72,11 +71,6 @@ export default function Login() {
   const handleSubmitRegister = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      pass: data.get("password"),
-      repass: data.get("repeat-password"),
-    });
 
     if (data.get("repeat-password") !== data.get("password")) {
       //notistack las passwords no coinciden

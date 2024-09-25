@@ -42,7 +42,6 @@ const Personalization = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data);
           setData(result.data);
         }
       }
@@ -66,7 +65,6 @@ const Personalization = () => {
   };
 
   const handleEdit = async () => {
-    console.log(currentEdit._id);
     var toSend = {
       clave: formData.clave,
       valor: formData.valor,

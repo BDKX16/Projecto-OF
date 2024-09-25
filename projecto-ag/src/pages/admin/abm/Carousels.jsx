@@ -75,7 +75,6 @@ const ABMCarousel = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log(formData);
     //handle submit form
     const result = await callEndpoint(addCarousel(formData));
     if (result.status !== 200) {
@@ -111,7 +110,6 @@ const ABMCarousel = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };

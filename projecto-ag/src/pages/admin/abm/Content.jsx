@@ -69,7 +69,6 @@ const ABMTable = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log(formData);
     setData([...data, { ...formData, id: Math.random() * 10000 }]);
 
     //handle submit form
@@ -78,7 +77,6 @@ const ABMTable = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
-      console.log(result.data);
       setData([...data, result.data]);
       setFormData(initialFormData);
     }
@@ -108,13 +106,11 @@ const ABMTable = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };
 
   const changeState = async (id, status) => {
-    console.log(id);
     const result = await callEndpoint(contentState(id, !status));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -123,16 +119,11 @@ const ABMTable = () => {
         status == true ? "Contenido desabilitado" : "Contenido visible",
         { variant: "success" }
       );
-
-      console.log(
-        data.map((item) => {
-          if (item.id === id) {
-            item.status = !item.status;
-          }
-          return item;
-        })
+      setData(
+        data.map((item) =>
+          item.id === id ? { ...item, status: !item.status } : item
+        )
       );
-    }
   };
 
   const handleChange = (e) => {
