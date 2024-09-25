@@ -14,6 +14,8 @@ import {
   Box,
   Select,
   MenuItem,
+  Typography,
+  Switch,
 } from "@mui/material";
 import {
   Add,
@@ -23,6 +25,7 @@ import {
   ExpandLess,
   Label,
   Visibility,
+  Scale,
 } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
@@ -40,6 +43,9 @@ import { createTemplateAdapter } from "../../../adapters/template";
 import { createCarouselAdapter } from "../../../adapters/carousels";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 import { DatePicker } from "@mui/x-date-pickers";
+import Carousel from "../../content/components/Carousel";
+import Classification from "../../content/components/Classification";
+const black = { color: "#272727" };
 
 const initialFormData = {
   name: "",
@@ -105,7 +111,6 @@ const Templates = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -115,7 +120,6 @@ const Templates = () => {
       return;
     } else {
       if (result.data.length !== 0) {
-        console.log("fetched carousels");
         setCarousels(result.data.map((item) => createCarouselAdapter(item)));
       }
     }
@@ -129,12 +133,73 @@ const Templates = () => {
     });
   };
 
-  const handlePrevoew = async (id) => {
+  const handlePreview = async (id) => {
     const result = await callEndpoint(getTemplate(id));
     if (result.status !== 200) {
       enqueueSnackbar("Error loading preview", { variant: "error" });
     } else {
       console.log(result.data);
+    }
+  };
+
+  const handleChangeState = async (id, status) => {
+    const result = await callEndpoint(selectTemplate(id, !status));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error changing state", { variant: "error" });
+    } else {
+      setData(
+        data.map((item) =>
+          item.id === id ? { ...item, active: !status } : item
+        )
+      );
+    }
+  };
+
+  const printPreview = () => {
+    const component = carousels.find((item) => item.id === selectedComponent);
+    if (component.type === "banner") {
+      return (
+        <>
+          <h3>Banner</h3>
+          <Carousel
+            key={component.id}
+            demo={true}
+            data={{
+              componentData: component,
+              componentTitle: component.title,
+            }}
+            style={{ transform: "scale(0.2)" }}
+          />
+        </>
+      );
+    } else if (component.type === "button") {
+      return (
+        <>
+          <h3>Boton</h3>
+          <Button variant="contained" style={{ marginBottom: 9, marginop: 17 }}>
+            {component.title}
+          </Button>
+          <Typography color={"white"}>{component.description}</Typography>
+        </>
+      );
+      //return <Carousel key={component._id} data={component} />;
+    } else if (component.type === "category") {
+      return (
+        <>
+          <h3>Categoria</h3>
+          <Classification
+            key={component.id}
+            demo={true}
+            data={{
+              componentData: component,
+              componentTitle: component.title,
+            }}
+            style={{ transform: "scale(0.1)" }}
+          />
+        </>
+      );
+    } else {
+      return null;
     }
   };
 
@@ -255,7 +320,7 @@ const Templates = () => {
               {carousels ? (
                 carousels.map((item) => (
                   <MenuItem key={item.id} value={item.id}>
-                    {item.title}
+                    {item.title + " - " + item.type}
                   </MenuItem>
                 ))
               ) : (
@@ -284,10 +349,58 @@ const Templates = () => {
               width: "50%",
             }}
           >
-            {JSON.stringify(formData.components.map((item) => item.title))}
+            {selectedComponent && printPreview()}
           </Box>
         </Box>
       </Collapse>
+      <Box mt={2}>
+        {formData.components &&
+          formData.components.map((component) => {
+            if (component.type === "banner") {
+              return (
+                <Carousel
+                  key={component.id}
+                  demo={true}
+                  data={{
+                    componentData: component,
+                    componentName: component.title,
+                  }}
+                  style={{ transform: "scale(0.2)" }}
+                />
+              );
+            } else if (component.type === "button") {
+              return (
+                <>
+                  <Button
+                    key={component.id}
+                    variant="contained"
+                    style={{ marginBottom: 9, marginop: 17 }}
+                  >
+                    {component.title}
+                  </Button>
+                  <Typography color={"white"}>
+                    {component.description}
+                  </Typography>
+                </>
+              );
+              //return <Carousel key={component._id} data={component} />;
+            } else if (component.type === "category") {
+              return (
+                <Classification
+                  key={component.id}
+                  demo={true}
+                  data={{
+                    componentData: component,
+                    componentName: component.title,
+                  }}
+                />
+              );
+            } else {
+              return null;
+            }
+            return null;
+          })}
+      </Box>
       {data.length === 0 ? (
         <p>No hay datos</p>
       ) : (
@@ -295,24 +408,28 @@ const Templates = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Fecha de creacion</TableCell>
-                <TableCell>Valido desde</TableCell>
-                <TableCell>Valido hasta</TableCell>
-                <TableCell>Acciones</TableCell>
+                <TableCell style={black}>Nombre</TableCell>
+                <TableCell style={black}>Fecha de creacion</TableCell>
+                <TableCell style={black}>Valido desde</TableCell>
+                <TableCell style={black}>Valido hasta</TableCell>
+                <TableCell style={black}>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
-                    <TableCell>
+                    <TableCell style={black}>{row.name}</TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.createdAt)}
+                    </TableCell>
+                    <TableCell style={black}>
                       {formatDateToString(row.validityFrom)}
                     </TableCell>
-                    <TableCell>{formatDateToString(row.validityTo)}</TableCell>
-                    <TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.validityTo)}
+                    </TableCell>
+                    <TableCell style={black}>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);
@@ -325,9 +442,15 @@ const Templates = () => {
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
                       </IconButton>
-                      <IconButton onClick={() => handlePrevoew(row.id)}>
+                      <IconButton onClick={() => handlePreview(row.id)}>
                         <Visibility />
                       </IconButton>
+                      <Switch
+                        checked={row.active}
+                        onClick={() => {
+                          handleChangeState(row.id, row.active);
+                        }}
+                      ></Switch>
                     </TableCell>
                   </TableRow>
                 ))}

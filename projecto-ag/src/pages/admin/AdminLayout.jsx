@@ -45,7 +45,7 @@ const Content = styled.div`
   padding: 10px;
   background-color: #ffffff;
   width: calc(100% - ${drawerWidth}px);
-  height: 98.7vh;
+  min-height: 98.7vh;
 `;
 
 const AdminLayout = (props) => {

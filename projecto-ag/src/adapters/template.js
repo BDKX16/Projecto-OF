@@ -4,5 +4,6 @@ export const createTemplateAdapter = (template) => ({
   createdAt: template.createdAt,
   validityFrom: template.validityFrom,
   validityTo: template.validityTo,
+  active: template.active,
   components: template.components.map((component) => ({ ...component })),
 });

@@ -43,6 +43,7 @@ import { createUserManagmentAdapter } from "../../../adapters/user";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 import LoadingSpinner from "../../content/components/LoadingSpinner";
 
+const black = { color: "#272727" };
 const initialFormData = {
   confirmed: false,
   email: "",
@@ -83,7 +84,6 @@ const ABMUsuarios = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log(formData);
     setData([...data, { ...formData, id: Math.random() * 10000 }]);
 
     //handle submit form
@@ -92,7 +92,6 @@ const ABMUsuarios = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
-      console.log(result.data);
       setData([...data, result.data]);
       setFormData(initialFormData);
     }
@@ -100,7 +99,6 @@ const ABMUsuarios = () => {
   };
 
   const handleEdit = async () => {
-    console.log(formData);
     const result = await callEndpoint(editUser(formData));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -121,7 +119,6 @@ const ABMUsuarios = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };
@@ -132,13 +129,11 @@ const ABMUsuarios = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       //show modal
     }
   };
 
   const changeState = async (id, status) => {
-    console.log(id);
     const result = await callEndpoint(contentState(id, !status));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -146,15 +141,6 @@ const ABMUsuarios = () => {
       enqueueSnackbar(
         status == true ? "Contenido desabilitado" : "Contenido visible",
         { variant: "success" }
-      );
-
-      console.log(
-        data.map((item) => {
-          if (item.id === id) {
-            item.status = !item.status;
-          }
-          return item;
-        })
       );
     }
   };
@@ -286,11 +272,11 @@ const ABMUsuarios = () => {
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
-                <TableCell>User</TableCell>
-                <TableCell>Rol</TableCell>
-                <TableCell>Fecha de creacion</TableCell>
-                <TableCell>Fecha de baja</TableCell>
-                <TableCell>Actions</TableCell>
+                <TableCell style={black}>User</TableCell>
+                <TableCell style={black}>Rol</TableCell>
+                <TableCell style={black}>Fecha de creacion</TableCell>
+                <TableCell style={black}>Fecha de baja</TableCell>
+                <TableCell style={black}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -318,17 +304,28 @@ const ABMUsuarios = () => {
                           fontWeight: "600",
                           lineHeight: ".2rem",
                           fontSize: ".8rem",
+                          color: "#272727",
                         }}
                       >
                         {row.name}
                       </p>
-                      <p style={{ lineHeight: ".2rem", fontSize: ".8rem" }}>
+                      <p
+                        style={{
+                          lineHeight: ".2rem",
+                          fontSize: ".8rem",
+                          color: "#525252",
+                        }}
+                      >
                         {row.email}
                       </p>
                     </TableCell>
-                    <TableCell>{colorRole(row.role)}</TableCell>
-                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
-                    <TableCell>{formatDateToString(row.nullDate)}</TableCell>
+                    <TableCell style={black}>{colorRole(row.role)}</TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.createdAt)}
+                    </TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.nullDate)}
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => {

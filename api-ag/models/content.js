@@ -21,6 +21,14 @@ const contentSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  likes: {
+    type: Number,
+    default: 0,
+  },
+  dislikes: {
+    type: Number,
+    default: 0,
+  },
   categorys: {
     type: [String],
     required: true,
@@ -36,6 +44,25 @@ const contentSchema = new mongoose.Schema({
   state: {
     type: Boolean,
     required: true,
+  },
+  discount: {
+    type: Number,
+    required: false,
+  },
+  validityFrom: {
+    type: Date,
+    required: true,
+    default: null,
+  },
+  validityTo: {
+    type: Date,
+    required: false,
+    default: null,
+  },
+  nullDate: {
+    type: Date,
+    required: false,
+    default: null,
   },
 });
 

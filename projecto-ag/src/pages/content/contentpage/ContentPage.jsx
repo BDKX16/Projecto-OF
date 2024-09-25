@@ -23,14 +23,11 @@ const ContentPage = () => {
       // Use the parameters as needed
       const result = await callEndpoint(getVideo(videoId));
 
-      console.log(result);
       if (Object.keys(result).length === 0) {
         return;
       } else if (result.status !== 200) {
         //enqueueSnackbar("Error", { variant: "error", });
       } else {
-        //console.log(createContentAdapter(result.data));
-
         setData(createContentAdapter(result.data));
       }
     };
@@ -59,7 +56,7 @@ const ContentPage = () => {
   } else if (data.videoUrl == null) {
     return <Checkout />;
   } else {
-    return <VideoPage />;
+    return <VideoPage video={data} />;
   }
 };
 

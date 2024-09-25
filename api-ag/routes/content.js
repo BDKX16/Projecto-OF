@@ -10,7 +10,7 @@ const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
 const Payment = require("../models/payment.js");
 // GET /api/content/:videoId
-router.get("/content/:videoId", checkAuth, async (req, res) => {
+router.get("/content/:videoId", async (req, res) => {
   const videoId = req.params.videoId;
 
   if (videoId === "undefined") {
@@ -51,6 +51,9 @@ router.get("/content/:videoId", checkAuth, async (req, res) => {
       return res.status(200).json(videoContent);
     }
 
+    // Increment the count of the specific content
+    await Content.updateOne({ _id: videoId }, { $inc: { cantVisits: 1 } });
+
     // Example response
     const videoContent = {
       title: content.title,
@@ -59,6 +62,7 @@ router.get("/content/:videoId", checkAuth, async (req, res) => {
       status: payment.status,
       coverUrl: content.coverUrl,
       price: content.price,
+      categorys: content.categorys,
       createdAt: content.createdAt,
       id: content.id,
     };

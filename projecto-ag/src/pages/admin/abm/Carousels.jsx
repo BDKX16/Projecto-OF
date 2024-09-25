@@ -37,10 +37,12 @@ import { formatDateToString } from "../../../utils/format-date-to-string";
 import LoadingSpinner from "../../content/components/LoadingSpinner";
 
 import { RgbaStringColorPicker } from "react-colorful";
+const black = { color: "#272727" };
+
 const initialFormData = {
   title: "",
   description: "",
-  imagesURL: [],
+  imagesUrl: [],
   link: "",
   type: "",
   createdAt: "",
@@ -73,7 +75,6 @@ const ABMCarousel = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-
     //handle submit form
     const result = await callEndpoint(addCarousel(formData));
     if (result.status !== 200) {
@@ -109,7 +110,6 @@ const ABMCarousel = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };
@@ -119,7 +119,7 @@ const ABMCarousel = () => {
   };
 
   const handleImagesUrlChange = (e) => {
-    setFormData({ ...formData, imagesURL: e });
+    setFormData({ ...formData, imagesUrl: e });
   };
 
   const handleColorChange = (e) => {
@@ -161,8 +161,8 @@ const ABMCarousel = () => {
           />
           <TextField
             label="Imagen URL"
-            name="imagesURL"
-            value={formData.imagesURL}
+            name="imagesUrl"
+            value={formData.imagesUrl}
             onChange={(e) => handleImagesUrlChange([e.target.value])}
             fullWidth
             margin="normal"
@@ -240,9 +240,9 @@ const ABMCarousel = () => {
 
           <Autocomplete
             multiple
-            name="imagesURL"
-            id="imagesURL"
-            options={formData.imagesURL}
+            name="imagesUrl"
+            id="imagesUrl"
+            options={formData.imagesUrl}
             freeSolo
             onChange={(e, value) => {
               handleImagesUrlChange(value);
@@ -418,9 +418,7 @@ const ABMCarousel = () => {
               style={{ width: "300px" }}
             >
               <MenuItem value="static">Imagen Estatica</MenuItem>
-              <MenuItem value="category" disabled>
-                Categorias
-              </MenuItem>
+              <MenuItem value="category">Categorias</MenuItem>
               <MenuItem value="banner">Banner</MenuItem>
               <MenuItem value="button">Button</MenuItem>
             </Select>
@@ -439,12 +437,12 @@ const ABMCarousel = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Title</TableCell>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Images</TableCell>
-                  <TableCell>Link</TableCell>
-                  <TableCell>Type</TableCell>
-                  <TableCell>Fecha de creación</TableCell>
+                  <TableCell style={black}>Title</TableCell>
+                  <TableCell style={black}>Description</TableCell>
+                  <TableCell style={black}>Images</TableCell>
+                  <TableCell style={black}>Link</TableCell>
+                  <TableCell style={black}>Type</TableCell>
+                  <TableCell style={black}>Fecha de creación</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -465,25 +463,29 @@ const ABMCarousel = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Images</TableCell>
-                <TableCell>Link</TableCell>
-                <TableCell>Type</TableCell>
-                <TableCell>Fecha de creación</TableCell>
+                <TableCell style={black}>Title</TableCell>
+                <TableCell style={black}>Description</TableCell>
+                <TableCell style={black}>Images</TableCell>
+                <TableCell style={black}>Link</TableCell>
+                <TableCell style={black}>Type</TableCell>
+                <TableCell style={black}>Fecha de creación</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.imagesURL}</TableCell>
-                    <TableCell>{row.link}</TableCell>
-                    <TableCell>{row.type}</TableCell>
-                    <TableCell>{formatDateToString(row.createdAt)} </TableCell>
-                    <TableCell>
+                    <TableCell style={black}>{row.title}</TableCell>
+                    <TableCell style={black}>{row.description}</TableCell>
+                    <TableCell style={black}>
+                      {row.imagesUrl ? row.imagesUrl.length : 0}
+                    </TableCell>
+                    <TableCell style={black}>{row.link}</TableCell>
+                    <TableCell style={black}>{row.type}</TableCell>
+                    <TableCell style={black}>
+                      {formatDateToString(row.createdAt)}{" "}
+                    </TableCell>
+                    <TableCell style={black}>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);

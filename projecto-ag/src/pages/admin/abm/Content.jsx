@@ -69,7 +69,6 @@ const ABMTable = () => {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    console.log(formData);
     setData([...data, { ...formData, id: Math.random() * 10000 }]);
 
     //handle submit form
@@ -78,7 +77,6 @@ const ABMTable = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido agregado", { variant: "success" });
-      console.log(result.data);
       setData([...data, result.data]);
       setFormData(initialFormData);
     }
@@ -108,13 +106,11 @@ const ABMTable = () => {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
       enqueueSnackbar("Contenido eliminado", { variant: "success" });
-      console.log(result);
       setData(data.filter((item) => item.id !== id));
     }
   };
 
   const changeState = async (id, status) => {
-    console.log(id);
     const result = await callEndpoint(contentState(id, !status));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
@@ -123,15 +119,7 @@ const ABMTable = () => {
         status == true ? "Contenido desabilitado" : "Contenido visible",
         { variant: "success" }
       );
-
-      console.log(
-        data.map((item) => {
-          if (item.id === id) {
-            item.status = !item.status;
-          }
-          return item;
-        })
-      );
+      m;
     }
   };
 
@@ -312,28 +300,38 @@ const ABMTable = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Title</TableCell>
-                <TableCell>Description</TableCell>
-                <TableCell>Precio</TableCell>
-                <TableCell>Fecha de subida</TableCell>
-                <TableCell>Portada</TableCell>
-                <TableCell>Video</TableCell>
+                <TableCell style={{ color: "#272727" }}>Title</TableCell>
+                <TableCell style={{ color: "#272727" }}>Description</TableCell>
+                <TableCell style={{ color: "#272727" }}>Precio</TableCell>
+                <TableCell style={{ color: "#272727" }}>
+                  Fecha de subida
+                </TableCell>
+                <TableCell style={{ color: "#272727" }}>Portada</TableCell>
+                <TableCell style={{ color: "#272727" }}>Video</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.date}>
-                    <TableCell>{row.title}</TableCell>
-                    <TableCell>{row.description}</TableCell>
-                    <TableCell>{row.price}</TableCell>
-                    <TableCell>{formatDateToString(row.date)}</TableCell>
-                    <TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.title}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.description}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.price}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {formatDateToString(row.date)}
+                    </TableCell>
+                    <TableCell style={{ color: "#272727" }}>
                       {row.coverUrl
                         ? row.coverUrl.substring(0, 20) + "..."
                         : " - "}
                     </TableCell>
-                    <TableCell>
+                    <TableCell style={{ color: "#272727" }}>
                       {row.videoUrl
                         ? row.videoUrl.substring(0, 20) + "..."
                         : " - "}

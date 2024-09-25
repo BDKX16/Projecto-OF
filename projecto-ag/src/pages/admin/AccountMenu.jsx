@@ -91,7 +91,14 @@ export default function AccountMenu() {
         <MenuItem onClick={handleClose}>
           <Avatar>{userState.name.charAt(0).toUpperCase()}</Avatar>{" "}
           <div>
-            <p style={{ lineHeight: 0.2, fontSize: 15, fontWeight: "bold" }}>
+            <p
+              style={{
+                lineHeight: 0.2,
+                fontSize: 15,
+                fontWeight: "bold",
+                color: "#242424",
+              }}
+            >
               {userState.name}
             </p>
             <p style={{ lineHeight: 0.2, fontSize: 15, color: "#808080" }}>
@@ -107,6 +114,7 @@ export default function AccountMenu() {
         </MenuItem>
         <Divider />
         <MenuItem
+          style={{ color: "#000000" }}
           onClick={() => {
             handleClose();
             window.location.href = "/admin/user-managment";
@@ -124,6 +132,7 @@ export default function AccountMenu() {
           Page settings
         </MenuItem>
         <MenuItem
+          style={{ color: "#000000" }}
           onClick={() => {
             handleClose();
             window.location.href = "/admin/personalization";
@@ -135,6 +144,7 @@ export default function AccountMenu() {
           Page theme
         </MenuItem>
         <MenuItem
+          style={{ color: "#000000" }}
           onClick={() => {
             handleClose();
             logout();

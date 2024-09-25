@@ -42,7 +42,6 @@ const Personalization = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data);
           setData(result.data);
         }
       }
@@ -66,7 +65,6 @@ const Personalization = () => {
   };
 
   const handleEdit = async () => {
-    console.log(currentEdit._id);
     var toSend = {
       clave: formData.clave,
       valor: formData.valor,
@@ -227,8 +225,8 @@ const Personalization = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>Clave</TableCell>
-                <TableCell>Valor</TableCell>
+                <TableCell style={{ color: "#272727" }}>Clave</TableCell>
+                <TableCell style={{ color: "#272727" }}>Valor</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -240,6 +238,7 @@ const Personalization = () => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
+                        color: "#272727",
                       }}
                     >
                       <div
@@ -252,7 +251,9 @@ const Personalization = () => {
                       ></div>
                       {row.clave}
                     </TableCell>
-                    <TableCell>{row.valor}</TableCell>
+                    <TableCell style={{ color: "#272727" }}>
+                      {row.valor}
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => {
