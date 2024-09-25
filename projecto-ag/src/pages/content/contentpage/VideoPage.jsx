@@ -9,7 +9,7 @@ const VideoPage = ({ video }) => {
       {/* Aquí puedes agregar el reproductor de video y otros elementos relacionados */}
       <div className="video-container">
         <iframe
-          width="100%"
+          width="989px"
           height="100%"
           src={
             video.videoUrl ||
