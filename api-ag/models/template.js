@@ -32,6 +32,10 @@ const templateSchema = new mongoose.Schema({
     type: [componentSchema],
     required: true,
   },
+  active: {
+    type: Boolean,
+    required: true,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

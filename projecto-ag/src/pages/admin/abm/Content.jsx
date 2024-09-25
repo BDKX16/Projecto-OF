@@ -119,11 +119,8 @@ const ABMTable = () => {
         status == true ? "Contenido desabilitado" : "Contenido visible",
         { variant: "success" }
       );
-      setData(
-        data.map((item) =>
-          item.id === id ? { ...item, status: !item.status } : item
-        )
-      );
+      m;
+    }
   };
 
   const handleChange = (e) => {

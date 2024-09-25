@@ -170,6 +170,29 @@ router.put(
   }
 );
 
+// SELECT an existing template
+router.put(
+  "/template/:id",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const templateId = req.params.id;
+    const templateData = req.body;
+
+    try {
+      await Template.updateOne(
+        { _id: templateId },
+        { active: templateData.active }
+      );
+      // Logic to update the template with the given ID in the database using the provided data
+      // Send the updated template as a response
+      return res.status(200).json({ message: "Template updated" });
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
 // DELETE a template
 router.delete(
   "/templates/:id",
@@ -345,7 +368,7 @@ router.get(
   }
 );
 
-// CREATE a new template
+// CREATE a new category
 router.post(
   "/category",
   checkAuth,

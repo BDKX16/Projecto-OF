@@ -15,6 +15,7 @@ import {
   Select,
   MenuItem,
   Typography,
+  Switch,
 } from "@mui/material";
 import {
   Add,
@@ -110,7 +111,6 @@ const Templates = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -133,12 +133,25 @@ const Templates = () => {
     });
   };
 
-  const handlePrevoew = async (id) => {
+  const handlePreview = async (id) => {
     const result = await callEndpoint(getTemplate(id));
     if (result.status !== 200) {
       enqueueSnackbar("Error loading preview", { variant: "error" });
     } else {
       console.log(result.data);
+    }
+  };
+
+  const handleChangeState = async (id, status) => {
+    const result = await callEndpoint(selectTemplate(id, !status));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error changing state", { variant: "error" });
+    } else {
+      setData(
+        data.map((item) =>
+          item.id === id ? { ...item, active: !status } : item
+        )
+      );
     }
   };
 
@@ -429,9 +442,15 @@ const Templates = () => {
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
                       </IconButton>
-                      <IconButton onClick={() => handlePrevoew(row.id)}>
+                      <IconButton onClick={() => handlePreview(row.id)}>
                         <Visibility />
                       </IconButton>
+                      <Switch
+                        checked={row.active}
+                        onClick={() => {
+                          handleChangeState(row.id, row.active);
+                        }}
+                      ></Switch>
                     </TableCell>
                   </TableRow>
                 ))}

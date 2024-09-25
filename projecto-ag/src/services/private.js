@@ -479,7 +479,7 @@ export const editTemplate = (id, data) => {
   };
 };
 
-export const selectTemplate = (id) => {
+export const selectTemplate = (id, active) => {
   const controller = loadAbort();
   const headers = getAxiosHeaders();
   if (!headers) {
@@ -487,9 +487,14 @@ export const selectTemplate = (id) => {
   }
   return {
     call: axios
-      .put(import.meta.env.VITE_BASE_URL + "/admin/template/" + id, headers, {
-        signal: controller.signal,
-      })
+      .put(
+        import.meta.env.VITE_BASE_URL + "/admin/template/" + id,
+        { active },
+        headers,
+        {
+          signal: controller.signal,
+        }
+      )
       .catch((error) => {
         notifyError(error);
       }),
