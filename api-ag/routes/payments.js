@@ -179,7 +179,7 @@ router.post("/payments/webhook", async (req, res) => {
   const secret = process.env.MERCADOPAGO_SECRET;
 
   // Generate the manifest string
-  const manifest = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
+  const manifest = `id:${body.data.id};request-id:${requestHeader};ts:${ts};`;
 
   // Create an HMAC signature
   const hmac = crypto.createHmac("sha256", secret);
