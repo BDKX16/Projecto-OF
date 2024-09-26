@@ -145,13 +145,12 @@ router.post("/payments/webhook", async (req, res) => {
   const body = req.body;
   console.log(body);
 
-  const mpPayments = new Payment(client);
   try {
     if (payment.type === "payment") {
       const paymentId = payment["data.id"];
       console.log(paymentId);
-      const pago = await mpPayments
-        .get(paymentId)
+      const pago = await new Payment(client)
+        .get({ id: body.data.id })
         .then(console.log)
         .catch(console.log);
       //const data = await Payments.findById(payment["data.id"]);
