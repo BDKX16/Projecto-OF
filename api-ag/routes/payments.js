@@ -142,6 +142,8 @@ router.post("/payments/success", async (req, res) => {
 
 router.post("/payments/webhook", async (req, res) => {
   const payment = req.query;
+  const body = req.body;
+  console.log(body);
 
   const mpPayments = new Payment(client);
   try {
