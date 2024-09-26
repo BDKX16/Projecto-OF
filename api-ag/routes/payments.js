@@ -19,8 +19,6 @@ const client = new MercadoPagoConfig({
     "TEST-4044483755982456-090411-5db8f54f0db2a277d1634dc16b51bc3d-157050868",
 });
 
-const mpPayments = new Payment(client);
-
 // Create a new payment
 router.post(
   "/payments",
@@ -145,6 +143,7 @@ router.post("/payments/success", async (req, res) => {
 router.post("/payments/webhook", async (req, res) => {
   const payment = req.query;
 
+  const mpPayments = new Payment(client);
   try {
     if (payment.type === "payment") {
       const paymentId = payment["data.id"];
