@@ -166,14 +166,7 @@ router.post("/payments/webhook", async (req, res) => {
         { paymentMethod: "mercadopago", videoId },
         { status: paymentData.status, paymentyId: paymentData.id }
       );
-      const payment = new Payments({
-        userId: req.user._id,
-        contentId: contentId,
-        paymentId: paymentData.id,
-        paymentMethod: "mercadopago",
-        currency: "ars",
-        date: new Date(),
-      });
+
       console.log(paymentData.additional_info.items);
     }
 
