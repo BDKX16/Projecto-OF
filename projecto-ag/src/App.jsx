@@ -12,14 +12,17 @@ import { Facebook, Instagram, Telegram, Twitter } from "@mui/icons-material";
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
   const theme = useTheme();
+
   const toggleSidebar = () => {
     if (sidebarState) {
       const sidebar = document.querySelector(".sidebar");
       sidebar.style.opacity = "0";
+      sidebar.style.display = "none";
       setSidebarState(false);
     } else {
       const sidebar = document.querySelector(".sidebar");
       sidebar.style.opacity = "1";
+      sidebar.style.display = "block";
       setSidebarState(true);
     }
   };
