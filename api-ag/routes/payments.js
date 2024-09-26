@@ -28,14 +28,12 @@ router.post(
     try {
       const { contentId } = req.body;
       const userId = req.userData._id;
-      console.log(req.userData);
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
       const content = await Content.findById(contentId);
       if (!content) {
         return res.status(404).json({ error: "Content not found" });
       }
-
       // Create a payment preference
       const requestMP = {
         body: {
@@ -53,7 +51,7 @@ router.post(
             failure: "https://almendragala.com/",
             pending: "https://almendragala.com/",
           },
-          notification_url: "https://almendragala.com/api/payments/webhook",
+          //notification_url: "https://almendragala.com/api/payments/webhook",
           redirect_urls: {
             success: "https://almendragala.com/",
             failure: "https://almendragala.com/",
@@ -68,7 +66,6 @@ router.post(
         .catch((error) => console.error(error));
 
       // Create a payment
-      console.log(preference);
 
       if (!preference) {
         return res.status(500).json({ error: "Failed to create payment" });
@@ -87,7 +84,7 @@ router.post(
       });
 
       // Return the payment preference ID
-      res.json(preference);
+      res.json({ preferenceRedirect: preference.init_point });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to create payment" });
@@ -153,12 +150,11 @@ router.post("/payments/success", async (req, res) => {
 
 router.post("/payments/webhook", async (req, res) => {
   //prod only
-  /*const secret = req.headers.get("x-signature-id");
+  const secret = req.headers.get("x-signature-id");
 
   if (secret != process.env.MERCADOPAGO_SECRET) {
     return res.status(401).json({ error: "Unauthorized" });
   }
-    */
 
   const payment = req.query;
   const body = req.body;
