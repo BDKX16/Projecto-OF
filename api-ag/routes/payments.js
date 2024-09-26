@@ -150,8 +150,17 @@ router.post("/payments/success", async (req, res) => {
 });
 
 router.post("/payments/webhook", async (req, res) => {
+  //prod only
+  /*const secret = req.headers.get("x-signature-id");
+
+  if (secret != process.env.MERCADOPAGO_SECRET) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+    */
+
   const payment = req.query;
   const body = req.body;
+
   var paymentData;
   console.log(body);
 
@@ -162,8 +171,13 @@ router.post("/payments/webhook", async (req, res) => {
         .then((res) => (paymentData = res))
         .catch(console.log);
 
+      console.log(paymentData.additional_info.items);
+
       const pay = await Payments.findOneAndUpdate(
-        { paymentMethod: "mercadopago", videoId },
+        {
+          paymentMethod: "mercadopago",
+          videoId: paymentData.additional_info.items[0].id,
+        },
         { status: paymentData.status, paymentyId: paymentData.id }
       );
 
