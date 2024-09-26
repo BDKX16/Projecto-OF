@@ -27,6 +27,8 @@ router.post(
   async (req, res) => {
     try {
       const { contentId } = req.body;
+      const userId = req.userData._id;
+      console.log(req.userData);
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
       const content = await Content.findById(contentId);
@@ -73,14 +75,14 @@ router.post(
       }
 
       await Payments.create({
-        userId: req.user._id,
+        userId: userId,
         contentId: contentId,
         paymentId: null,
         paymentMethod: "mercadopago",
         currency: "ARS",
         date: new Date(),
         videoId: contentId,
-        status: "preference",
+        status: "pending",
         amount: content.price,
       });
 
@@ -162,7 +164,6 @@ router.post("/payments/webhook", async (req, res) => {
   const body = req.body;
 
   var paymentData;
-  console.log(body);
 
   try {
     if (payment.type === "payment") {
@@ -171,6 +172,8 @@ router.post("/payments/webhook", async (req, res) => {
         .then((res) => (paymentData = res))
         .catch(console.log);
 
+      console.log(paymentData);
+      console.log(paymentData.additional_info);
       console.log(paymentData.additional_info.items);
 
       const pay = await Payments.findOneAndUpdate(
