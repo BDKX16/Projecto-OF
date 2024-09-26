@@ -51,7 +51,7 @@ router.post(
             failure: "https://almendragala.com/",
             pending: "https://almendragala.com/",
           },
-          //notification_url: "https://almendragala.com/api/payments/webhook",
+          notification_url: "https://almendragala.com/api/payments/webhook",
           redirect_urls: {
             success: "https://almendragala.com/",
             failure: "https://almendragala.com/",
@@ -149,15 +149,48 @@ router.post("/payments/success", async (req, res) => {
 });
 
 router.post("/payments/webhook", async (req, res) => {
-  //prod only
-  const secret = req.headers.get("x-signature-id");
-
-  if (secret != process.env.MERCADOPAGO_SECRET) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   const payment = req.query;
   const body = req.body;
+
+  //prod only
+  const signatureHeader = req.headers["x-signature"];
+  const requestHeader = req.headers["x-request-id"];
+
+  const signatureParts = signatureHeader.split(",");
+  // Iterate over the values to obtain ts and v1
+  parts.forEach((part) => {
+    // Split each part into key and value
+    const [key, value] = part.split("=");
+    if (key && value) {
+      const trimmedKey = key.trim();
+      const trimmedValue = value.trim();
+      if (trimmedKey === "ts") {
+        ts = trimmedValue;
+      } else if (trimmedKey === "v1") {
+        hash = trimmedValue;
+      }
+    }
+  });
+
+  const secret = process.env.MERCADOPAGO_SECRET;
+
+  // Generate the manifest string
+  const manifest = `id:${dataID};request-id:${xRequestId};ts:${ts};`;
+
+  // Create an HMAC signature
+  const hmac = crypto.createHmac("sha256", secret);
+  hmac.update(manifest);
+
+  // Obtain the hash result as a hexadecimal string
+  const sha = hmac.digest("hex");
+
+  if (sha === hash) {
+    // HMAC verification passed
+    console.log("HMAC verification passed");
+  } else {
+    // HMAC verification failed
+    console.log("HMAC verification failed");
+  }
 
   var paymentData;
   var userInfo = null;
