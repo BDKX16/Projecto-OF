@@ -32,7 +32,6 @@ router.post(
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
       const content = await Content.findById(contentId);
-      console.log(content);
       if (!content) {
         return res.status(404).json({ error: "Content not found" });
       }
@@ -43,22 +42,22 @@ router.post(
           items: [
             {
               id: contentId,
-              title: "test",
-              description: "testId",
+              title: "AlmenWeb",
+              description: "Contenido pagina web",
               quantity: 1,
-              unit_price: 100,
+              unit_price: content.price,
             },
           ],
           back_urls: {
-            success: "https://almendragala.com/success",
-            failure: "https://almendragala.com/failure",
-            pending: "https://almendragala.com/pending",
+            success: "https://almendragala.com/",
+            failure: "https://almendragala.com/",
+            pending: "https://almendragala.com/",
           },
           notification_url: "https://almendragala.com/api/payments/webhook",
           redirect_urls: {
-            success: "https://almendragala.com/success",
-            failure: "https://almendragala.com/failure",
-            pending: "https://almendragala.com/pending",
+            success: "https://almendragala.com/",
+            failure: "https://almendragala.com/",
+            pending: "https://almendragala.com/",
           },
         },
       };
@@ -168,13 +167,13 @@ router.post("/payments/webhook", async (req, res) => {
   var userInfo = null;
   try {
     if (payment.type === "payment") {
-      const pago = await new Payment(client)
+      await new Payment(client)
         .get({ id: body.data.id })
         .then((res) => (paymentData = res))
         .catch(console.log);
 
       paymentData.payer && (userInfo = paymentData.payer);
-      const pay = await Payments.findOneAndUpdate(
+      await Payments.findOneAndUpdate(
         {
           paymentMethod: "mercadopago",
           videoId: paymentData.additional_info.items[0].id,
@@ -185,8 +184,6 @@ router.post("/payments/webhook", async (req, res) => {
           userData: userInfo,
         }
       );
-
-      console.log(paymentData.additional_info.items);
     }
 
     res.status(204).send("webhook");
