@@ -44,6 +44,7 @@ router.post(
             {
               id: contentId,
               title: "test",
+              description: "testId",
               quantity: 1,
               unit_price: 100,
             },
@@ -164,7 +165,7 @@ router.post("/payments/webhook", async (req, res) => {
   const body = req.body;
 
   var paymentData;
-
+  var userInfo = null;
   try {
     if (payment.type === "payment") {
       const pago = await new Payment(client)
@@ -172,17 +173,17 @@ router.post("/payments/webhook", async (req, res) => {
         .then((res) => (paymentData = res))
         .catch(console.log);
 
-      console.log(paymentData);
-      console.log(paymentData.additional_info);
-      console.log(paymentData.additional_info.items);
-      console.log(paymentData.additional_info.items[0].id);
-
+      paymentData.payer && (userInfo = paymentData.payer);
       const pay = await Payments.findOneAndUpdate(
         {
           paymentMethod: "mercadopago",
           videoId: paymentData.additional_info.items[0].id,
         },
-        { status: paymentData.status, paymentyId: paymentData.id }
+        {
+          status: paymentData.status,
+          paymentyId: paymentData.id,
+          userData: userInfo,
+        }
       );
 
       console.log(paymentData.additional_info.items);

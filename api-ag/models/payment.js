@@ -32,8 +32,21 @@ const paymentSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["pending", "completed", "failed", "approved", "accredited"],
+    enum: [
+      "pending",
+      "completed",
+      "failed",
+      "approved",
+      "accredited",
+      "cancelled",
+      "rejected",
+      "authorized",
+    ],
     default: "pending",
+  },
+  userData: {
+    type: Object,
+    required: false,
   },
 });
 
