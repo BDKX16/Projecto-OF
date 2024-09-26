@@ -31,11 +31,16 @@ router.post(
       //guardar solicitud en mongo, estado: pendiente
       const content = await Content.findById(contentId);
       console.log(content);
+      if (!content) {
+        return res.status(404).json({ error: "Content not found" });
+      }
+
       // Create a payment preference
       const requestMP = {
         body: {
           items: [
             {
+              id: contentId,
               title: "test",
               quantity: 1,
               unit_price: 100,
@@ -62,19 +67,23 @@ router.post(
 
       // Create a payment
       console.log(preference);
-      /** 
-      const payment = new Payments({
+
+      if (!preference) {
+        return res.status(500).json({ error: "Failed to create payment" });
+      }
+
+      await Payments.create({
         userId: req.user._id,
         contentId: contentId,
-        paymentId: preference.order.id,
+        paymentId: null,
         paymentMethod: "mercadopago",
-        currency: "ars",
+        currency: "ARS",
         date: new Date(),
         videoId: contentId,
-        status: preference.status,
-        amount: 100,
-      });*/
-      //const response = await mercadopago.preferences.create(preference);
+        status: "preference",
+        amount: content.price,
+      });
+
       // Return the payment preference ID
       res.json(preference);
     } catch (error) {
@@ -143,18 +152,29 @@ router.post("/payments/success", async (req, res) => {
 router.post("/payments/webhook", async (req, res) => {
   const payment = req.query;
   const body = req.body;
+  var paymentData;
   console.log(body);
 
   try {
     if (payment.type === "payment") {
-      const paymentId = payment["data.id"];
-      console.log(paymentId);
       const pago = await new Payment(client)
         .get({ id: body.data.id })
-        .then(console.log)
+        .then((res) => (paymentData = res))
         .catch(console.log);
-      //const data = await Payments.findById(payment["data.id"]);
-      console.log(pago);
+
+      const pay = await Payments.findOneAndUpdate(
+        { paymentMethod: "mercadopago", videoId },
+        { status: paymentData.status, paymentyId: paymentData.id }
+      );
+      const payment = new Payments({
+        userId: req.user._id,
+        contentId: contentId,
+        paymentId: paymentData.id,
+        paymentMethod: "mercadopago",
+        currency: "ars",
+        date: new Date(),
+      });
+      console.log(paymentData.additional_info.items);
     }
 
     res.status(204).send("webhook");
@@ -165,3 +185,153 @@ router.post("/payments/webhook", async (req, res) => {
 });
 
 module.exports = router;
+
+/*{
+  accounts_info: null,
+  acquirer_reconciliation: [],
+  additional_info: {
+    authentication_code: null,
+    available_balance: null,
+    ip_address: '190.194.81.208',
+    items: [ [Object] ],
+    nsu_processadora: null
+  },
+  authorization_code: '229549003',
+  binary_mode: false,
+  brand_id: null,
+  build_version: '3.71.0-rc-4',
+  call_for_authorize_id: null,
+  captured: true,
+  card: {
+    cardholder: { identification: [Object], name: 'APRO' },
+    country: 'ARG',
+    date_created: '2024-09-25T23:01:55.000-04:00',
+    date_last_updated: '2024-09-25T23:01:55.000-04:00',
+    expiration_month: 11,
+    expiration_year: 2025,
+    first_six_digits: '450995',
+    id: null,
+    last_four_digits: '3704',
+    tags: null
+  },
+  charges_details: [
+    {
+      accounts: [Object],
+      amounts: [Object],
+      client_id: 0,
+      date_created: '2024-09-25T23:01:55.000-04:00',
+      id: '1327154491-001',
+      last_updated: '2024-09-25T23:01:55.000-04:00',
+      metadata: [Object],
+      name: 'mercadopago_fee',
+      refund_charges: [],
+      reserve_id: null,
+      type: 'fee'
+    }
+  ],
+  collector_id: 157050868,
+  corporation_id: null,
+  counter_currency: null,
+  coupon_amount: 0,
+  currency_id: 'ARS',
+  date_approved: '2024-09-25T23:01:55.816-04:00',
+  date_created: '2024-09-25T23:01:55.464-04:00',
+  date_last_updated: '2024-09-25T23:01:55.816-04:00',
+  date_of_expiration: null,
+  deduction_schema: null,
+  description: 'test',
+  differential_pricing_id: null,
+  external_reference: null,
+  fee_details: [ { amount: 4.1, fee_payer: 'collector', type: 'mercadopago_fee' } ],
+  financing_group: null,
+  id: 1327154491,
+  installments: 1,
+  integrator_id: null,
+  issuer_id: '310',
+  live_mode: false,
+  marketplace_owner: null,
+  merchant_account_id: null,
+  merchant_number: null,
+  metadata: {},
+  money_release_date: '2024-10-13T23:01:55.816-04:00',
+  money_release_schema: null,
+  money_release_status: 'pending',
+  notification_url: 'https://almendragala.com/api/payments/webhook',
+  operation_type: 'regular_payment',
+  order: { id: '23215819116', type: 'mercadopago' },
+  payer: {
+    identification: { number: '32659430', type: 'DNI' },
+    entity_type: null,
+    phone: { number: null, extension: null, area_code: null },
+    last_name: null,
+    id: '2008633462',
+    type: null,
+    first_name: null,
+    email: 'test_user_80507629@testuser.com'
+  },
+  payment_method: {
+    data: { routing_data: [Object] },
+    id: 'visa',
+    issuer_id: '310',
+    type: 'credit_card'
+  },
+  payment_method_id: 'visa',
+  payment_type_id: 'credit_card',
+  platform_id: null,
+  point_of_interaction: {
+    business_info: {
+      branch: 'Merchant Services',
+      sub_unit: 'checkout_pro',
+      unit: 'online_payments'
+    },
+    transaction_data: { e2e_id: null },
+    type: 'CHECKOUT'
+  },
+  pos_id: null,
+  processing_mode: 'aggregator',
+  refunds: [],
+  release_info: null,
+  shipping_amount: 0,
+  sponsor_id: null,
+  statement_descriptor: null,
+  status: 'approved',
+  status_detail: 'accredited',
+  store_id: null,
+  tags: null,
+  taxes_amount: 0,
+  transaction_amount: 100,
+  transaction_amount_refunded: 0,
+  transaction_details: {
+    acquirer_reference: null,
+    external_resource_url: null,
+    financial_institution: null,
+    installment_amount: 100,
+    net_received_amount: 95.9,
+    overpaid_amount: 0,
+    payable_deferral_period: null,
+    payment_method_reference_id: null,
+    total_paid_amount: 100
+  },
+  api_response: {
+    status: 200,
+    headers: [Object: null prototype] {
+      date: [Array],
+      'content-type': [Array],
+      'transfer-encoding': [Array],
+      connection: [Array],
+      vary: [Array],
+      'cache-control': [Array],
+      'x-content-type-options': [Array],
+      'x-request-id': [Array],
+      'x-xss-protection': [Array],
+      'strict-transport-security': [Array],
+      'access-control-allow-origin': [Array],
+      'access-control-allow-headers': [Array],
+      'access-control-allow-methods': [Array],
+      'access-control-max-age': [Array],
+      'timing-allow-origin': [Array],
+      'content-encoding': [Array]
+    }
+  }
+}
+*/
