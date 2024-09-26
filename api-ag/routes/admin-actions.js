@@ -7,6 +7,7 @@ const Configuration = require("../models/configuration.js");
 const User = require("../models/user.js");
 const Category = require("../models/category.js");
 const Carousel = require("../models/carousel.js");
+const Payment = require("../models/payment.js");
 
 /*
 Page personalization:
@@ -95,16 +96,26 @@ router.put(
 );
 
 // PUT /admin/payments/:id - Update existing payment
+router.get(
+  "/payments",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    const payments = await Payment.find({});
+    res.status(200).json(payments);
+  }
+);
+
+// PUT /admin/payments/:id - Update existing payment
 router.put(
   "/payment/:id",
   checkAuth,
-  checkRole(["admin", "owner"]),
-  (req, res) => {
+  checkRole(["owner"]),
+  async (req, res) => {
     const { id } = req.params;
-    const { amount, description } = req.body;
-    // Logic to update payment by ID in the database
-    // ...
-    res.send(`Update payment with ID ${id}`);
+    const { status } = req.body;
+    const payment = await Payment.findOneAndUpdate({ _id: id }, { status });
+    res.status(200).json(payment);
   }
 );
 
@@ -113,11 +124,12 @@ router.delete(
   "/payment/:id",
   checkAuth,
   checkRole(["admin", "owner"]),
-  (req, res) => {
+  async (req, res) => {
     const { id } = req.params;
     // Logic to delete payment by ID from the database
     // ...
-    res.send(`Delete payment with ID ${id}`);
+    await Payment.findOneAndUpdate({ _id: id }, { nullDate: new Date() });
+    res.status(200).json({ message: "Deleted" });
   }
 );
 

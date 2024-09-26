@@ -15,6 +15,7 @@ import ABMCategorys from "./pages/admin/abm/Categorys.jsx";
 import Template from "./pages/admin/abm/Template.jsx";
 import Carousels from "./pages/admin/abm/Carousels.jsx";
 import Personalization from "./pages/admin/abm/Personalization.jsx";
+import Payments from "./pages/admin/abm/Payments.jsx";
 
 //Routes
 const Login = lazy(() => import("./pages/Login.jsx"));
@@ -40,6 +41,7 @@ const Layout = () => {
                 <Route path={`/carousels`} element={<Carousels />} />
                 <Route path={`/user-managment`} element={<ABMUsuarios />} />
                 <Route path={`/category`} element={<ABMCategorys />} />
+                <Route path={`/payments`} element={<Payments />} />
                 <Route
                   path={`/personalization`}
                   element={<Personalization />}

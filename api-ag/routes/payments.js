@@ -93,7 +93,7 @@ router.post(
   }
 );
 
-// Get user payments
+// Get user payments (no sensitive data)
 router.get(
   "/payments",
   checkAuth,
@@ -107,6 +107,16 @@ router.get(
       if (payments.length === 0) {
         return res.status(404).json({ error: "No payments found" });
       }
+      payments = payments.map((payment) => {
+        return {
+          _id: payment._id,
+          videoId: payment.videoId,
+          status: payment.status,
+          date: payment.date,
+          amount: payment.amount,
+          currency: payment.currency,
+        };
+      });
 
       res.status(200).json(payments);
     } catch (error) {

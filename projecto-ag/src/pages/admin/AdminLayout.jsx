@@ -17,6 +17,8 @@ import { Link } from "react-router-dom";
 import {
   AccountBalanceRounded,
   AutoAwesomeMotion,
+  CreditCard,
+  CreditCardSharp,
   CreditScoreRounded,
   DashboardOutlined,
   NotificationsRounded,
@@ -25,6 +27,8 @@ import {
   Videocam,
   VideocamOutlined,
   ViewCarouselOutlined,
+  ViewDayTwoTone,
+  WebAssetTwoTone,
 } from "@mui/icons-material";
 import AccountMenu from "./AccountMenu";
 import NotificationsMenu from "./NotificationsMenu";
@@ -111,33 +115,27 @@ const AdminLayout = (props) => {
           <ListItemButton component={Link} to="/admin/carousels">
             <ViewCarouselOutlined
               sx={{ width: 27, height: 27, marginRight: 1 }}
-            ></ViewCarouselOutlined>
+            />
             <ListItemText primary="Carousels" />
           </ListItemButton>
           <ListItemButton component={Link} to="/admin/category">
-            <AutoAwesomeMotion
-              sx={{ width: 27, height: 27, marginRight: 1 }}
-            ></AutoAwesomeMotion>
+            <AutoAwesomeMotion sx={{ width: 27, height: 27, marginRight: 1 }} />
             <ListItemText primary="Categorys" />
           </ListItemButton>
-          <ListItemButton
-            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
-            component={Link}
-            to="/admin/category"
-          >
-            <AutoAwesomeMotion
-              sx={{ width: 27, height: 27, marginRight: 1 }}
-            ></AutoAwesomeMotion>
+          <ListItemButton disabled component={Link} to="/admin/category">
+            <WebAssetTwoTone sx={{ width: 27, height: 27, marginRight: 1 }} />
+
             <ListItemText primary="Navbar" />
           </ListItemButton>
-          <ListItemButton
-            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
-            component={Link}
-            to="/admin/category"
-          >
-            <AutoAwesomeMotion
-              sx={{ width: 27, height: 27, marginRight: 1 }}
-            ></AutoAwesomeMotion>
+          <ListItemButton disabled component={Link} to="/admin/category">
+            <WebAssetTwoTone
+              sx={{
+                width: 27,
+                height: 27,
+                marginRight: 1,
+                transform: "rotate(180deg)",
+              }}
+            />
             <ListItemText primary="Footer" />
           </ListItemButton>
 
@@ -153,21 +151,13 @@ const AdminLayout = (props) => {
           >
             BILLING
           </p>
-          <ListItemButton
-            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
-            component={Link}
-            to="/admin/category"
-          >
+          <ListItemButton component={Link} to="/admin/payments">
             <CreditScoreRounded
               sx={{ width: 27, height: 27, marginRight: 1 }}
             ></CreditScoreRounded>
             <ListItemText primary="Payments" />
           </ListItemButton>
-          <ListItemButton
-            component={Link}
-            style={{ backgroundColor: "#c5c5c540", color: "#8b8b8b" }}
-            to="/admin/category"
-          >
+          <ListItemButton component={Link} disabled to="/admin/payments">
             <AccountBalanceRounded
               sx={{ width: 27, height: 27, marginRight: 1 }}
             ></AccountBalanceRounded>

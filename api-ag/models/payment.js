@@ -17,7 +17,6 @@ const paymentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
   paymentId: {
     type: String,
     required: false,
@@ -29,6 +28,10 @@ const paymentSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+  },
+  nullDate: {
+    type: Date,
+    required: false,
   },
   status: {
     type: String,

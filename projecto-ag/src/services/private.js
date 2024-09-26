@@ -525,6 +525,69 @@ export const deleteTemplate = (id) => {
 };
 
 /**********
+ * PAYMENTS
+ ************/
+
+export const getPayments = () => {
+  const controller = loadAbort();
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+  return {
+    call: axios
+      .get(import.meta.env.VITE_BASE_URL + "/admin/payments", headers, {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
+export const editPayment = (status = null) => {
+  const controller = loadAbort();
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+  return {
+    call: axios
+      .put(
+        import.meta.env.VITE_BASE_URL + "/admin/payment/" + id,
+        { status },
+        headers,
+        {
+          signal: controller.signal,
+        }
+      )
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
+export const deletePayment = (id) => {
+  const controller = loadAbort();
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+  return {
+    call: axios
+      .delete(import.meta.env.VITE_BASE_URL + "/admin/payment/" + id, headers, {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
+/**********
  * FUNCTIONS
  ************/
 
