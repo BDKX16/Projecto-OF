@@ -181,7 +181,6 @@ router.post("/payments/webhook", async (req, res) => {
   });
 
   const secret = process.env.MERCADOPAGO_SECRET;
-  console.log(secret);
   // Generate the manifest string
   const manifest = `id:${body.data.id};request-id:${requestHeader};ts:${ts};`;
 
@@ -193,11 +192,11 @@ router.post("/payments/webhook", async (req, res) => {
   const sha = hmac.digest("hex");
 
   if (sha === hash) {
-    // HMAC verification passed
-    console.log("HMAC verification passed");
+    console.log("Payment!");
   } else {
     // HMAC verification failed
     console.log("HMAC verification failed");
+    return res.status(400).send("HMAC verification failed");
   }
 
   var paymentData;
