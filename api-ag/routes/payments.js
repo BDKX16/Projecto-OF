@@ -157,8 +157,12 @@ router.post("/payments/webhook", async (req, res) => {
   const requestHeader = req.headers["x-request-id"];
 
   const signatureParts = signatureHeader.split(",");
+
+  // Initializing variables to store ts and hash
+  let ts;
+  let hash;
   // Iterate over the values to obtain ts and v1
-  parts.forEach((part) => {
+  signatureParts.forEach((part) => {
     // Split each part into key and value
     const [key, value] = part.split("=");
     if (key && value) {
