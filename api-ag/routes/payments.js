@@ -1,4 +1,5 @@
 const express = require("express");
+const crypto = require("crypto");
 const {
   MercadoPagoConfig,
   Preference,
@@ -180,7 +181,7 @@ router.post("/payments/webhook", async (req, res) => {
   });
 
   const secret = process.env.MERCADOPAGO_SECRET;
-
+  console.log(secret);
   // Generate the manifest string
   const manifest = `id:${body.data.id};request-id:${requestHeader};ts:${ts};`;
 
