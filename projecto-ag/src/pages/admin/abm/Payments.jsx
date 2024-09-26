@@ -28,7 +28,7 @@ import {
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { getContent } from "../../../services/public";
+import { getContent, getPayment } from "../../../services/public";
 import {
   editContent,
   deleteContent,
@@ -39,6 +39,8 @@ import {
   getUsers,
   getUser,
   getPayments,
+  deletePayment,
+  editPayment,
 } from "../../../services/private";
 import { createPaymentAdapter } from "../../../adapters/payments";
 import { formatDateToString } from "../../../utils/format-date-to-string";
@@ -84,24 +86,8 @@ const Payments = () => {
     fetchData();
   }, []);
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    setData([...data, { ...formData, id: Math.random() * 10000 }]);
-
-    //handle submit form
-    const result = await callEndpoint(addContent(formData));
-    if (result.status !== 200) {
-      enqueueSnackbar("Error", { variant: "error" });
-    } else {
-      enqueueSnackbar("Contenido agregado", { variant: "success" });
-      setData([...data, result.data]);
-      setFormData(initialFormData);
-    }
-    setIsAddOpen(false);
-  };
-
-  const handleEdit = async () => {
-    const result = await callEndpoint(editUser(formData));
+  const handleEdit = async (id, status) => {
+    const result = await callEndpoint(editPayment(id, status));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
@@ -116,7 +102,7 @@ const Payments = () => {
   };
 
   const handleDelete = async (id) => {
-    const result = await callEndpoint(deleteUser(id));
+    const result = await callEndpoint(deletePayment(id));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
@@ -126,7 +112,7 @@ const Payments = () => {
   };
 
   const handleViewUser = async (id) => {
-    const result = await callEndpoint(getUser(id));
+    const result = await callEndpoint(getPayment(id));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
@@ -135,29 +121,51 @@ const Payments = () => {
     }
   };
 
-  const changeState = async (id, status) => {
-    const result = await callEndpoint(contentState(id, !status));
-    if (result.status !== 200) {
-      enqueueSnackbar("Error", { variant: "error" });
-    } else {
-      enqueueSnackbar(
-        status == true ? "Contenido desabilitado" : "Contenido visible",
-        { variant: "success" }
-      );
-    }
-  };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const colorPaymentStatus = (role) => {
-    switch (role) {
+  const paymentIcon = (method) => {
+    switch (method) {
+      case "mercadopago":
+        return (
+          <img
+            width={40}
+            src="https://logospng.org/download/mercado-pago/logo-mercado-pago-icone-1024.png"
+            alt="mercadopago"
+          />
+        );
+      case "paypal":
+        return (
+          <img
+            width={60}
+            src="https://freelogopng.com/images/all_img/1655979298paypal-logo-png-transparent.png"
+            alt="paypal"
+          />
+        );
+      case "stripe":
+        return (
+          <img
+            width={60}
+            src="https://th.bing.com/th/id/OIP.edmqAxMa4imIeujI3QyrqwHaDb?rs=1&pid=ImgDetMain"
+            alt="stripe"
+          />
+        );
+      default:
+        return <p>{method}</p>;
+    }
+  };
+
+  const colorPaymentStatus = (status) => {
+    switch (status) {
       case "pending":
+      case "deleted":
+      case "in_process":
+      case "in_mediation":
         return (
           <span
             style={{
-              backgroundColor: "#e0e0e0",
+              backgroundColor: "#e0e0e0a7",
               border: "solid",
               borderWidth: 2,
               borderColor: "#858282",
@@ -170,18 +178,21 @@ const Payments = () => {
               textTransform: "capitalize",
             }}
           >
-            {role}
+            {status}
           </span>
         );
       case "completed":
+      case "approved":
+      case "accredited":
+      case "authorized":
         return (
           <span
             style={{
-              backgroundColor: "#dfdbff",
+              backgroundColor: "#a0dda568",
               border: "solid",
               borderWidth: 2,
-              borderColor: "#574cef",
-              color: "#644cef",
+              borderColor: "#34c440",
+              color: "#33bb3f",
               borderRadius: 20,
               paddingLeft: 8,
               paddingRight: 8,
@@ -191,18 +202,42 @@ const Payments = () => {
               textTransform: "capitalize",
             }}
           >
-            {role}
+            {status}
           </span>
         );
-      case "user":
+      case "charged_back":
         return (
           <span
             style={{
-              backgroundColor: "#dbffdb",
+              backgroundColor: "#dfdbff83",
               border: "solid",
               borderWidth: 2,
-              borderColor: "#39c958",
-              color: "#39c958",
+              borderColor: "#564ce2",
+              color: "#4f37d4",
+              borderRadius: 20,
+              paddingLeft: 8,
+              paddingRight: 8,
+              paddingTop: 4,
+              paddingBottom: 3,
+              fontWeight: "bold",
+              textTransform: "capitalize",
+            }}
+          >
+            {status}
+          </span>
+        );
+      case "failed":
+      case "rejected":
+      case "cancelled":
+      case "refunded":
+        return (
+          <span
+            style={{
+              backgroundColor: "#f09d9d60",
+              border: "solid",
+              borderWidth: 2,
+              borderColor: "#c92f2fd5",
+              color: "#c92f2fca",
               borderRadius: 20,
               paddingLeft: 8,
               paddingRight: 8,
@@ -212,11 +247,11 @@ const Payments = () => {
               fontWeight: "bold",
             }}
           >
-            {role}
+            {status}
           </span>
         );
       default:
-        return <span>{role}</span>;
+        return <span>{status}</span>;
     }
   };
 
@@ -295,7 +330,14 @@ const Payments = () => {
                   >
                     <TableCell>
                       <div>
-                        <Tooltip title={JSON.stringify(row.userData)}>
+                        <Tooltip
+                          title={
+                            row.userData &&
+                            Object.entries(row.userData)
+                              .map(([key, value]) => `${key}: ${value}`)
+                              .join(", ")
+                          }
+                        >
                           <IconButton
                             size="small"
                             sx={{ ml: 2 }}
@@ -318,7 +360,9 @@ const Payments = () => {
                     <TableCell style={black}>
                       {row.amount + " " + row.currency}
                     </TableCell>
-                    <TableCell style={black}>{row.paymentMethod}</TableCell>
+                    <TableCell style={black}>
+                      {paymentIcon(row.paymentMethod)}
+                    </TableCell>
                     <TableCell style={black}>
                       {formatDateToString(row.date)}
                     </TableCell>
