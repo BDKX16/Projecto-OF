@@ -175,6 +175,7 @@ router.post("/payments/webhook", async (req, res) => {
       console.log(paymentData);
       console.log(paymentData.additional_info);
       console.log(paymentData.additional_info.items);
+      console.log(paymentData.additional_info.items[0].id);
 
       const pay = await Payments.findOneAndUpdate(
         {
