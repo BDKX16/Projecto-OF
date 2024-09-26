@@ -1,10 +1,15 @@
 const express = require("express");
-const { MercadoPagoConfig, Preference } = require("mercadopago");
+const {
+  MercadoPagoConfig,
+  Preference,
+
+  Payment,
+} = require("mercadopago");
 
 const { checkAuth, checkRole } = require("../middlewares/authentication");
 const router = express.Router();
 
-const Payment = require("../models/payment.js");
+const Payments = require("../models/payment.js");
 const Content = require("../models/content.js");
 
 // Set up MercadoPago credentials
@@ -13,6 +18,8 @@ const client = new MercadoPagoConfig({
     process.env.MERCADOPAGO_ACCESS_TOKEN ||
     "TEST-4044483755982456-090411-5db8f54f0db2a277d1634dc16b51bc3d-157050868",
 });
+
+const mpPayments = new Payment(client);
 
 // Create a new payment
 router.post(
@@ -57,21 +64,21 @@ router.post(
 
       // Create a payment
       console.log(preference);
-
-      const payment = new Payment({
+      /** 
+      const payment = new Payments({
         userId: req.user._id,
         contentId: contentId,
-        paymentId: paymentData.order.id,
+        paymentId: preference.order.id,
         paymentMethod: "mercadopago",
         currency: "ars",
         date: new Date(),
         videoId: contentId,
-        status: paymentData.status,
+        status: preference.status,
         amount: 100,
-      });
+      });*/
       //const response = await mercadopago.preferences.create(preference);
       // Return the payment preference ID
-      res.json(paymentData);
+      res.json(preference);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to create payment" });
@@ -88,7 +95,7 @@ router.get(
     try {
       const { id } = req.params;
       // Get the payment status
-      let payments = await Payment.find({ userId: id });
+      let payments = await Payments.find({ userId: id });
 
       if (payments.length === 0) {
         return res.status(404).json({ error: "No payments found" });
@@ -122,14 +129,28 @@ router.get(
     }
   }
 );
+
+router.post("/payments/success", async (req, res) => {
+  console.log(req.query);
+  const payment = req.query;
+
+  try {
+    res.status(204).send("webhook");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get payment status" });
+  }
+});
+
 router.post("/payments/webhook", async (req, res) => {
   console.log(req.query);
   const payment = req.query;
 
   try {
     if (payment.type === "payment") {
-      const data = await Payment.findById(payment["data.id"]);
-      console.log(data);
+      const pago = mpPayments.get(payment["data.id"]);
+      //const data = await Payments.findById(payment["data.id"]);
+      console.log(pago);
     }
 
     res.status(204).send("webhook");
