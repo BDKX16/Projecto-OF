@@ -148,7 +148,7 @@ router.post("/payments/webhook", async (req, res) => {
 
   try {
     if (payment.type === "payment") {
-      const pago = mpPayments.get(payment["data.id"]);
+      const pago = await mpPayments.get(payment["data.id"]);
       //const data = await Payments.findById(payment["data.id"]);
       console.log(pago);
     }
