@@ -151,6 +151,9 @@ router.post("/payments/success", async (req, res) => {
 router.post("/payments/webhook", async (req, res) => {
   const payment = req.query;
   const body = req.body;
+  if (payment.type != "payment") {
+    return res.status(204).send("webhook");
+  }
 
   //prod only
   const signatureHeader = req.headers["x-signature"];
@@ -199,25 +202,23 @@ router.post("/payments/webhook", async (req, res) => {
   var paymentData;
   var userInfo = null;
   try {
-    if (payment.type === "payment") {
-      await new Payment(client)
-        .get({ id: body.data.id })
-        .then((res) => (paymentData = res))
-        .catch(console.log);
+    await new Payment(client)
+      .get({ id: body.data.id })
+      .then((res) => (paymentData = res))
+      .catch(console.log);
 
-      paymentData.payer && (userInfo = paymentData.payer);
-      await Payments.findOneAndUpdate(
-        {
-          paymentMethod: "mercadopago",
-          videoId: paymentData.additional_info.items[0].id,
-        },
-        {
-          status: paymentData.status,
-          paymentyId: paymentData.id,
-          userData: userInfo,
-        }
-      );
-    }
+    paymentData.payer && (userInfo = paymentData.payer);
+    await Payments.findOneAndUpdate(
+      {
+        paymentMethod: "mercadopago",
+        videoId: paymentData.additional_info.items[0].id,
+      },
+      {
+        status: paymentData.status,
+        paymentyId: paymentData.id,
+        userData: userInfo,
+      }
+    );
 
     res.status(204).send("webhook");
   } catch (error) {
