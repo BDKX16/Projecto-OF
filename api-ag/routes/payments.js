@@ -32,7 +32,7 @@ router.post(
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
       const content = await Content.findById(contentId);
-
+      console.log(content);
       // Create a payment preference
       const requestMP = {
         body: {
@@ -143,12 +143,16 @@ router.post("/payments/success", async (req, res) => {
 });
 
 router.post("/payments/webhook", async (req, res) => {
-  console.log(req.query);
   const payment = req.query;
 
   try {
     if (payment.type === "payment") {
-      const pago = await mpPayments.get(payment["data.id"]);
+      const paymentId = payment["data.id"];
+      console.log(paymentId);
+      const pago = await mpPayments
+        .get(paymentId)
+        .then(console.log)
+        .catch(console.log);
       //const data = await Payments.findById(payment["data.id"]);
       console.log(pago);
     }
