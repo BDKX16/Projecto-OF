@@ -13,20 +13,21 @@ router.get("/webcontent", async (req, res) => {
   try {
     let template = await Template.findOne({
       nullDate: null,
+      active: true,
       $or: [{ validityFrom: null }, { validityFrom: { $lt: new Date() } }],
       $or: [{ validityTo: null }, { validityTo: { $gt: new Date() } }],
     });
-    console.log(template);
+
     if (!template) {
       return res.status(500).json({ message: "Template not found" });
     }
-    //quiero que no retorne los campos nullDate, validityFrom, validityTo y userId
 
     template = template.toObject();
     delete template.nullDate;
     delete template.validityFrom;
     delete template.validityTo;
     delete template.userId;
+    delete template.active;
     delete template._id;
 
     let componentIds = template.components.map(

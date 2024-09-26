@@ -3,7 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../content.css"; // Archivo CSS para estilos personalizados
-import { Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 const settings = {
   dots: false,
@@ -93,11 +93,31 @@ const Classification = ({ data, demo }) => {
             <div key={img._id}>
               <div className="carousel-image-container">
                 <img
-                  src={img.coverUrl}
-                  alt={`Slide ${index + 1}`}
+                  src={
+                    "https://via.placeholder.com/150" ||
+                    "https://via.placeholder.com/150"
+                  }
+                  alt={`Slide ${img.title}`}
                   className="carousel-image"
                 />
-                <h3 className="carousel-image-title">Title {index + 1}</h3>
+                <Box height={34}>
+                  <Typography
+                    variant="h3"
+                    component="h3"
+                    fontSize={14}
+                    color="text.primary"
+                    textAlign="start"
+                    mt={1}
+                    mb={1}
+                    style={{
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {img.title}
+                  </Typography>
+                </Box>
 
                 <Button
                   type="submit"

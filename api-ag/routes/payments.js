@@ -21,26 +21,35 @@ router.post(
   checkRole(["user", "admin", "owner"]),
   async (req, res) => {
     try {
-      const { amount, description } = req.body;
+      const { contentId } = req.body;
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
+      const content = await Content.findById(contentId);
 
       // Create a payment preference
       const requestMP = {
         body: {
           items: [
             {
-              title: description,
+              title: "test",
               quantity: 1,
               unit_price: 100,
             },
           ],
+          back_urls: {
+            success: "https://almendragala.com/success",
+            failure: "https://almendragala.com/failure",
+            pending: "https://almendragala.com/pending",
+          },
+          notification_url: "https://almendragala.com/api/payments/webhook",
           redirect_urls: {
             success: "https://almendragala.com/success",
             failure: "https://almendragala.com/failure",
+            pending: "https://almendragala.com/pending",
           },
         },
       };
+
       const preference = await new Preference(client)
         .create(requestMP)
         .then((res) => (paymentData = res))
@@ -48,9 +57,21 @@ router.post(
 
       // Create a payment
       console.log(preference);
+
+      const payment = new Payment({
+        userId: req.user._id,
+        contentId: contentId,
+        paymentId: paymentData.order.id,
+        paymentMethod: "mercadopago",
+        currency: "ars",
+        date: new Date(),
+        videoId: contentId,
+        status: paymentData.status,
+        amount: 100,
+      });
       //const response = await mercadopago.preferences.create(preference);
       // Return the payment preference ID
-      res.json({ preferenceLink: paymentData.init_point });
+      res.json(paymentData);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to create payment" });
@@ -101,5 +122,21 @@ router.get(
     }
   }
 );
+router.post("/payments/webhook", async (req, res) => {
+  console.log(req.query);
+  const payment = req.query;
+
+  try {
+    if (payment.type === "payment") {
+      const data = await Payment.findById(payment["data.id"]);
+      console.log(data);
+    }
+
+    res.status(204).send("webhook");
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to get payment status" });
+  }
+});
 
 module.exports = router;

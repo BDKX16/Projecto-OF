@@ -222,7 +222,7 @@ const ABMTable = () => {
               type="number"
             />
             <TextField
-              helperText="Url de la imagen de portada en jpeg o jpg"
+              helperText="Url de la imagen de portada en jpeg o jpg. Preferentemente en formato 150x150, aunque puede ir cualquier tamaño si es el mismo en todo el contenido"
               name="coverUrl"
               value={formData.coverUrl}
               onChange={handleChange}
