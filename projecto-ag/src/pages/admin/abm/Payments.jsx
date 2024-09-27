@@ -125,7 +125,7 @@ const Payments = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const paymentIcon = (method) => {
+  const PaymentIcon = ({ method }) => {
     switch (method) {
       case "mercadopago":
         return (
@@ -156,7 +156,7 @@ const Payments = () => {
     }
   };
 
-  const colorPaymentStatus = (status) => {
+  const PaymentStatus = ({ status }) => {
     switch (status) {
       case "pending":
       case "deleted":
@@ -353,15 +353,24 @@ const Payments = () => {
                     </TableCell>
                     <TableCell style={black}>{row.videoId}</TableCell>
                     <TableCell style={black}>
-                      {colorPaymentStatus(
-                        row.nullDate == null ? row.status : "deleted"
-                      )}
+                      <PaymentStatus
+                        status={row.nullDate == null ? row.status : "deleted"}
+                      ></PaymentStatus>
                     </TableCell>
                     <TableCell style={black}>
                       {row.amount + " " + row.currency}
                     </TableCell>
-                    <TableCell style={black}>
-                      {paymentIcon(row.paymentMethod)}
+                    <TableCell>
+                      <div
+                        style={{
+                          ...black,
+                          alignItems: "center",
+                          display: "flex",
+                          flexDirection: "column",
+                        }}
+                      >
+                        <PaymentIcon method={row.paymentMethod}></PaymentIcon>
+                      </div>
                     </TableCell>
                     <TableCell style={black}>
                       {formatDateToString(row.date)}
