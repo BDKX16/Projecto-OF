@@ -27,6 +27,7 @@ router.get("/content/:videoId", async (req, res) => {
 
     if (!payment) {
       const videoContent = {
+        title: content.title,
         videoUrl: undefined,
         description: content.description,
         coverUrl: content.coverUrl,
@@ -40,6 +41,7 @@ router.get("/content/:videoId", async (req, res) => {
 
     if (payment.status !== "completed") {
       const videoContent = {
+        title: content.title,
         videoUrl: undefined,
         status: payment.status,
         description: content.description,
