@@ -13,7 +13,7 @@ router.get("/webcontent", async (req, res) => {
   try {
     let template = await Template.findOne({
       nullDate: null,
-      active: false,
+      active: true,
       $or: [{ validityFrom: null }, { validityFrom: { $lt: new Date() } }],
       $or: [{ validityTo: null }, { validityTo: { $gt: new Date() } }],
     });
