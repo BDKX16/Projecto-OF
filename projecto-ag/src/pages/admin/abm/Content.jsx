@@ -13,12 +13,15 @@ import {
   IconButton,
   Box,
   Switch,
+  Chip,
+  Autocomplete,
 } from "@mui/material";
 import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
 import { getContent } from "../../../services/public";
+import { getCategorys } from "../../../services/private";
 import {
   editContent,
   deleteContent,
@@ -26,6 +29,7 @@ import {
   contentState,
 } from "../../../services/private";
 import { createContentAdapter } from "../../../adapters/content";
+import { createCategoryAdapter } from "../../../adapters/categorys";
 import { formatDateToString } from "../../../utils/format-date-to-string";
 import LoadingSpinner from "../../content/components/LoadingSpinner";
 
@@ -33,6 +37,7 @@ const initialFormData = {
   title: "",
   description: "",
   price: 0,
+  categorys: [],
   coverUrl: "",
   videoUrl: "",
   date: new Date(),
@@ -47,6 +52,7 @@ const ABMTable = () => {
   const [currentEdit, setCurrentEdit] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
 
+  const [categorys, setCategorys] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
       const result = await callEndpoint(getContent());
@@ -63,7 +69,7 @@ const ABMTable = () => {
         }
       }
     };
-
+    fetchCategorys();
     fetchData();
   }, []);
 
@@ -119,12 +125,24 @@ const ABMTable = () => {
         status == true ? "Contenido desabilitado" : "Contenido visible",
         { variant: "success" }
       );
-      m;
     }
   };
-
+  const fetchCategorys = async () => {
+    const result = await callEndpoint(getCategorys());
+    if (!result || Object.keys(result)?.length === 0) {
+      return;
+    } else {
+      if (result.data.length !== 0) {
+        setCategorys(result.data.map((item) => item.name));
+      }
+    }
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleCategoriesChange = (e) => {
+    setFormData({ ...formData, categorys: e });
   };
 
   return (
@@ -238,6 +256,35 @@ const ABMTable = () => {
               fullWidth
               margin="normal"
             />
+            <Autocomplete
+              multiple
+              name="categorys"
+              id="categorys"
+              options={categorys}
+              onChange={(e, value) => {
+                handleCategoriesChange(value);
+              }}
+              renderTags={(value, getTagProps) =>
+                value.map((option, index) => {
+                  const { key, ...tagProps } = getTagProps({ index });
+                  return (
+                    <Chip
+                      variant="outlined"
+                      label={option}
+                      key={key}
+                      {...tagProps}
+                    />
+                  );
+                })
+              }
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Categorias"
+                  placeholder="Categorias"
+                />
+              )}
+            />
             <Button
               variant="contained"
               color="primary"
@@ -313,7 +360,7 @@ const ABMTable = () => {
             <TableBody>
               {data &&
                 data.map((row) => (
-                  <TableRow key={row.date}>
+                  <TableRow key={row.id}>
                     <TableCell style={{ color: "#272727" }}>
                       {row.title}
                     </TableCell>
@@ -408,6 +455,37 @@ const ABMTable = () => {
             onChange={handleChange}
             fullWidth
             margin="normal"
+          />
+          <Autocomplete
+            multiple
+            name="categorys"
+            id="categorys"
+            options={categorys}
+            freeSolo
+            value={formData.categorys}
+            onChange={(e, value) => {
+              handleCategoriesChange(value);
+            }}
+            renderTags={(value, getTagProps) =>
+              value.map((option, index) => {
+                const { key, ...tagProps } = getTagProps({ index });
+                return (
+                  <Chip
+                    variant="outlined"
+                    label={option}
+                    key={key}
+                    {...tagProps}
+                  />
+                );
+              })
+            }
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Categorias"
+                placeholder="Categorias"
+              />
+            )}
           />
           <Button
             variant="contained"
