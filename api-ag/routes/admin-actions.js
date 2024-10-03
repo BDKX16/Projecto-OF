@@ -153,9 +153,7 @@ router.post(
         validityFrom:
           templateData.validityFrom == "" ? null : templateData.validityFrom,
         validityTo:
-          templateData.validityTo == "" || templateData.validityTo == null
-            ? null
-            : templateData.validityTo,
+          templateData.validityTo == "" ? null : templateData.validityTo,
         nullDate: null,
         active: true,
         components: templateData.components.map((component) => ({
