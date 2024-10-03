@@ -24,15 +24,56 @@ const App = () => {
         primary: {
           main: "rgba(198, 198, 198, 1)",
           light: "rgba(198, 198, 198, 1)",
+          contrastText: "#141414",
         },
         secondary: {
           main: "rgba(198, 198, 198, 1)",
+          contrastText: "#141414",
         },
         background: {
           default: "rgba(198, 198, 198, 1)",
           topbar: "rgba(198, 198, 198, 1)",
           sidebar: "rgba(198, 198, 198, 1)",
           footer: "rgba(198, 198, 198, 1)",
+        },
+      },
+      typography: {
+        fontFamily: "Cinzel",
+        button: {
+          fontFamily: "Cinzel",
+        },
+        h1: {
+          fontFamily: "Cinzel",
+        },
+        h2: {
+          fontFamily: "Cinzel",
+        },
+        h3: {
+          fontFamily: "Cinzel",
+        },
+        h4: {
+          fontFamily: "Cinzel",
+        },
+        h5: {
+          fontFamily: "Cinzel",
+        },
+        h6: {
+          fontFamily: "Cinzel",
+        },
+        subtitle1: {
+          fontFamily: "Cinzel",
+        },
+        subtitle2: {
+          fontFamily: "Cinzel",
+        },
+        body1: {
+          fontFamily: "Cinzel",
+        },
+        body2: {
+          fontFamily: "Cinzel",
+        },
+        caption: {
+          fontFamily: "Cinzel",
         },
       },
     })

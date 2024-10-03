@@ -86,12 +86,19 @@ function App() {
 
         <ul className="topbar">
           <li className="principal">
-            <a href="/" className="logo">
-              <img
-                height="128"
-                src="https://static.vecteezy.com/system/resources/thumbnails/012/986/755/small/abstract-circle-logo-icon-free-png.png"
-              ></img>
-            </a>
+            <Typography>
+              <a
+                href="/"
+                className="logo cinzel-600"
+                alt="Almendra Gala Logo"
+                style={{
+                  color: theme.palette.secondary.main,
+                  fontSize: "1.9rem",
+                }}
+              >
+                ALMENDRA GALA
+              </a>
+            </Typography>
           </li>
           <li className="hideOnMobile">
             <a href="#">Favoritos</a>

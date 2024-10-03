@@ -150,9 +150,14 @@ router.post(
         userId: userId,
         name: templateData.name,
         createdAt: new Date(),
-        validityFrom: templateData.validityFrom,
-        validityTo: templateData.validityTo,
+        validityFrom:
+          templateData.validityFrom == "" ? null : templateData.validityFrom,
+        validityTo:
+          templateData.validityTo == "" || templateData.validityTo == null
+            ? null
+            : templateData.validityTo,
         nullDate: null,
+        active: true,
         components: templateData.components.map((component) => ({
           componentName: component.title,
           componentType: component.type,

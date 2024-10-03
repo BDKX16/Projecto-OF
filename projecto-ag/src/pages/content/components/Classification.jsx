@@ -85,9 +85,21 @@ const Classification = ({ data, demo }) => {
   } else {
     return (
       <div className="carousel-container-classification">
-        <h2 className="classification-title">
+        <Typography
+          variant="h2"
+          component="h2"
+          color="text.primary"
+          backgroundColor="primary.main"
+          fontSize={30}
+          className="classification-title"
+          style={{
+            marginBottom: "1rem",
+            marginLeft: "0.3rem",
+            marginTop: "1rem",
+          }}
+        >
           {data.componentName.toUpperCase()}
-        </h2>
+        </Typography>
         <Slider {...settings}>
           {imagesUrl.map((img, index) => (
             <div key={img._id}>

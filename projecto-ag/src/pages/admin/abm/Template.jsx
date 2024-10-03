@@ -52,6 +52,7 @@ const initialFormData = {
   createdAt: new Date(),
   validityFrom: "",
   validityTo: "",
+  active: true,
   components: [],
 };
 const Templates = () => {

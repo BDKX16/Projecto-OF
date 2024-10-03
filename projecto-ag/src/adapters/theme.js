@@ -29,9 +29,78 @@ export const createThemeAdapter = (theme) => ({
       primary:
         theme.find((element) => element.clave === "text-primary")?.valor ||
         "#000000",
+      contrastText: "#141414",
       secondary:
         theme.find((element) => element.clave === "text-secondary")?.valor ||
         "#000000",
+      contrastText: "#141414",
+    },
+  },
+  typography: {
+    fontFamily:
+      theme.find((element) => element.clave === "font-family")?.valor ||
+      "#Cinzel",
+    button: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    h1: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+      fontWeight: "bold",
+    },
+    h2: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+      fontWeight: "bold",
+    },
+    h3: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    h4: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    h5: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    h6: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    subtitle1: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    subtitle2: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    body1: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    body2: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
+    },
+    caption: {
+      fontFamily:
+        theme.find((element) => element.clave === "font-family")?.valor ||
+        "Cinzel",
     },
   },
 });
