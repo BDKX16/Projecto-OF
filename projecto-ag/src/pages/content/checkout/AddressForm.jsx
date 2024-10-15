@@ -1,15 +1,15 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
-import Grid from '@mui/material/Grid';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import { styled } from '@mui/system';
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormLabel from "@mui/material/FormLabel";
+import Grid from "@mui/material/Grid";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { styled } from "@mui/system";
 
 const FormGrid = styled(Grid)(() => ({
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
 }));
 
 export default function AddressForm() {
@@ -17,20 +17,20 @@ export default function AddressForm() {
     <Grid container spacing={3}>
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="first-name" required>
-          First name
+          Nombre
         </FormLabel>
         <OutlinedInput
           id="first-name"
           name="first-name"
           type="name"
-          placeholder="John"
+          placeholder="Juan"
           autoComplete="first name"
           required
         />
       </FormGrid>
       <FormGrid item xs={12} md={6}>
         <FormLabel htmlFor="last-name" required>
-          Last name
+          Apellidos
         </FormLabel>
         <OutlinedInput
           id="last-name"
@@ -43,7 +43,7 @@ export default function AddressForm() {
       </FormGrid>
       <FormGrid item xs={12}>
         <FormLabel htmlFor="address1" required>
-          Address line 1
+          Direccion
         </FormLabel>
         <OutlinedInput
           id="address1"
@@ -55,7 +55,7 @@ export default function AddressForm() {
         />
       </FormGrid>
       <FormGrid item xs={12}>
-        <FormLabel htmlFor="address2">Address line 2</FormLabel>
+        <FormLabel htmlFor="address2">Direccion 2</FormLabel>
         <OutlinedInput
           id="address2"
           name="address2"
@@ -67,7 +67,7 @@ export default function AddressForm() {
       </FormGrid>
       <FormGrid item xs={6}>
         <FormLabel htmlFor="city" required>
-          City
+          Ciudad
         </FormLabel>
         <OutlinedInput
           id="city"
@@ -80,7 +80,7 @@ export default function AddressForm() {
       </FormGrid>
       <FormGrid item xs={6}>
         <FormLabel htmlFor="state" required>
-          State
+          Provincia
         </FormLabel>
         <OutlinedInput
           id="state"
@@ -93,7 +93,7 @@ export default function AddressForm() {
       </FormGrid>
       <FormGrid item xs={6}>
         <FormLabel htmlFor="zip" required>
-          Zip / Postal code
+          Codigo Postal / Zip
         </FormLabel>
         <OutlinedInput
           id="zip"
@@ -106,7 +106,7 @@ export default function AddressForm() {
       </FormGrid>
       <FormGrid item xs={6}>
         <FormLabel htmlFor="country" required>
-          Country
+          Pais
         </FormLabel>
         <OutlinedInput
           id="country"
@@ -115,12 +115,6 @@ export default function AddressForm() {
           placeholder="United States"
           autoComplete="shipping country"
           required
-        />
-      </FormGrid>
-      <FormGrid item xs={12}>
-        <FormControlLabel
-          control={<Checkbox name="saveAddress" value="yes" />}
-          label="Use this address for payment details"
         />
       </FormGrid>
     </Grid>

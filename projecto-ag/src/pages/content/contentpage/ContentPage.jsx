@@ -54,7 +54,11 @@ const ContentPage = () => {
       </div>
     );
   } else if (data.videoUrl == null) {
-    return <Checkout />;
+    return (
+      <div style={{ backgroundColor: "white", padding: 30, borderRadius: 15 }}>
+        <Checkout />
+      </div>
+    );
   } else {
     return <VideoPage video={data} />;
   }

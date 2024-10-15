@@ -165,7 +165,7 @@ const ABMCategorys = () => {
               setIsAddOpen(!isAddOpen);
             }}
           >
-            Agregar nuevo video
+            Agregar nueva categoria
           </Button>
         </div>
       </div>

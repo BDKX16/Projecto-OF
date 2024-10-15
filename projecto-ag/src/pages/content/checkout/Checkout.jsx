@@ -30,7 +30,11 @@ import PaymentForm from "./PaymentForm";
 import Review from "./Review";
 import ToggleColorMode from "./ToggleColorMode";
 
-const steps = ["Shipping address", "Payment details", "Review your order"];
+const steps = [
+  "Datos de usuario / facturacion",
+  "Metodo de pago",
+  "Confirmacion",
+];
 
 const logoStyle = {
   width: "140px",
@@ -71,7 +75,12 @@ export default function Checkout() {
 
   return (
     <ThemeProvider theme={defaultTheme}>
-      <Grid container sx={{ height: { xs: "100%", sm: "100dvh" } }}>
+      <Grid
+        container
+        sx={{
+          height: { xs: "100%", sm: "100dvh" },
+        }}
+      >
         <Grid
           item
           xs={12}
@@ -102,14 +111,7 @@ export default function Checkout() {
               href="/"
               sx={{ ml: "-8px" }}
             >
-              Back to
-              <img
-                src={
-                  "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
-                }
-                style={logoStyle}
-                alt="Sitemark's logo"
-              />
+              Volver al sitio
             </Button>
           </Box>
           <Box
@@ -164,14 +166,7 @@ export default function Checkout() {
                 href="/material-ui/getting-started/templates/landing-page/"
                 sx={{ alignSelf: "start" }}
               >
-                Back to
-                <img
-                  src={
-                    "https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg"
-                  }
-                  style={logoStyle}
-                  alt="Sitemark's logo"
-                />
+                Volver al sitio
               </Button>
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             </Box>
