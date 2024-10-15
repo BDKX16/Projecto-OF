@@ -61,8 +61,8 @@ const AdminLayout = (props) => {
         style={{ backgroundColor: "transparent", width: 230 }}
       >
         <Toolbar style={{ padding: 0, marginBottom: 30 }}>
-          <Button
-            href="https://almendragala.com"
+          <Link
+            to="/admin"
             style={{
               flex: 1,
               display: "flex",
@@ -85,7 +85,7 @@ const AdminLayout = (props) => {
             >
               v1
             </p>
-          </Button>
+          </Link>
         </Toolbar>
         <List>
           <p

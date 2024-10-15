@@ -440,10 +440,13 @@ const Templates = () => {
                       >
                         <Edit />
                       </IconButton>
-                      <IconButton onClick={() => handleDelete(row.id)}>
+                      <IconButton disabled onClick={() => handleDelete(row.id)}>
                         <Delete />
                       </IconButton>
-                      <IconButton onClick={() => handlePreview(row.id)}>
+                      <IconButton
+                        disabled
+                        onClick={() => handlePreview(row.id)}
+                      >
                         <Visibility />
                       </IconButton>
                       <Switch
@@ -462,14 +465,7 @@ const Templates = () => {
 
       <Collapse in={isEditOpen}>
         <Box component={Paper} p={2} mt={2}>
-          <TextField
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
+          <Typography style={{ fontSize: 35 }}>{formData.name}</Typography>
           <div
             style={{
               display: "flex",
