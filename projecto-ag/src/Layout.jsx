@@ -16,6 +16,7 @@ import Template from "./pages/admin/abm/Template.jsx";
 import Carousels from "./pages/admin/abm/Carousels.jsx";
 import Personalization from "./pages/admin/abm/Personalization.jsx";
 import Payments from "./pages/admin/abm/Payments.jsx";
+import { Button } from "@mui/material";
 
 //Routes
 const Login = lazy(() => import("./pages/Login.jsx"));
@@ -42,6 +43,31 @@ const Layout = () => {
                 <Route path={`/user-managment`} element={<ABMUsuarios />} />
                 <Route path={`/category`} element={<ABMCategorys />} />
                 <Route path={`/payments`} element={<Payments />} />
+                <Route
+                  path={`/`}
+                  element={
+                    <>
+                      <h1>Almendra gala web panel</h1>
+                      <h2>Panel de administrador</h2>
+                      <p>Seleccione una opción del menú lateral</p>
+                      <h3>Pagina principal</h3>
+                      <Button
+                        href="https://www.almendragala.com/"
+                        variant="contained"
+                      >
+                        Almendra gala
+                      </Button>
+                      <h3>Enlaces utiles</h3>
+                      <p>Para acceder al almacenamiento en la nube:</p>
+                      <Button
+                        href="https://s3.almendragala.com/"
+                        variant="contained"
+                      >
+                        Cloud storage
+                      </Button>
+                    </>
+                  }
+                />
                 <Route
                   path={`/personalization`}
                   element={<Personalization />}

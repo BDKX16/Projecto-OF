@@ -13,6 +13,7 @@ import {
   IconButton,
   Box,
   Switch,
+  Typography,
 } from "@mui/material";
 import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
@@ -297,15 +298,7 @@ const ABMCategorys = () => {
 
       <Collapse in={isEditOpen}>
         <Box component={Paper} p={2} mt={2}>
-          <TextField
-            label="Nombre"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            type="text"
-          />
+          <Typography variant="h6">{formData.name}</Typography>
           <div
             style={{
               display: "flex",
