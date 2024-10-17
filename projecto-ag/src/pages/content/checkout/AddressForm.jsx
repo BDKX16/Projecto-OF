@@ -49,7 +49,7 @@ export default function AddressForm() {
           id="address1"
           name="address1"
           type="address1"
-          placeholder="Street name and number"
+          placeholder="Calle y numero"
           autoComplete="shipping address-line1"
           required
         />
@@ -60,7 +60,7 @@ export default function AddressForm() {
           id="address2"
           name="address2"
           type="address2"
-          placeholder="Apartment, suite, unit, etc. (optional)"
+          placeholder="Departamento, planta baja, unidad, etc. (opcional)"
           autoComplete="shipping address-line2"
           required
         />
@@ -73,7 +73,7 @@ export default function AddressForm() {
           id="city"
           name="city"
           type="city"
-          placeholder="New York"
+          placeholder="Capital Federal"
           autoComplete="City"
           required
         />
@@ -86,7 +86,7 @@ export default function AddressForm() {
           id="state"
           name="state"
           type="state"
-          placeholder="NY"
+          placeholder="Buenos Aires"
           autoComplete="State"
           required
         />
@@ -112,7 +112,7 @@ export default function AddressForm() {
           id="country"
           name="country"
           type="country"
-          placeholder="United States"
+          placeholder="Argentina"
           autoComplete="shipping country"
           required
         />
