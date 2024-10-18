@@ -135,7 +135,9 @@ export default function Checkout({ video }) {
       enqueueSnackbar("Pago efectuado", {
         variant: "success",
       });
+
       console.log(result.data);
+      window.open(result.data.preferenceRedirect, "_blank");
       setOrderId(result.data.orderId);
       setActiveStep(activeStep + 1);
     }
