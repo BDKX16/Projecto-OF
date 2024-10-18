@@ -17,15 +17,32 @@ const FormGrid = styled(Grid)(() => ({
   flexDirection: "column",
 }));
 
+const InputContainer = styled("div")({
+  position: "relative",
+});
+
+const ErrorText = styled(Typography)({
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  color: "red",
+  fontSize: "12px",
+});
+
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First Name is required"),
-  lastName: Yup.string().required("Last Name is required"),
-  address: Yup.string().required("Address is required"),
-  address2: Yup.string(),
-  city: Yup.string().required("City is required"),
-  state: Yup.string().required("State is required"),
-  postalCode: Yup.string().required("Postal Code is required"),
-  country: Yup.string().required("Country is required"),
+  firstName: Yup.string().required("El nombre es obligatorio"),
+  lastName: Yup.string().required("El apellido es obligatorio"),
+  address: Yup.string().required("Una direccion es requerida"),
+  phone: Yup.string()
+    .matches(
+      /^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?[\d\s.-]{7,10}$/,
+      "El numero de telefono no es válido"
+    )
+    .required("El numero de telefono es obligatorio"),
+  city: Yup.string().required("La ciudad es requerida"),
+  state: Yup.string().required("La provincia es requerida"),
+  postalCode: Yup.string().required("El codio postal es obligatorio"),
+  country: Yup.string().required("El pais es obligatorio"),
 });
 
 export default function AddressForm({ onFormDataChange, formData }) {
@@ -43,137 +60,159 @@ export default function AddressForm({ onFormDataChange, formData }) {
           <Grid container spacing={3}>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="firstName" required>
-                First Name
+                Nombre
               </FormLabel>
-              <OutlinedInput
-                id="firstName"
-                name="firstName"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.firstName}
-                fullWidth
-              />
-              <ErrorMessage
-                name="firstName"
-                component={Typography}
-                color="error"
-              />
+              <InputContainer>
+                <OutlinedInput
+                  id="firstName"
+                  name="firstName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.firstName}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="lastName" required>
-                Last Name
+                Apellido
               </FormLabel>
-              <OutlinedInput
-                id="lastName"
-                name="lastName"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.lastName}
-                fullWidth
-              />
-              <ErrorMessage
-                name="lastName"
-                component={Typography}
-                color="error"
-              />
+              <InputContainer>
+                <OutlinedInput
+                  id="lastName"
+                  name="lastName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.lastName}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="lastName"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
             <Grid item xs={12}>
               <FormLabel htmlFor="address" required>
-                Address
+                Dirección
               </FormLabel>
-              <OutlinedInput
-                id="address"
-                name="address"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.address}
-                fullWidth
-              />
-              <ErrorMessage
-                name="address"
-                component={Typography}
-                color="error"
-              />
+              <InputContainer>
+                <OutlinedInput
+                  id="address"
+                  name="address"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.address}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="address"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
             <Grid item xs={12}>
-              <FormLabel htmlFor="address2">Address 2</FormLabel>
-              <OutlinedInput
-                id="address2"
-                name="address2"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.address2}
-                fullWidth
-              />
-              <ErrorMessage
-                name="address2"
-                component={Typography}
-                color="error"
-              />
+              <FormLabel htmlFor="phone" required>
+                Numero de telefono
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="phone"
+                  name="phone"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.phone}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="phone"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="city" required>
-                City
+                Ciudad
               </FormLabel>
-              <OutlinedInput
-                id="city"
-                name="city"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.city}
-                fullWidth
-              />
-              <ErrorMessage name="city" component={Typography} color="error" />
+              <InputContainer>
+                <OutlinedInput
+                  id="city"
+                  name="city"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.city}
+                  fullWidth
+                />
+                <ErrorMessage name="city" component={ErrorText} color="error" />
+              </InputContainer>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="state" required>
-                State
+                Estado
               </FormLabel>
-              <OutlinedInput
-                id="state"
-                name="state"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.state}
-                fullWidth
-              />
-              <ErrorMessage name="state" component={Typography} color="error" />
+              <InputContainer>
+                <OutlinedInput
+                  id="state"
+                  name="state"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.state}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="state"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="postalCode" required>
-                Postal Code
+                Código Postal
               </FormLabel>
-              <OutlinedInput
-                id="postalCode"
-                name="postalCode"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.postalCode}
-                fullWidth
-              />
-              <ErrorMessage
-                name="postalCode"
-                component={Typography}
-                color="error"
-              />
+              <InputContainer>
+                <OutlinedInput
+                  id="postalCode"
+                  name="postalCode"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.postalCode}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="postalCode"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="country" required>
-                Country
+                País
               </FormLabel>
-              <OutlinedInput
-                id="country"
-                name="country"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.country}
-                fullWidth
-              />
-              <ErrorMessage
-                name="country"
-                component={Typography}
-                color="error"
-              />
+              <InputContainer>
+                <OutlinedInput
+                  id="country"
+                  name="country"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.country}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="country"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
             </Grid>
           </Grid>
           <Button
@@ -181,7 +220,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
             variant="contained"
             endIcon={<ChevronRightRoundedIcon />}
             color="primary"
-            style={{ marginTop: "16px" }}
+            style={{ marginTop: "30px" }}
           >
             Siguiente
           </Button>

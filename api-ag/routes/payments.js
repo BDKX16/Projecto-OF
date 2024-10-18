@@ -27,11 +27,11 @@ router.post(
   checkRole(["user", "admin", "owner"]),
   async (req, res) => {
     try {
-      const { contentId } = req.body;
+      const formData = req.body;
       const userId = req.userData._id;
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
-      const content = await Content.findById(contentId);
+      const content = await Content.findById(formData.contentId);
       if (!content) {
         return res.status(404).json({ error: "Content not found" });
       }
@@ -40,7 +40,7 @@ router.post(
         body: {
           items: [
             {
-              id: contentId,
+              id: formData.contentId,
               title: "AlmenWeb",
               description: "Contenido pagina web",
               quantity: 1,
@@ -72,20 +72,34 @@ router.post(
         return res.status(500).json({ error: "Failed to create payment" });
       }
 
-      await Payments.create({
+      const paymentData = await Payments.create({
         userId: userId,
-        contentId: contentId,
+        contentId: formData.contentId,
         paymentId: null,
         paymentMethod: "mercadopago",
         currency: "ARS",
         date: new Date(),
-        videoId: contentId,
+        videoId: formData.contentId,
         status: "pending",
         amount: content.price,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        phone: formData.phone,
+        address: formData.address,
+        address2: formData.address2,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        postalCode: formData.postalCode,
       });
 
       // Return the payment preference ID
-      res.json({ preferenceRedirect: preference.init_point });
+      res
+        .json({
+          preferenceRedirect: preference.init_point,
+          orderId: paymentData._id,
+        })
+        .status(200);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to create payment" });

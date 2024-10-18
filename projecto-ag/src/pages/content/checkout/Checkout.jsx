@@ -29,6 +29,10 @@ import Info from "./Info";
 import InfoMobile from "./InfoMobile";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
+import { sendPayment } from "../../../services/public";
+import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
+
+import { enqueueSnackbar } from "notistack";
 
 const steps = [
   "Datos de usuario / facturacion",
@@ -47,7 +51,9 @@ function getStepContent(
   step,
   handleFormDataChange,
   formData,
-  handlePaymentTypeChange
+  handlePaymentTypeChange,
+  paymentData,
+  videoData
 ) {
   switch (step) {
     case 0:
@@ -60,13 +66,20 @@ function getStepContent(
     case 1:
       return <PaymentForm onPaymentTypeChange={handlePaymentTypeChange} />;
     case 2:
-      return <Review />;
+      return (
+        <Review
+          video={videoData}
+          formData={formData}
+          paymentData={paymentData}
+        />
+      );
     default:
       throw new Error("Unknown step");
   }
 }
 
 export default function Checkout({ video }) {
+  const { loading, callEndpoint } = useFetchAndLoad();
   const defaultTheme = createTheme({ palette: { mode: "light" } });
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
@@ -74,7 +87,7 @@ export default function Checkout({ video }) {
     firstName: "",
     lastName: "",
     address: "",
-    address2: "",
+    phone: "",
     city: "",
     state: "",
     postalCode: "",
@@ -96,12 +109,35 @@ export default function Checkout({ video }) {
         setActiveStep(activeStep + 1);
       }
     } else if (activeStep == 2) {
-      setActiveStep(activeStep + 1);
+      confirmAndSendPayment();
     }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+  };
+
+  const confirmAndSendPayment = async () => {
+    const toSend = {
+      ...formData,
+      paymentMethod: selectedPaymentType,
+      contentId: video.id,
+    };
+
+    const result = await callEndpoint(sendPayment(toSend));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error procesing payment", {
+        variant: "error",
+      });
+      return;
+    } else {
+      enqueueSnackbar("Pago efectuado", {
+        variant: "success",
+      });
+      console.log(result);
+      console.log(result.data);
+    }
+    setActiveStep(activeStep + 1);
   };
 
   return (
@@ -323,7 +359,9 @@ export default function Checkout({ video }) {
                   activeStep,
                   handleFormDataChange,
                   formData,
-                  handlePaymentTypeChange
+                  handlePaymentTypeChange,
+                  selectedPaymentType,
+                  video
                 )}
                 <Box
                   sx={{
