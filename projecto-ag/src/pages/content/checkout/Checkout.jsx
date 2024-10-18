@@ -44,10 +44,15 @@ const logoStyle = {
   marginRight: "-8px",
 };
 
-function getStepContent(step, handleFormDataChange) {
+function getStepContent(step, handleFormDataChange, formData) {
   switch (step) {
     case 0:
-      return <AddressForm onFormDataChange={handleFormDataChange} />;
+      return (
+        <AddressForm
+          onFormDataChange={handleFormDataChange}
+          formData={formData}
+        />
+      );
     case 1:
       return <PaymentForm />;
     case 2:
@@ -61,10 +66,20 @@ export default function Checkout({ video }) {
   const [mode, setMode] = React.useState("light");
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+  });
 
   const handleFormDataChange = (data) => {
     setFormData(data);
+    setActiveStep(activeStep + 1);
   };
 
   const toggleColorMode = () => {
@@ -72,7 +87,9 @@ export default function Checkout({ video }) {
   };
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (activeStep > 0) {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const handleBack = () => {
@@ -295,7 +312,7 @@ export default function Checkout({ video }) {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep, handleFormDataChange)}
+                {getStepContent(activeStep, handleFormDataChange, formData)}
                 <Box
                   sx={{
                     display: "flex",
@@ -319,34 +336,24 @@ export default function Checkout({ video }) {
                         display: { xs: "none", sm: "flex" },
                       }}
                     >
-                      Previous
+                      Anterior
                     </Button>
                   )}
 
-                  {activeStep !== 0 && (
+                  {activeStep > 0 && (
                     <Button
-                      startIcon={<ChevronLeftRoundedIcon />}
-                      onClick={handleBack}
-                      variant="outlined"
-                      fullWidth
+                      variant="contained"
+                      endIcon={<ChevronRightRoundedIcon />}
+                      onClick={handleNext}
                       sx={{
-                        display: { xs: "flex", sm: "none" },
+                        width: { xs: "100%", sm: "fit-content" },
                       }}
                     >
-                      Previous
+                      {activeStep === steps.length - 1
+                        ? "Confirmar compra"
+                        : "Siguiente"}
                     </Button>
                   )}
-
-                  <Button
-                    variant="contained"
-                    endIcon={<ChevronRightRoundedIcon />}
-                    onClick={handleNext}
-                    sx={{
-                      width: { xs: "100%", sm: "fit-content" },
-                    }}
-                  >
-                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                  </Button>
                 </Box>
               </React.Fragment>
             )}
