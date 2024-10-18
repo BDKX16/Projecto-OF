@@ -83,6 +83,7 @@ export default function Checkout({ video }) {
   const defaultTheme = createTheme({ palette: { mode: "light" } });
   const [activeStep, setActiveStep] = React.useState(0);
   const [selectedPaymentType, setSelectedPaymentType] = useState("");
+  const [orderId, setOrderId] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -135,8 +136,9 @@ export default function Checkout({ video }) {
         variant: "success",
       });
       console.log(result);
+      setOrderId(result.data.orderId);
+      setActiveStep(activeStep + 1);
     }
-    setActiveStep(activeStep + 1);
   };
 
   return (
@@ -339,7 +341,7 @@ export default function Checkout({ video }) {
                 <Typography variant="h5">Thank you for your order!</Typography>
                 <Typography variant="body1" color="text.secondary">
                   Your order number is
-                  <strong>&nbsp;#140396</strong>. We have emailed your order
+                  <strong>&nbsp;{orderId}</strong>. We have emailed your order
                   confirmation and will update you once its shipped.
                 </Typography>
                 <Button
