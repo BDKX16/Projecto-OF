@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -43,10 +44,10 @@ const logoStyle = {
   marginRight: "-8px",
 };
 
-function getStepContent(step) {
+function getStepContent(step, handleFormDataChange) {
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return <AddressForm onFormDataChange={handleFormDataChange} />;
     case 1:
       return <PaymentForm />;
     case 2:
@@ -56,10 +57,15 @@ function getStepContent(step) {
   }
 }
 
-export default function Checkout() {
+export default function Checkout({ video }) {
   const [mode, setMode] = React.useState("light");
   const defaultTheme = createTheme({ palette: { mode } });
   const [activeStep, setActiveStep] = React.useState(0);
+  const [formData, setFormData] = useState({});
+
+  const handleFormDataChange = (data) => {
+    setFormData(data);
+  };
 
   const toggleColorMode = () => {
     setMode((prev) => (prev === "dark" ? "light" : "dark"));
@@ -123,7 +129,10 @@ export default function Checkout() {
               maxWidth: 500,
             }}
           >
-            <Info totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"} />
+            <Info
+              totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"}
+              contenido={[video]}
+            />
           </Box>
         </Grid>
         <Grid
@@ -190,7 +199,7 @@ export default function Checkout() {
                 {steps.map((label) => (
                   <Step
                     sx={{
-                      ":first-child": { pl: 0 },
+                      ":first-of-type": { pl: 0 },
                       ":last-child": { pr: 0 },
                     }}
                     key={label}
@@ -249,7 +258,7 @@ export default function Checkout() {
               {steps.map((label) => (
                 <Step
                   sx={{
-                    ":first-child": { pl: 0 },
+                    ":first-of-type": { pl: 0 },
                     ":last-child": { pr: 0 },
                     "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
                   }}
@@ -286,7 +295,7 @@ export default function Checkout() {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)}
+                {getStepContent(activeStep, handleFormDataChange)}
                 <Box
                   sx={{
                     display: "flex",

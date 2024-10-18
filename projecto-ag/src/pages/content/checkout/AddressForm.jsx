@@ -12,7 +12,28 @@ const FormGrid = styled(Grid)(() => ({
   flexDirection: "column",
 }));
 
-export default function AddressForm() {
+export default function AddressForm({ onFormDataChange }) {
+  const [formData, setFormData] = React.useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    const newFormData = {
+      ...formData,
+      [name]: value,
+    };
+    setFormData(newFormData);
+    onFormDataChange(newFormData); // Llama a la función del componente padre
+  };
+
   return (
     <Grid container spacing={3}>
       <FormGrid item xs={12} md={6}>
@@ -20,8 +41,9 @@ export default function AddressForm() {
           Nombre
         </FormLabel>
         <OutlinedInput
-          id="first-name"
-          name="first-name"
+          onChange={handleChange}
+          id="firstName"
+          name="firstName"
           type="name"
           placeholder="Juan"
           autoComplete="first name"
@@ -29,26 +51,28 @@ export default function AddressForm() {
         />
       </FormGrid>
       <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="last-name" required>
+        <FormLabel htmlFor="lastName" required>
           Apellidos
         </FormLabel>
         <OutlinedInput
-          id="last-name"
-          name="last-name"
-          type="last-name"
+          onChange={handleChange}
+          id="lastName"
+          name="lastName"
+          type="lastName"
           placeholder="Snow"
           autoComplete="last name"
           required
         />
       </FormGrid>
       <FormGrid item xs={12}>
-        <FormLabel htmlFor="address1" required>
+        <FormLabel htmlFor="address" required>
           Direccion
         </FormLabel>
         <OutlinedInput
-          id="address1"
-          name="address1"
-          type="address1"
+          onChange={handleChange}
+          id="address"
+          name="address"
+          type="address"
           placeholder="Street name and number"
           autoComplete="shipping address-line1"
           required
@@ -57,6 +81,7 @@ export default function AddressForm() {
       <FormGrid item xs={12}>
         <FormLabel htmlFor="address2">Direccion 2</FormLabel>
         <OutlinedInput
+          onChange={handleChange}
           id="address2"
           name="address2"
           type="address2"
@@ -70,6 +95,7 @@ export default function AddressForm() {
           Ciudad
         </FormLabel>
         <OutlinedInput
+          onChange={handleChange}
           id="city"
           name="city"
           type="city"
@@ -83,6 +109,7 @@ export default function AddressForm() {
           Provincia
         </FormLabel>
         <OutlinedInput
+          onChange={handleChange}
           id="state"
           name="state"
           type="state"
@@ -92,13 +119,14 @@ export default function AddressForm() {
         />
       </FormGrid>
       <FormGrid item xs={6}>
-        <FormLabel htmlFor="zip" required>
-          Codigo Postal / Zip
+        <FormLabel htmlFor="postalCode" required>
+          Codigo Postal / ZIP
         </FormLabel>
         <OutlinedInput
-          id="zip"
-          name="zip"
-          type="zip"
+          onChange={handleChange}
+          id="postalCode"
+          name="postalCode"
+          type="postalCode"
           placeholder="12345"
           autoComplete="shipping postal-code"
           required
@@ -109,6 +137,7 @@ export default function AddressForm() {
           Pais
         </FormLabel>
         <OutlinedInput
+          onChange={handleChange}
           id="country"
           name="country"
           type="country"
