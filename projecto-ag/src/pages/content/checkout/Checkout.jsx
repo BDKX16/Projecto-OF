@@ -135,7 +135,6 @@ export default function Checkout({ video }) {
         variant: "success",
       });
       console.log(result);
-      console.log(result.data);
     }
     setActiveStep(activeStep + 1);
   };
