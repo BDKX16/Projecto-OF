@@ -26,37 +26,12 @@ const FormGrid = styled("div")(() => ({
   flexDirection: "column",
 }));
 
-export default function PaymentForm() {
-  const [paymentType, setPaymentType] = React.useState("creditCard");
-  const [cardNumber, setCardNumber] = React.useState("");
-  const [cvv, setCvv] = React.useState("");
-  const [expirationDate, setExpirationDate] = React.useState("");
+export default function PaymentForm({ onPaymentTypeChange }) {
+  const [paymentType, setPaymentType] = React.useState("");
 
-  const handlePaymentTypeChange = (event) => {
-    setPaymentType(event.target.value);
-  };
-
-  const handleCardNumberChange = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    const formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
-    if (value.length <= 16) {
-      setCardNumber(formattedValue);
-    }
-  };
-
-  const handleCvvChange = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    if (value.length <= 3) {
-      setCvv(value);
-    }
-  };
-
-  const handleExpirationDateChange = (event) => {
-    const value = event.target.value.replace(/\D/g, "");
-    const formattedValue = value.replace(/(\d{2})(?=\d{2})/, "$1/");
-    if (value.length <= 4) {
-      setExpirationDate(formattedValue);
-    }
+  const handlePaymentTypeChange = (value) => {
+    setPaymentType(value);
+    onPaymentTypeChange(value);
   };
 
   return (
@@ -66,7 +41,6 @@ export default function PaymentForm() {
           aria-label="Payment options"
           name="paymentType"
           value={paymentType}
-          onChange={handlePaymentTypeChange}
           sx={{
             flexDirection: { sm: "column", md: "row" },
             gap: 2,
@@ -84,7 +58,9 @@ export default function PaymentForm() {
                 paymentType === "mercadopago" ? "background.default" : "",
             }}
           >
-            <CardActionArea onClick={() => setPaymentType("mercadopago")}>
+            <CardActionArea
+              onClick={() => handlePaymentTypeChange("mercadopago")}
+            >
               <CardContent
                 sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >
@@ -105,7 +81,7 @@ export default function PaymentForm() {
                 paymentType === "paypal" ? "background.default" : "",
             }}
           >
-            <CardActionArea onClick={() => setPaymentType("paypal")}>
+            <CardActionArea onClick={() => handlePaymentTypeChange("paypal")}>
               <CardContent
                 sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >
@@ -126,7 +102,9 @@ export default function PaymentForm() {
                 paymentType === "bankTransfer" ? "background.default" : "",
             }}
           >
-            <CardActionArea onClick={() => setPaymentType("bankTransfer")}>
+            <CardActionArea
+              onClick={() => handlePaymentTypeChange("bankTransfer")}
+            >
               <CardContent
                 sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >

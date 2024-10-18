@@ -29,7 +29,6 @@ import Info from "./Info";
 import InfoMobile from "./InfoMobile";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
-import ToggleColorMode from "./ToggleColorMode";
 
 const steps = [
   "Datos de usuario / facturacion",
@@ -44,7 +43,12 @@ const logoStyle = {
   marginRight: "-8px",
 };
 
-function getStepContent(step, handleFormDataChange, formData) {
+function getStepContent(
+  step,
+  handleFormDataChange,
+  formData,
+  handlePaymentTypeChange
+) {
   switch (step) {
     case 0:
       return (
@@ -54,7 +58,7 @@ function getStepContent(step, handleFormDataChange, formData) {
         />
       );
     case 1:
-      return <PaymentForm />;
+      return <PaymentForm onPaymentTypeChange={handlePaymentTypeChange} />;
     case 2:
       return <Review />;
     default:
@@ -63,9 +67,9 @@ function getStepContent(step, handleFormDataChange, formData) {
 }
 
 export default function Checkout({ video }) {
-  const [mode, setMode] = React.useState("light");
-  const defaultTheme = createTheme({ palette: { mode } });
+  const defaultTheme = createTheme({ palette: { mode: "light" } });
   const [activeStep, setActiveStep] = React.useState(0);
+  const [selectedPaymentType, setSelectedPaymentType] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -77,17 +81,21 @@ export default function Checkout({ video }) {
     country: "",
   });
 
+  const handlePaymentTypeChange = (paymentType) => {
+    setSelectedPaymentType(paymentType);
+  };
+
   const handleFormDataChange = (data) => {
     setFormData(data);
     setActiveStep(activeStep + 1);
   };
 
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
   const handleNext = () => {
-    if (activeStep > 0) {
+    if (activeStep == 1) {
+      if (selectedPaymentType != "") {
+        setActiveStep(activeStep + 1);
+      }
+    } else if (activeStep == 2) {
       setActiveStep(activeStep + 1);
     }
   };
@@ -194,7 +202,6 @@ export default function Checkout({ video }) {
               >
                 Volver al sitio
               </Button>
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             </Box>
             <Box
               sx={{
@@ -312,7 +319,12 @@ export default function Checkout({ video }) {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep, handleFormDataChange, formData)}
+                {getStepContent(
+                  activeStep,
+                  handleFormDataChange,
+                  formData,
+                  handlePaymentTypeChange
+                )}
                 <Box
                   sx={{
                     display: "flex",
