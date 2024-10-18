@@ -72,7 +72,7 @@ router.post(
         return res.status(500).json({ error: "Failed to create payment" });
       }
 
-      const paymentData = await Payments.create({
+      const paymentResult = await Payments.create({
         userId: userId,
         contentId: formData.contentId,
         paymentId: null,
@@ -97,7 +97,7 @@ router.post(
       res
         .json({
           preferenceRedirect: preference.init_point,
-          orderId: paymentData._id,
+          orderId: paymentResult._id,
         })
         .status(200);
     } catch (error) {
