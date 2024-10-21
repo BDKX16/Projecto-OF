@@ -20,6 +20,7 @@
     "@reduxjs/toolkit": "^2.2.7",
     "axios": "^1.7.3",
     "date-fns": "^3.6.0",
+    "formik": "^2.4.6",
     "hamburger-react": "^2.5.1",
     "mercadopago": "^2.0.15",
     "notistack": "^3.0.1",
@@ -31,7 +32,8 @@
     "react-slick": "^0.30.2",
     "react-spinners": "^0.14.1",
     "slick-carousel": "^1.8.1",
-    "styled-components": "^6.1.12"
+    "styled-components": "^6.1.12",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

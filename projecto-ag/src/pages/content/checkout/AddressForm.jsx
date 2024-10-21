@@ -1,122 +1,231 @@
 import * as React from "react";
-
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormLabel from "@mui/material/FormLabel";
 import Grid from "@mui/material/Grid";
 import OutlinedInput from "@mui/material/OutlinedInput";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
+
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
 const FormGrid = styled(Grid)(() => ({
   display: "flex",
   flexDirection: "column",
 }));
 
-export default function AddressForm() {
+const InputContainer = styled("div")({
+  position: "relative",
+});
+
+const ErrorText = styled(Typography)({
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  color: "red",
+  fontSize: "12px",
+});
+
+const validationSchema = Yup.object({
+  firstName: Yup.string().required("El nombre es obligatorio"),
+  lastName: Yup.string().required("El apellido es obligatorio"),
+  address: Yup.string().required("Una direccion es requerida"),
+  phone: Yup.string()
+    .matches(
+      /^(\+?\d{1,3}[-.\s]?)?(\(?\d{3}\)?[-.\s]?)?[\d\s.-]{7,10}$/,
+      "El numero de telefono no es válido"
+    )
+    .required("El numero de telefono es obligatorio"),
+  city: Yup.string().required("La ciudad es requerida"),
+  state: Yup.string().required("La provincia es requerida"),
+  postalCode: Yup.string().required("El codio postal es obligatorio"),
+  country: Yup.string().required("El pais es obligatorio"),
+});
+
+export default function AddressForm({ onFormDataChange, formData }) {
+  const initialValues = JSON.parse(JSON.stringify(formData));
   return (
-    <Grid container spacing={3}>
-      <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="first-name" required>
-          Nombre
-        </FormLabel>
-        <OutlinedInput
-          id="first-name"
-          name="first-name"
-          type="name"
-          placeholder="Juan"
-          autoComplete="first name"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12} md={6}>
-        <FormLabel htmlFor="last-name" required>
-          Apellidos
-        </FormLabel>
-        <OutlinedInput
-          id="last-name"
-          name="last-name"
-          type="last-name"
-          placeholder="Snow"
-          autoComplete="last name"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12}>
-        <FormLabel htmlFor="address1" required>
-          Direccion
-        </FormLabel>
-        <OutlinedInput
-          id="address1"
-          name="address1"
-          type="address1"
-          placeholder="Calle y numero"
-          autoComplete="shipping address-line1"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={12}>
-        <FormLabel htmlFor="address2">Direccion 2</FormLabel>
-        <OutlinedInput
-          id="address2"
-          name="address2"
-          type="address2"
-          placeholder="Departamento, planta baja, unidad, etc. (opcional)"
-          autoComplete="shipping address-line2"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={6}>
-        <FormLabel htmlFor="city" required>
-          Ciudad
-        </FormLabel>
-        <OutlinedInput
-          id="city"
-          name="city"
-          type="city"
-          placeholder="Capital Federal"
-          autoComplete="City"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={6}>
-        <FormLabel htmlFor="state" required>
-          Provincia
-        </FormLabel>
-        <OutlinedInput
-          id="state"
-          name="state"
-          type="state"
-          placeholder="Buenos Aires"
-          autoComplete="State"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={6}>
-        <FormLabel htmlFor="zip" required>
-          Codigo Postal / Zip
-        </FormLabel>
-        <OutlinedInput
-          id="zip"
-          name="zip"
-          type="zip"
-          placeholder="12345"
-          autoComplete="shipping postal-code"
-          required
-        />
-      </FormGrid>
-      <FormGrid item xs={6}>
-        <FormLabel htmlFor="country" required>
-          Pais
-        </FormLabel>
-        <OutlinedInput
-          id="country"
-          name="country"
-          type="country"
-          placeholder="Argentina"
-          autoComplete="shipping country"
-          required
-        />
-      </FormGrid>
-    </Grid>
+    <Formik
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values) => {
+        onFormDataChange(values);
+      }}
+    >
+      {({ handleChange, handleBlur, values }) => (
+        <Form>
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6}>
+              <FormLabel htmlFor="firstName" required>
+                Nombre
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="firstName"
+                  name="firstName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.firstName}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormLabel htmlFor="lastName" required>
+                Apellido
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="lastName"
+                  name="lastName"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.lastName}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="lastName"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12}>
+              <FormLabel htmlFor="address" required>
+                Dirección
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="address"
+                  name="address"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.address}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="address"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12}>
+              <FormLabel htmlFor="phone" required>
+                Numero de telefono
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="phone"
+                  name="phone"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.phone}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="phone"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormLabel htmlFor="city" required>
+                Ciudad
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="city"
+                  name="city"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.city}
+                  fullWidth
+                />
+                <ErrorMessage name="city" component={ErrorText} color="error" />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormLabel htmlFor="state" required>
+                Estado
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="state"
+                  name="state"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.state}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="state"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormLabel htmlFor="postalCode" required>
+                Código Postal
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="postalCode"
+                  name="postalCode"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.postalCode}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="postalCode"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormLabel htmlFor="country" required>
+                País
+              </FormLabel>
+              <InputContainer>
+                <OutlinedInput
+                  id="country"
+                  name="country"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.country}
+                  fullWidth
+                />
+                <ErrorMessage
+                  name="country"
+                  component={ErrorText}
+                  color="error"
+                />
+              </InputContainer>
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            variant="contained"
+            endIcon={<ChevronRightRoundedIcon />}
+            color="primary"
+            style={{ marginTop: "30px" }}
+          >
+            Siguiente
+          </Button>
+        </Form>
+      )}
+    </Formik>
   );
 }

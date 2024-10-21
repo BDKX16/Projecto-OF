@@ -196,6 +196,24 @@ export const getPayment = (id) => {
   };
 };
 
+export const sendPayment = (formData) => {
+  const controller = loadAbort();
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+  return {
+    call: axios
+      .post(import.meta.env.VITE_BASE_URL + "/payments", formData, headers, {
+        signal: controller.signal,
+      })
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
 /**********
  * FUNCTIONS
  ************/

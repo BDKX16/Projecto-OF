@@ -62,7 +62,7 @@ nav a:hover {
   cursor: pointer;
   background-color: transparent;
 }
-nav li:first-child {
+nav li:first-of-type {
   margin-right: auto;
 }
 .principal {

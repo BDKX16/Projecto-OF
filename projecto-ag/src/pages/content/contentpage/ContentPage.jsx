@@ -56,7 +56,7 @@ const ContentPage = () => {
   } else if (data.videoUrl == null) {
     return (
       <div style={{ backgroundColor: "white", padding: 30, borderRadius: 15 }}>
-        <Checkout />
+        <Checkout video={data} />
       </div>
     );
   } else {

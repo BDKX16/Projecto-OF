@@ -1,5 +1,6 @@
 import * as React from "react";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -28,7 +29,10 @@ import Info from "./Info";
 import InfoMobile from "./InfoMobile";
 import PaymentForm from "./PaymentForm";
 import Review from "./Review";
-import ToggleColorMode from "./ToggleColorMode";
+import { sendPayment } from "../../../services/public";
+import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
+
+import { enqueueSnackbar } from "notistack";
 
 const steps = [
   "Datos de usuario / facturacion",
@@ -43,34 +47,95 @@ const logoStyle = {
   marginRight: "-8px",
 };
 
-function getStepContent(step) {
+function getStepContent(
+  step,
+  handleFormDataChange,
+  formData,
+  handlePaymentTypeChange,
+  paymentData,
+  videoData
+) {
   switch (step) {
     case 0:
-      return <AddressForm />;
+      return (
+        <AddressForm
+          onFormDataChange={handleFormDataChange}
+          formData={formData}
+        />
+      );
     case 1:
-      return <PaymentForm />;
+      return <PaymentForm onPaymentTypeChange={handlePaymentTypeChange} />;
     case 2:
-      return <Review />;
+      return (
+        <Review
+          video={videoData}
+          formData={formData}
+          paymentData={paymentData}
+        />
+      );
     default:
       throw new Error("Unknown step");
   }
 }
 
-export default function Checkout() {
-  const [mode, setMode] = React.useState("light");
-  const defaultTheme = createTheme({ palette: { mode } });
+export default function Checkout({ video }) {
+  const { loading, callEndpoint } = useFetchAndLoad();
+  const defaultTheme = createTheme({ palette: { mode: "light" } });
   const [activeStep, setActiveStep] = React.useState(0);
+  const [selectedPaymentType, setSelectedPaymentType] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    address: "",
+    phone: "",
+    city: "",
+    state: "",
+    postalCode: "",
+    country: "",
+  });
 
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === "dark" ? "light" : "dark"));
+  const handlePaymentTypeChange = (paymentType) => {
+    setSelectedPaymentType(paymentType);
+  };
+
+  const handleFormDataChange = (data) => {
+    setFormData(data);
+    setActiveStep(activeStep + 1);
   };
 
   const handleNext = () => {
-    setActiveStep(activeStep + 1);
+    if (activeStep == 1) {
+      if (selectedPaymentType != "") {
+        setActiveStep(activeStep + 1);
+      }
+    } else if (activeStep == 2) {
+      confirmAndSendPayment();
+    }
   };
 
   const handleBack = () => {
     setActiveStep(activeStep - 1);
+  };
+
+  const confirmAndSendPayment = async () => {
+    const toSend = {
+      ...formData,
+      paymentMethod: selectedPaymentType,
+      contentId: video.id,
+    };
+
+    const result = await callEndpoint(sendPayment(toSend));
+    if (result.status !== 200) {
+      enqueueSnackbar("Error procesing payment", {
+        variant: "error",
+      });
+      return;
+    } else {
+      window.open(result.data.preferenceRedirect, "_blank");
+      setOrderId(result.data.orderId);
+      setActiveStep(activeStep + 1);
+    }
   };
 
   return (
@@ -123,7 +188,10 @@ export default function Checkout() {
               maxWidth: 500,
             }}
           >
-            <Info totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"} />
+            <Info
+              totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"}
+              contenido={[video]}
+            />
           </Box>
         </Grid>
         <Grid
@@ -168,7 +236,6 @@ export default function Checkout() {
               >
                 Volver al sitio
               </Button>
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
             </Box>
             <Box
               sx={{
@@ -190,7 +257,7 @@ export default function Checkout() {
                 {steps.map((label) => (
                   <Step
                     sx={{
-                      ":first-child": { pl: 0 },
+                      ":first-of-type": { pl: 0 },
                       ":last-child": { pr: 0 },
                     }}
                     key={label}
@@ -249,7 +316,7 @@ export default function Checkout() {
               {steps.map((label) => (
                 <Step
                   sx={{
-                    ":first-child": { pl: 0 },
+                    ":first-of-type": { pl: 0 },
                     ":last-child": { pr: 0 },
                     "& .MuiStepConnector-root": { top: { xs: 6, sm: 12 } },
                   }}
@@ -271,7 +338,7 @@ export default function Checkout() {
                 <Typography variant="h5">Thank you for your order!</Typography>
                 <Typography variant="body1" color="text.secondary">
                   Your order number is
-                  <strong>&nbsp;#140396</strong>. We have emailed your order
+                  <strong>&nbsp;{orderId}</strong>. We have emailed your order
                   confirmation and will update you once its shipped.
                 </Typography>
                 <Button
@@ -286,7 +353,14 @@ export default function Checkout() {
               </Stack>
             ) : (
               <React.Fragment>
-                {getStepContent(activeStep)}
+                {getStepContent(
+                  activeStep,
+                  handleFormDataChange,
+                  formData,
+                  handlePaymentTypeChange,
+                  selectedPaymentType,
+                  video
+                )}
                 <Box
                   sx={{
                     display: "flex",
@@ -310,34 +384,24 @@ export default function Checkout() {
                         display: { xs: "none", sm: "flex" },
                       }}
                     >
-                      Previous
+                      Anterior
                     </Button>
                   )}
 
-                  {activeStep !== 0 && (
+                  {activeStep > 0 && (
                     <Button
-                      startIcon={<ChevronLeftRoundedIcon />}
-                      onClick={handleBack}
-                      variant="outlined"
-                      fullWidth
+                      variant="contained"
+                      endIcon={<ChevronRightRoundedIcon />}
+                      onClick={handleNext}
                       sx={{
-                        display: { xs: "flex", sm: "none" },
+                        width: { xs: "100%", sm: "fit-content" },
                       }}
                     >
-                      Previous
+                      {activeStep === steps.length - 1
+                        ? "Confirmar compra"
+                        : "Siguiente"}
                     </Button>
                   )}
-
-                  <Button
-                    variant="contained"
-                    endIcon={<ChevronRightRoundedIcon />}
-                    onClick={handleNext}
-                    sx={{
-                      width: { xs: "100%", sm: "fit-content" },
-                    }}
-                  >
-                    {activeStep === steps.length - 1 ? "Place order" : "Next"}
-                  </Button>
                 </Box>
               </React.Fragment>
             )}
