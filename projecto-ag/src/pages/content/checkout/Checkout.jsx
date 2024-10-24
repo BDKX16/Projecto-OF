@@ -143,7 +143,7 @@ export default function Checkout({ video }) {
       <Grid
         container
         sx={{
-          height: { xs: "100%", sm: "100dvh" },
+          height: { xs: "185dvh", sm: "120dvh", md: "100vh" },
         }}
       >
         <Grid

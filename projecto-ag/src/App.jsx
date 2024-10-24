@@ -151,7 +151,9 @@ function App() {
 
       <div
         className="container"
-        style={{ backgroundColor: theme.palette.background.default }}
+        style={{
+          backgroundColor: theme.palette.background.default,
+        }}
       >
         <Routes>
           <Route path={`/`} element={<Content />} />
