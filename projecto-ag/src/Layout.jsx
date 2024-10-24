@@ -63,7 +63,7 @@ const Layout = () => {
                         href="https://s3.almendragala.com/"
                         variant="contained"
                       >
-                        Cloud storage
+                        MinIO
                       </Button>
                     </>
                   }

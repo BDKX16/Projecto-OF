@@ -79,9 +79,6 @@ function App() {
           <li>
             <a href="#">Más recientes</a>
           </li>
-          <li>
-            <a href="#">Carrito</a>
-          </li>
         </ul>
 
         <ul className="topbar">
@@ -111,9 +108,6 @@ function App() {
           </li>
           <li className="hideOnMobile">
             <a href="#">Más recientes</a>
-          </li>
-          <li className="hideOnMobile">
-            <a href="#">Carrito</a>
           </li>
           <li className="hideOnMobile">
             <div className="buscar">

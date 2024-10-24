@@ -8,6 +8,7 @@ import useFetchAndLoad from "../../hooks/useFetchAndLoad";
 import { getWebContent } from "../../services/public";
 import { Button, Modal, Box, Typography } from "@mui/material";
 import LoadingSpinner from "./components/LoadingSpinner";
+import StaticImage from "./components/StaticImage";
 
 const style = {
   position: "absolute",
@@ -40,7 +41,6 @@ const Content = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data.components);
           setData(result.data.components);
         }
       }
@@ -114,6 +114,8 @@ const Content = () => {
                 //return <Carousel key={component._id} data={component} />;
               } else if (component.componentType === "category") {
                 return <Classification key={component._id} data={component} />;
+              } else if (component.componentType === "static") {
+                return <StaticImage key={component._id} data={component} />;
               } else {
                 return null;
               }

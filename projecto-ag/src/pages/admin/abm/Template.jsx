@@ -45,6 +45,7 @@ import { formatDateToString } from "../../../utils/format-date-to-string";
 import { DatePicker } from "@mui/x-date-pickers";
 import Carousel from "../../content/components/Carousel";
 import Classification from "../../content/components/Classification";
+import StaticImage from "../../content/components/StaticImage";
 const black = { color: "#272727" };
 
 const initialFormData = {
@@ -388,6 +389,17 @@ const Templates = () => {
             } else if (component.type === "category") {
               return (
                 <Classification
+                  key={component.id}
+                  demo={true}
+                  data={{
+                    componentData: component,
+                    componentName: component.title,
+                  }}
+                />
+              );
+            } else if (component.type === "static") {
+              return (
+                <StaticImage
                   key={component.id}
                   demo={true}
                   data={{
