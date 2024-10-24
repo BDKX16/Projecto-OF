@@ -6,6 +6,6 @@ export const createContentAdapter = (content) => ({
   coverUrl: content.coverUrl,
   price: content.price,
   date: content.createdAt,
-  id: content.id,
+  id: content._id,
   status: content.state,
 });

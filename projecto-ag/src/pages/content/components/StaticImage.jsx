@@ -42,21 +42,17 @@ const StaticImage = ({ data, demo }) => {
 
   if (component.imagesUrl.length <= 0 || demo === true) {
     return (
-      <>
-        {demo === true && (
-          <a
-            className="carousel-container-classification"
-            href="https://almendragala.com"
-            style={{ marginTop: 30, marginBottom: 30 }}
-          >
-            <img
-              src="https://via.placeholder.com/1200x600"
-              alt="placeholder"
-              className="classification-image"
-            ></img>
-          </a>
-        )}
-      </>
+      <a
+        className="carousel-container-classification"
+        href="https://almendragala.com"
+        style={{ marginTop: 30, marginBottom: 30 }}
+      >
+        <img
+          src="https://picsum.photos/1200/600"
+          alt="placeholder"
+          className="classification-image"
+        ></img>
+      </a>
     );
   } else {
     return (

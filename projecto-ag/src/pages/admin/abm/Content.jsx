@@ -103,6 +103,7 @@ const ABMTable = () => {
       );
       setIsEditOpen(false);
     }
+    console.log(currentEdit);
     setCurrentEdit(null);
   };
 

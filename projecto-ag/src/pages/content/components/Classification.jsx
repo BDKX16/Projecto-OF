@@ -48,39 +48,52 @@ const Classification = ({ data, demo }) => {
       }
       setImagesUrl(newImagesUrl);
     }
+    console.log(component);
   }, [component]);
-  if (component.imagesUrl.length < 3 || demo === true) {
+  if (component.imagesUrl.length < 3) {
+    return <></>;
+  } else if (demo === true) {
     return (
-      <>
-        {demo === true && (
-          <div className="carousel-container-classification">
-            <h2 className="classification-title">{data.componentName}</h2>
-            <Slider {...settings}>
-              {[...Array(5)].map((img, index) => (
-                <div key={index}>
-                  <div className="carousel-image-container">
-                    <img
-                      src={"https://via.placeholder.com/150"}
-                      alt={`Slide ${index + 1}`}
-                      className="carousel-image"
-                    />
-                    <h3 className="carousel-image-title">Title {index + 1}</h3>
+      <div className="carousel-container-classification">
+        <Typography
+          variant="h2"
+          component="h2"
+          color="text.primary"
+          backgroundColor="primary.main"
+          fontSize={30}
+          className="classification-title"
+          style={{
+            marginBottom: "1rem",
+            marginLeft: "0.3rem",
+            marginTop: "1rem",
+          }}
+        >
+          {data.componentName.toUpperCase()}
+        </Typography>{" "}
+        <Slider {...settings}>
+          {[...Array(5)].map((img, index) => (
+            <div key={index}>
+              <div className="carousel-image-container">
+                <img
+                  src={"https://picsum.photos/150/150"}
+                  alt={`Slide ${index + 1}`}
+                  className="carousel-image"
+                />
+                <h3 className="carousel-image-title">Title {index + 1}</h3>
 
-                    <Button
-                      type="submit"
-                      color="secondary"
-                      variant="contained"
-                      className="carousel-image-button"
-                    >
-                      Ver mas
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </Slider>
-          </div>
-        )}
-      </>
+                <Button
+                  type="submit"
+                  color="secondary"
+                  variant="contained"
+                  className="carousel-image-button"
+                >
+                  Ver mas
+                </Button>
+              </div>
+            </div>
+          ))}
+        </Slider>
+      </div>
     );
   } else {
     return (
@@ -105,10 +118,7 @@ const Classification = ({ data, demo }) => {
             <div key={img._id}>
               <div className="carousel-image-container">
                 <img
-                  src={
-                    "https://via.placeholder.com/150" ||
-                    "https://via.placeholder.com/150"
-                  }
+                  src={img.coverUrl || "https://via.placeholder.com/150"}
                   alt={`Slide ${img.title}`}
                   className="carousel-image"
                 />
