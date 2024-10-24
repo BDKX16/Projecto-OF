@@ -83,16 +83,16 @@ function App() {
             <a href="#">XXXX</a>
           </li>
           <li>
-            <a href="#">Favoritos</a>
+            <a href="/search?id=favorites">Favoritos</a>
           </li>
           <li>
-            <a href="#">Video del mes</a>
+            <a href="/search?id=this-month">Video del mes</a>
           </li>
           <li>
-            <a href="#">Mas likeados</a>
+            <a href="/search?id=most-liked">Mas likeados</a>
           </li>
           <li>
-            <a href="#">Más recientes</a>
+            <a href="/search?id=most-recent">Más recientes</a>
           </li>
         </ul>
 
@@ -113,16 +113,16 @@ function App() {
             </Typography>
           </li>
           <li className="hideOnMobile">
-            <a href="#">Favoritos</a>
+            <a href="/search?id=favorites">Favoritos</a>
           </li>
           <li className="hideOnMobile">
-            <a href="#">Video del mes</a>
+            <a href="/search?id=this-month">Video del mes</a>
           </li>
           <li className="hideOnMobile">
-            <a href="#">Mas likeados</a>
+            <a href="/search?id=most-liked">Mas likeados</a>
           </li>
           <li className="hideOnMobile">
-            <a href="#">Más recientes</a>
+            <a href="/search?id=most-recent">Más recientes</a>
           </li>
           <li className="hideOnMobile">
             <div className="buscar">

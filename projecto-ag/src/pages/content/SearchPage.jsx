@@ -34,7 +34,7 @@ const SearchPage = () => {
   }, []);
 
   return (
-    <div style={{ color: "white" }}>
+    <div style={{ color: "white" }} className="mid-container">
       <Grid container spacing={2}>
         {data.length > 0 ? (
           data.map((img) => (
