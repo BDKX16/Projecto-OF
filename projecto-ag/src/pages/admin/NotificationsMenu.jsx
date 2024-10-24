@@ -35,7 +35,6 @@ export default function NotificationsMenu() {
       >
         <Tooltip title="Account settings">
           <IconButton
-            disabled
             onClick={handleClick}
             size="small"
             sx={{ ml: 2 }}

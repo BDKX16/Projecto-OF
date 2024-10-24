@@ -39,6 +39,7 @@ router.get("/webcontent", async (req, res) => {
     const content = await Content.find({});
 
     content.forEach((item) => {
+      item = item.toObject();
       delete item.videoUrl;
       delete item.dislikes;
       delete item.validityFrom;

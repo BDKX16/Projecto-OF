@@ -50,9 +50,7 @@ const Classification = ({ data, demo }) => {
     }
     console.log(component);
   }, [component]);
-  if (component.imagesUrl.length < 3) {
-    return <></>;
-  } else if (demo === true) {
+  if (demo === true) {
     return (
       <div className="carousel-container-classification">
         <Typography
@@ -95,6 +93,8 @@ const Classification = ({ data, demo }) => {
         </Slider>
       </div>
     );
+  } else if (component.imagesUrl.length < 3) {
+    return <></>;
   } else {
     return (
       <div className="carousel-container-classification">

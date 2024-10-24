@@ -194,7 +194,7 @@ const Templates = () => {
             demo={true}
             data={{
               componentData: component,
-              componentTitle: component.title,
+              componentName: component.title,
             }}
             style={{ transform: "scale(0.1)" }}
           />
@@ -409,9 +409,8 @@ const Templates = () => {
                 />
               );
             } else {
-              return null;
+              return <></>;
             }
-            return null;
           })}
       </Box>
       {data.length === 0 ? (
