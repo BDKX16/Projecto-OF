@@ -10,6 +10,7 @@ import { Box, Typography, useTheme } from "@mui/material";
 import BasesYCondiciones from "./pages/BasesYCondiciones";
 import { Facebook, Instagram, Telegram, Twitter } from "@mui/icons-material";
 import { grey } from "@mui/material/colors";
+import SearchPage from "./pages/content/SearchPage";
 
 function TikTokIcon({ color }) {
   return (
@@ -54,6 +55,20 @@ function App() {
       sidebar.style.opacity = "1";
       sidebar.style.display = "block";
       setSidebarState(true);
+    }
+  };
+
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = () => {
+    if (searchQuery.trim()) {
+      window.location.href = `/search?id=${searchQuery.trim()}`;
+    }
+  };
+
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
     }
   };
 
@@ -111,8 +126,17 @@ function App() {
           </li>
           <li className="hideOnMobile">
             <div className="buscar">
-              <input type="text" placeholder="buscar" required></input>
-              <a className="btn-lupa">
+              <input
+                type="text"
+                placeholder="buscar"
+                color="red"
+                style={{ color: "black" }}
+                required
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleKeyPress}
+              ></input>
+              <a className="btn-lupa" onClick={handleSearch}>
                 <Lupa className="Lupa2"></Lupa>
               </a>
             </div>
@@ -131,6 +155,7 @@ function App() {
       >
         <Routes>
           <Route path={`/`} element={<Content />} />
+          <Route path={`/search`} element={<SearchPage />} />
           <Route path="/video" element={<ContentPage />} />
           <Route path={`/video/:id`} element={<ContentPage />} />
           <Route

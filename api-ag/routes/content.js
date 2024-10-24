@@ -89,9 +89,34 @@ router.get("/content", async (req, res) => {
 router.get("/content-search/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const content = await Content.find({
-      title: { $regex: id, $options: "i" },
-    }).limit(5);
+
+    let content;
+    if (id === "favorites") {
+      content = await Content.find({}).sort({ likes: -1 }).limit(15);
+    } else if (id === "most-liked") {
+      content = await Content.find({}).sort({ likes: -1 }).limit(15);
+    } else if (id === "most-recent") {
+      content = await Content.find({}).sort({ createdAt: -1 }).limit(15);
+    } else if (id === "this-month") {
+      const startOfMonth = new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1
+      );
+      content = await Content.find({ createdAt: { $gte: startOfMonth } }).limit(
+        15
+      );
+    } else {
+      content = await Content.find({
+        title: { $regex: id, $options: "i" },
+      }).limit(15);
+    }
+
+    content = content.map((item) => {
+      const { videoUrl, ...rest } = item.toObject();
+      return rest;
+    });
+
     return res.status(200).json(content);
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
@@ -118,8 +143,7 @@ router.get("/categorys", async (req, res) => {
           })
         );
         category.videos = videos;
-        console.log(category);
-        console.log(category.videos);
+
         return category;
       } catch (error) {
         console.log(error);
