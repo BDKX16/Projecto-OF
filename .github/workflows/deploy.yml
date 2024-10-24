@@ -44,6 +44,7 @@ jobs:
             docker compose up -d --build
 
             cd /srv/repositories/Projecto-OF/projecto-ag
+            npm install
             npm run build
             rm -r /var/www/almendragala.com/html
             mkdir /var/www/almendragala.com/html
