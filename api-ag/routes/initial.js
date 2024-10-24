@@ -38,6 +38,14 @@ router.get("/webcontent", async (req, res) => {
 
     const content = await Content.find({});
 
+    content.forEach((item) => {
+      delete item.videoUrl;
+      delete item.dislikes;
+      delete item.validityFrom;
+      delete item.validityTo;
+      delete item.nullDate;
+    });
+
     carousels.forEach((carousel, index) => {
       if (carousel.type === "category") {
         carousel.imagesUrl = content.filter((content) =>
