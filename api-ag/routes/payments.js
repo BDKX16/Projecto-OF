@@ -35,40 +35,20 @@ router.post(
       if (!content) {
         return res.status(404).json({ error: "Content not found" });
       }
-      // Create a payment preference
-      const requestMP = {
-        body: {
-          items: [
-            {
-              id: formData.contentId,
-              title: "AlmenWeb",
-              description: "Contenido pagina web",
-              quantity: 1,
-              unit_price: content.price,
-            },
-          ],
-          back_urls: {
-            success: "https://almendragala.com/",
-            failure: "https://almendragala.com/",
-            pending: "https://almendragala.com/",
-          },
-          notification_url: "https://almendragala.com/api/payments/webhook",
-          redirect_urls: {
-            success: "https://almendragala.com/",
-            failure: "https://almendragala.com/",
-            pending: "https://almendragala.com/",
-          },
-        },
-      };
 
-      const preference = await new Preference(client)
-        .create(requestMP)
-        .then((res) => (paymentData = res))
-        .catch((error) => console.error(error));
+      let paymentResponse;
 
-      // Create a payment
-
-      if (!preference) {
+      if (formData.paymentMethod === "mercadopago") {
+        paymentResponse = await processMercadopagoPayment(
+          formData.contentId,
+          content.price
+        );
+      } else if (formData.paymentMethod === "paypal") {
+        paymentResponse = await processPaypalPayment({});
+      } else {
+        return res.status(500).json({ error: "Invalid payment method" });
+      }
+      if (!paymentResponse) {
         return res.status(500).json({ error: "Failed to create payment" });
       }
 
@@ -76,7 +56,7 @@ router.post(
         userId: userId,
         contentId: formData.contentId,
         paymentId: null,
-        paymentMethod: "mercadopago",
+        paymentMethod: formData.paymentMethod,
         currency: "ARS",
         date: new Date(),
         videoId: formData.contentId,
@@ -96,7 +76,7 @@ router.post(
       // Return the payment preference ID
       res
         .json({
-          preferenceRedirect: preference.init_point,
+          preferenceRedirect: paymentResponse.init_point,
           orderId: paymentResult._id,
         })
         .status(200);
@@ -250,6 +230,43 @@ router.post("/payments/webhook", async (req, res) => {
     res.status(500).json({ error: "Failed to get payment status" });
   }
 });
+
+const processMercadopagoPayment = async ({ contentId, price }) => {
+  const requestMP = {
+    body: {
+      items: [
+        {
+          id: contentId,
+          title: "AlmenWeb",
+          description: "Contenido pagina web",
+          quantity: 1,
+          unit_price: price,
+        },
+      ],
+      back_urls: {
+        success: "https://almendragala.com/",
+        failure: "https://almendragala.com/",
+        pending: "https://almendragala.com/",
+      },
+      notification_url: "https://almendragala.com/api/payments/webhook",
+      redirect_urls: {
+        success: "https://almendragala.com/",
+        failure: "https://almendragala.com/",
+        pending: "https://almendragala.com/",
+      },
+    },
+  };
+  const preference = await new Preference(client)
+    .create(requestMP)
+    .then((res) => (paymentData = res))
+    .catch((error) => console.error(error));
+
+  return { preference: preference, init_point: preference.body.init_point };
+};
+
+const processPaypalPayment = async ({}) => {
+  return { preference: null, init_point: null };
+};
 
 module.exports = router;
 

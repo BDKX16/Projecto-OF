@@ -8,7 +8,7 @@ const User = require("../models/user.js");
 const Category = require("../models/category.js");
 const Carousel = require("../models/carousel.js");
 const Payment = require("../models/payment.js");
-
+const Content = require("../models/content.js");
 /*
 Page personalization:
 logo 128x128
@@ -29,7 +29,6 @@ router.post(
       const content = req.body;
 
       content.state = true;
-      content.categorys = [];
       content.price = parseFloat(content.price);
 
       await Content.create(content);
