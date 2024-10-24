@@ -38,19 +38,20 @@ router.get("/webcontent", async (req, res) => {
 
     const content = await Content.find({});
 
-    content.forEach((item) => {
-      item = item.toObject();
-      delete item.videoUrl;
-      delete item.dislikes;
-      delete item.validityFrom;
-      delete item.validityTo;
-      delete item.nullDate;
+    const sanitizedContent = content.map((item) => {
+      const sanitizedItem = item.toObject();
+      delete sanitizedItem.videoUrl;
+      delete sanitizedItem.dislikes;
+      delete sanitizedItem.validityFrom;
+      delete sanitizedItem.validityTo;
+      delete sanitizedItem.nullDate;
+      return sanitizedItem;
     });
 
     carousels.forEach((carousel, index) => {
       if (carousel.type === "category") {
-        carousel.imagesUrl = content.filter((content) =>
-          content.categorys.includes(carousel.title)
+        carousel.imagesUrl = sanitizedContent.filter((sanitizedContent) =>
+          sanitizedContent.categorys.includes(carousel.title)
         );
       }
     });
