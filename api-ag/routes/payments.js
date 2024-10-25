@@ -235,6 +235,7 @@ router.post("/payments/webhook", async (req, res) => {
 });
 
 const processMercadopagoPayment = async (contentId, price) => {
+  let paymentData;
   const requestMP = {
     body: {
       items: [
@@ -269,7 +270,8 @@ const processMercadopagoPayment = async (contentId, price) => {
       .then((res) => (paymentData = res))
       .catch((error) => console.error(error));
 
-    console.log(preference.body);
+    console.log(preference);
+    console.log(paymentData);
     return { preference: preference, init_point: preference.body.init_point };
   } catch (error) {
     return { preference: null, init_point: null };
