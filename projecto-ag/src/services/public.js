@@ -91,7 +91,6 @@ export const getVideo = (id) => {
 
 export const searchVideos = (id, page) => {
   const controller = loadAbort();
-  console.log(id);
   return {
     call: axios
       .get(

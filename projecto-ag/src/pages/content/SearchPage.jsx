@@ -14,7 +14,7 @@ const SearchPage = () => {
     const searchTerm = searchParams.get("id");
 
     const fetchData = async (searchTerm) => {
-      const result = await callEndpoint(searchVideos(searchTerm, page));
+      const result = await callEndpoint(searchVideos(searchTerm, 1));
 
       if (!result || Object.keys(result)?.length === 0) {
         return;
