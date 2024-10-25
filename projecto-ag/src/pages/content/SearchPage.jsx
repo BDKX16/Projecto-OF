@@ -8,6 +8,8 @@ import { Box, Typography, Button, Grid } from "@mui/material";
 const SearchPage = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
   const [data, setData] = useState([]);
+  const [filters, setFilters] = useState([]);
+  const [filtersMenu, setFiltersMenu] = useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -55,19 +57,32 @@ const SearchPage = () => {
           <Typography variant="h5" component="h5" color="text.primary">
             {data.length} resultados
           </Typography>
-          <Button variant="outlined">Filtros</Button>
+          <Button
+            disabled
+            variant="outlined"
+            onClick={() => setFiltersMenu(!filtersMenu)}
+          >
+            Filtros
+          </Button>
         </Box>
       </Box>
-      <Box
-        width="100%"
-        display="flex"
-        flexDirection={{ xs: "column", sm: "column", md: "row" }}
-        justifyContent="space-between"
-        mb={3}
-      >
-        <Button>Orden</Button>
-        <Button>Orden</Button>
-      </Box>
+      {filtersMenu && (
+        <Box
+          width="100%"
+          display="flex"
+          flexDirection={{ xs: "column", sm: "column", md: "row" }}
+          justifyContent="flex-end"
+          mb={3}
+        >
+          <Button>Orden</Button>
+          <Button>Mas recientes</Button>
+          <Button>Menos recientes</Button>
+          <Button>Mas vistos</Button>
+          <Button>Menos vistos</Button>
+          <Button>Mejor valorados</Button>
+          <Button>Peor valorados</Button>
+        </Box>
+      )}
       <Grid container spacing={2}>
         {data.length > 0 ? (
           data.map((img) => (

@@ -56,11 +56,15 @@ const StaticImage = ({ data, demo }) => {
     );
   } else {
     return (
-      <a href={component.link} style={{ marginTop: 30, marginBottom: 30 }}>
+      <a
+        href={component.link}
+        style={{ marginTop: 30, marginBottom: 30, maxWidth: "100%" }}
+      >
         <img
           src={component.imagesUrl[0]}
           alt={component.title}
           className="classification-image"
+          style={{ width: "90%", height: "auto" }}
         ></img>
       </a>
     );
