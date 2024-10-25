@@ -63,9 +63,15 @@ export const register = (name, username, password) => {
 
 export const getContent = () => {
   const controller = loadAbort();
+
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+
   return {
     call: axios
-      .get(import.meta.env.VITE_BASE_URL + "/content", {
+      .get(import.meta.env.VITE_BASE_URL + "/content", headers, {
         signal: controller.signal,
       })
       .catch((error) => {

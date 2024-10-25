@@ -84,6 +84,7 @@ const AdminLayout = (props) => {
                 flex: 1,
                 display: "flex",
                 justifyContent: "space-between",
+                alignItems: "center",
                 flexDirection: "row",
                 alignContent: "center",
                 paddingLeft: 20,
@@ -97,7 +98,7 @@ const AdminLayout = (props) => {
                 style={{
                   color: "#818181",
                   textTransform: "lowercase",
-                  marginBottom: 8,
+                  marginBottom: 14,
                 }}
               >
                 v1
