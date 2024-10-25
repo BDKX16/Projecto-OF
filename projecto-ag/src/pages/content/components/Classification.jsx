@@ -43,7 +43,7 @@ const Classification = ({ data, demo }) => {
   const [imagesUrl, setImagesUrl] = useState([]);
 
   useEffect(() => {
-    if (component.imagesUrl.length < 5 && component.imagesUrl.length > 1) {
+    if (component.imagesUrl.length > 1) {
       let newImagesUrl = [...component.imagesUrl];
       while (newImagesUrl.length < 5) {
         newImagesUrl = newImagesUrl.concat(component.imagesUrl);
@@ -51,6 +51,7 @@ const Classification = ({ data, demo }) => {
       setImagesUrl(newImagesUrl);
     }
   }, [component]);
+
   if (demo === true) {
     return (
       <div className="carousel-container-classification">

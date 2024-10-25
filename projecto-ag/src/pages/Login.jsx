@@ -21,6 +21,7 @@ import { createUser } from "./../redux/states/user";
 import { useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { enqueueSnackbar } from "notistack";
 import useAuth from "../hooks/useAuth";
 
 function Copyright(props) {
@@ -73,7 +74,9 @@ export default function Login() {
     const data = new FormData(event.currentTarget);
 
     if (data.get("repeat-password") !== data.get("password")) {
-      //notistack las passwords no coinciden
+      enqueueSnackbar("Las contraseñas no coinciden", {
+        variant: "error",
+      });
       return;
     }
 
