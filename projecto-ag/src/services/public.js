@@ -89,14 +89,17 @@ export const getVideo = (id) => {
   };
 };
 
-export const searchVideos = (id) => {
+export const searchVideos = (id, page) => {
   const controller = loadAbort();
   console.log(id);
   return {
     call: axios
-      .get(import.meta.env.VITE_BASE_URL + "/content-search/" + id, {
-        signal: controller.signal,
-      })
+      .get(
+        `${import.meta.env.VITE_BASE_URL}/content-search/${id}?page=${page}`,
+        {
+          signal: controller.signal,
+        }
+      )
       .catch((error) => {
         notifyError(error);
       }),

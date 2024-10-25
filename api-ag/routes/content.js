@@ -89,7 +89,7 @@ router.get("/content", async (req, res) => {
 router.get("/content-search/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const page = parseInt(req.params.page) || 1;
+    const page = parseInt(req.query.page) || 1;
     const limit = 15;
 
     let content;

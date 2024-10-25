@@ -14,7 +14,7 @@ const SearchPage = () => {
     const searchTerm = searchParams.get("id");
 
     const fetchData = async (searchTerm) => {
-      const result = await callEndpoint(searchVideos(searchTerm));
+      const result = await callEndpoint(searchVideos(searchTerm, page));
 
       if (!result || Object.keys(result)?.length === 0) {
         return;
@@ -24,8 +24,9 @@ const SearchPage = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data);
-          setData(result.data.map((item) => createContentAdapter(item)));
+          setData(
+            result.data.content.map((item) => createContentAdapter(item))
+          );
         }
       }
     };
