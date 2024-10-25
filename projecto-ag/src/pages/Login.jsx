@@ -21,7 +21,6 @@ import { createUser } from "./../redux/states/user";
 import { useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { enqueueSnackbar } from "notistack";
 import useAuth from "../hooks/useAuth";
 
 function Copyright(props) {
