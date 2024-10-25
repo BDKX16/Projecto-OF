@@ -261,12 +261,15 @@ const processMercadopagoPayment = async (contentId, price) => {
     },
   };
 
+  console.log(requestMP);
+
   try {
     const preference = await new Preference(client)
       .create(requestMP)
       .then((res) => (paymentData = res))
       .catch((error) => console.error(error));
 
+    console.log(preference.body);
     return { preference: preference, init_point: preference.body.init_point };
   } catch (error) {
     return { preference: null, init_point: null };
