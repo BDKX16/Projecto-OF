@@ -154,6 +154,7 @@ function App() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyPress}
               ></input>
+              <div className="overlay"></div>
               <a
                 className="btn-lupa"
                 onClick={handleSearch}
