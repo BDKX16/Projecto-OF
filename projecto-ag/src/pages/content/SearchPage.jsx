@@ -37,7 +37,10 @@ const SearchPage = () => {
   }, []);
 
   return (
-    <div style={{ color: "white", paddingTop: 0 }} className="mid-container">
+    <div
+      style={{ color: "white", paddingTop: 0, paddingLeft: 0, paddingRight: 0 }}
+      className="mid-container"
+    >
       <Box
         width="100%"
         display="flex"

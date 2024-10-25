@@ -75,29 +75,6 @@ nav li:first-of-type {
   position: sticky;
 }
 
-@media (max-width: 1380px) {
-  .principal {
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-}
-
-@media (max-width: 800px) {
-  .principal {
-    margin-left: 10px;
-  }
-}
-@media (max-width: 400px) {
-  .principal {
-    margin-left: 0px;
-    width: 40dvw;
-  }
-  .principal .logo {
-    transform: scale(0.7);
-  }
-}
-
 .sidebar {
   display: none;
   position: fixed;
@@ -123,9 +100,18 @@ nav li:first-of-type {
   width: 100%;
 }
 
+.lupa-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
 .buscar input {
+  opacity: 0;
   color: #000;
-  padding: 0 20px;
+  padding: 2px 16px 0 16px;
   height: 40px;
   font-size: 18px;
   width: 0px;
@@ -133,20 +119,19 @@ nav li:first-of-type {
   border: 2px solid rgb(92, 28, 28);
   border-radius: 30px;
   transition: all 0.6s ease;
-  margin-right: 10px;
 }
 .buscar:hover input {
   width: 240px;
+  opacity: 1;
 }
 .buscar input:focus {
   width: 240px;
+  opacity: 1;
 }
 
 .buscar {
   position: relative;
   height: 100%;
-  padding: 0 10px;
-  margin: 0 10px;
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -159,8 +144,7 @@ nav li:first-of-type {
 .btn-lupa {
   position: absolute;
   top: 10;
-  right: 10px;
-  background: rgb(110, 14, 14);
+  right: -10px;
   width: 50px;
   height: 50px;
   line-height: 55px;
@@ -176,34 +160,6 @@ nav li:first-of-type {
   display: none;
   align-items: center;
   justify-content: center;
-}
-
-@media (max-width: 1160px) {
-  .btn-lupa {
-    background: rgb(255, 255, 255);
-    border: rgba(43, 43, 43, 0.753) 2px solid;
-  }
-
-  .hideOnMobile {
-    display: none;
-  }
-
-  .menu-button {
-    display: flex;
-  }
-
-  .container {
-    padding: 10px 50px;
-  }
-}
-
-@media (max-width: 400px) {
-  .sidebar {
-    width: 100%;
-  }
-  .container {
-    padding: 10px 5px;
-  }
 }
 
 .main {
@@ -270,6 +226,87 @@ footer {
   transform: scale(2);
 }
 
+.logo {
+  font-size: 1.9rem;
+}
+
+@media (max-width: 1380px) {
+  .principal {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+@media (max-width: 1160px) {
+  .btn-lupa {
+    width: 48px;
+    height: 48px;
+  }
+
+  .buscar input {
+    background-color: rgb(0, 0, 0);
+  }
+
+  .buscar:hover .btn-lupa {
+    background-color: rgb(0, 0, 0);
+    border: 2px solid rgb(92, 28, 28);
+  }
+  .buscar .btn-lupa:focus {
+    background-color: rgb(0, 0, 0);
+    border: 2px solid rgb(92, 28, 28);
+  }
+
+  .hideOnMobile {
+    display: none;
+  }
+
+  .menu-button {
+    display: flex;
+  }
+
+  .container {
+    padding: 10px 50px;
+  }
+
+  .topbar li {
+    height: 8vh;
+  }
+  .logo {
+    font-size: 1.5rem;
+  }
+}
+@media (max-width: 800px) {
+  .lupa-container {
+    margin-right: 5px;
+    margin-left: 10px;
+  }
+
+  .principal {
+    margin-left: 10px;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+  .menu-button {
+    width: 60px;
+  }
+}
+@media (max-width: 400px) {
+  .principal {
+    margin-left: 0px;
+    width: 40dvw;
+  }
+
+  .logo {
+    font-size: 0.9rem;
+  }
+
+  .topbar li {
+    height: 6vh;
+  }
+}
+
 @media screen and (min-width: 700px) {
   footer {
     flex-direction: row;
@@ -283,5 +320,14 @@ footer {
 
   .logos-redes {
     gap: 0.4em;
+  }
+}
+
+@media (max-width: 400px) {
+  .sidebar {
+    width: 100%;
+  }
+  .container {
+    padding: 10px 5px;
   }
 }

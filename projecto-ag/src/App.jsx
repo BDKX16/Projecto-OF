@@ -116,7 +116,6 @@ function App() {
                 alt="Almendra Gala Logo"
                 style={{
                   color: theme.palette.secondary.main,
-                  fontSize: "1.9rem",
                   backgroundColor: theme.palette.background.topbar,
                 }}
               >
@@ -148,22 +147,31 @@ function App() {
             <div className="buscar">
               <input
                 type="text"
-                placeholder="buscar"
-                color="red"
+                placeholder="Buscar"
                 style={{ color: "black" }}
                 required
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyPress}
               ></input>
-              <a className="btn-lupa" onClick={handleSearch}>
-                <Lupa className="Lupa2"></Lupa>
+              <a
+                className="btn-lupa"
+                onClick={handleSearch}
+                style={{
+                  backgroundColor:
+                    window.innerWidth > 768 && theme.palette.secondary.main,
+                }}
+              >
+                <Lupa
+                  className="Lupa2"
+                  color={window.innerWidth < 768 ? "white" : "black"}
+                ></Lupa>
               </a>
             </div>
           </li>
           <li className="menu-button" onClick={() => toggleSidebar()}>
             <a href="#">
-              <Hamburger></Hamburger>
+              <Hamburger size={window.innerWidth < 768 ? 25 : 30}></Hamburger>
             </a>
           </li>
         </ul>
