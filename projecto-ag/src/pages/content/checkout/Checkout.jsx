@@ -124,7 +124,7 @@ export default function Checkout({ video }) {
       paymentMethod: selectedPaymentType,
       contentId: video.id,
     };
-
+    console.log(video);
     const result = await callEndpoint(sendPayment(toSend));
     if (result.status !== 200) {
       enqueueSnackbar("Error procesing payment", {

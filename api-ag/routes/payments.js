@@ -37,12 +37,16 @@ router.post(
       }
 
       let paymentResponse;
-
+      console.log(formData.contentId + " - " + content.price);
       if (formData.paymentMethod === "mercadopago") {
         paymentResponse = await processMercadopagoPayment(
           formData.contentId,
           content.price
         );
+
+        if (!paymentResponse.preference) {
+          return res.status(500).json({ error: "Failed to create payment" });
+        }
       } else if (formData.paymentMethod === "paypal") {
         paymentResponse = await processPaypalPayment({});
       } else {
@@ -256,12 +260,17 @@ const processMercadopagoPayment = async ({ contentId, price }) => {
       },
     },
   };
-  const preference = await new Preference(client)
-    .create(requestMP)
-    .then((res) => (paymentData = res))
-    .catch((error) => console.error(error));
 
-  return { preference: preference, init_point: preference.body.init_point };
+  try {
+    const preference = await new Preference(client)
+      .create(requestMP)
+      .then((res) => (paymentData = res))
+      .catch((error) => console.error(error));
+
+    return { preference: preference, init_point: preference.body.init_point };
+  } catch (error) {
+    return { preference: null, init_point: null };
+  }
 };
 
 const processPaypalPayment = async ({}) => {
