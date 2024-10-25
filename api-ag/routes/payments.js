@@ -37,7 +37,6 @@ router.post(
       }
 
       let paymentResponse;
-      console.log(formData.contentId + " - " + content.price);
       if (formData.paymentMethod === "mercadopago") {
         paymentResponse = await processMercadopagoPayment(
           formData.contentId,
@@ -235,7 +234,7 @@ router.post("/payments/webhook", async (req, res) => {
   }
 });
 
-const processMercadopagoPayment = async ({ contentId, price }) => {
+const processMercadopagoPayment = async (contentId, price) => {
   const requestMP = {
     body: {
       items: [
