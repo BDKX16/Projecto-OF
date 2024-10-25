@@ -260,8 +260,8 @@ const processMercadopagoPayment = async (contentId, price) => {
       },
     },
   };
-
-  console.log(requestMP);
+  console.log(contentId, price);
+  console.log(requestMP.body.items);
 
   try {
     const preference = await new Preference(client)
