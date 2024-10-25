@@ -314,11 +314,12 @@ footer {
   }
 
   .logo {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    margin-left: 50px;
   }
 
   .topbar li {
-    height: 6vh;
+    height: 7vh;
   }
 }
 
