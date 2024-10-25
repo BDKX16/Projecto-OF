@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../content.css"; // Archivo CSS para estilos personalizados
 import { Box, Button, Typography } from "@mui/material";
+import { AsyncImage } from "loadable-image";
 
 const settings = {
   dots: false,
@@ -40,6 +41,7 @@ const settings = {
 const Classification = ({ data, demo }) => {
   const [component, setComponent] = useState(data.componentData);
   const [imagesUrl, setImagesUrl] = useState([]);
+
   useEffect(() => {
     if (component.imagesUrl.length < 5 && component.imagesUrl.length > 1) {
       let newImagesUrl = [...component.imagesUrl];
@@ -116,10 +118,32 @@ const Classification = ({ data, demo }) => {
           {imagesUrl.map((img, index) => (
             <div key={img._id}>
               <div className="carousel-image-container">
-                <img
-                  src={img.coverUrl || "https://via.placeholder.com/150"}
-                  alt={`Slide ${img.title}`}
-                  className="carousel-image"
+                <AsyncImage
+                  src={img.coverUrl}
+                  style={{ height: "auto", aspectRatio: 1 / 1 }}
+                  loader={
+                    <div
+                      style={{
+                        background: "#2b2b2b",
+                        height: "150px",
+                        width: "150px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        animation: "pulse 2.5s infinite",
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: "80%",
+                          width: "80%",
+                          background: "#353535",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </div>
+                  }
+                  error={<div style={{ background: "#eee" }} />}
                 />
                 <Box height={34}>
                   <Typography

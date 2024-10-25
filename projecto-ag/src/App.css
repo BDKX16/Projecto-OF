@@ -223,6 +223,21 @@ footer {
   }
 }
 
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.skeleton {
+  animation: pulse 1.5s infinite ease-in-out;
+}
 .card {
   padding: 2em;
 }

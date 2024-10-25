@@ -108,7 +108,7 @@ const App = () => {
   }, []);
 
   return (
-    <React.StrictMode>
+    <>
       <CssBaseline />
       <SnackbarProvider>
         <Suspense
@@ -151,7 +151,7 @@ const App = () => {
           </Provider>
         </Suspense>
       </SnackbarProvider>
-    </React.StrictMode>
+    </>
   );
 };
 

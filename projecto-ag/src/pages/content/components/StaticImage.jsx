@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "../content.css"; // Archivo CSS para estilos personalizados
-import { Box, Button, Typography } from "@mui/material";
-
+import "../content.css";
+import { AsyncImage } from "loadable-image";
 const settings = {
   dots: false,
   infinite: true,
@@ -58,17 +57,55 @@ const StaticImage = ({ data, demo }) => {
     return (
       <a
         href={component.link}
-        style={{ marginTop: 30, marginBottom: 30, maxWidth: "100%" }}
+        style={{
+          marginTop: 30,
+          marginBottom: 30,
+          maxWidth: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignContent: "center",
+          alignItems: "center",
+        }}
       >
-        <img
+        <AsyncImage
           src={component.imagesUrl[0]}
-          alt={component.title}
-          className="classification-image"
-          style={{ width: "90%", height: "auto" }}
-        ></img>
+          style={{ width: "80%", height: "auto", aspectRatio: 16 / 9 }}
+          loader={
+            <div
+              style={{
+                background: "#2b2b2b",
+                height: "150px",
+                width: "150px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                animation: "pulse 2.5s infinite",
+              }}
+            >
+              <div
+                style={{
+                  height: "80%",
+                  width: "80%",
+                  background: "#353535",
+                  borderRadius: "4px",
+                }}
+              />
+            </div>
+          }
+          error={<div style={{ background: "#eee" }} />}
+        />
       </a>
     );
   }
 };
 
 export default StaticImage;
+
+/*
+<img
+          src={component.imagesUrl[0]}
+          alt={component.title}
+          className="classification-image"
+          style={{ width: "90%", height: "auto" }}
+        ></img>
+        */

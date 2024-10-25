@@ -5,6 +5,7 @@ import { enqueueSnackbar } from "notistack";
 import { createContentAdapter } from "../../adapters/content";
 import { Box, Typography, Button, Grid } from "@mui/material";
 
+import { AsyncImage } from "loadable-image";
 const SearchPage = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
   const [data, setData] = useState([]);
@@ -57,9 +58,6 @@ const SearchPage = () => {
           gap={3}
           justifyContent={"space-between"}
         >
-          <Typography variant="h5" component="h5" color="text.primary">
-            {data.length} resultados
-          </Typography>
           <Button
             disabled
             variant="outlined"
@@ -67,6 +65,9 @@ const SearchPage = () => {
           >
             Filtros
           </Button>
+          <Typography variant="h5" component="h5" color="text.primary">
+            {data.length} resultados
+          </Typography>
         </Box>
       </Box>
       {filtersMenu && (
@@ -91,10 +92,32 @@ const SearchPage = () => {
           data.map((img) => (
             <Grid item xs={6} sm={4} md={3} lg={2.4} key={img.id}>
               <div className="carousel-image-container">
-                <img
-                  src={img.coverUrl || "https://via.placeholder.com/150"}
-                  alt={`Slide ${img.title}`}
-                  className="carousel-image"
+                <AsyncImage
+                  src={img.coverUrl}
+                  style={{ height: "auto", aspectRatio: 1 / 1 }}
+                  loader={
+                    <div
+                      style={{
+                        background: "#2b2b2b",
+                        height: "150px",
+                        width: "150px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        animation: "pulse 2.5s infinite",
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: "80%",
+                          width: "80%",
+                          background: "#353535",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </div>
+                  }
+                  error={<div style={{ background: "#eee" }} />}
                 />
                 <Box height={34}>
                   <Typography
