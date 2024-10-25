@@ -124,7 +124,7 @@ router.get(
 router.get(
   "/payments/:id",
   checkAuth,
-  checkRole(["user", "admin", "owner"]),
+  checkRole(["admin", "owner"]),
   async (req, res) => {
     try {
       const { id } = req.params;

@@ -35,7 +35,39 @@ const SearchPage = () => {
   }, []);
 
   return (
-    <div style={{ color: "white" }} className="mid-container">
+    <div style={{ color: "white", paddingTop: 0 }} className="mid-container">
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection={{ xs: "column", sm: "column", md: "row" }}
+        justifyContent="space-between"
+        mb={3}
+      >
+        <Typography variant="h5" component="h5" color="text.primary">
+          Resultados de la busqueda
+        </Typography>
+        <Box
+          display="flex"
+          alignItems={"center"}
+          gap={3}
+          justifyContent={"space-between"}
+        >
+          <Typography variant="h5" component="h5" color="text.primary">
+            {data.length} resultados
+          </Typography>
+          <Button variant="outlined">Filtros</Button>
+        </Box>
+      </Box>
+      <Box
+        width="100%"
+        display="flex"
+        flexDirection={{ xs: "column", sm: "column", md: "row" }}
+        justifyContent="space-between"
+        mb={3}
+      >
+        <Button>Orden</Button>
+        <Button>Orden</Button>
+      </Box>
       <Grid container spacing={2}>
         {data.length > 0 ? (
           data.map((img) => (

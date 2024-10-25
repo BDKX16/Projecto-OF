@@ -2,9 +2,6 @@ const express = require("express");
 
 const router = express.Router();
 const Template = require("../models/template.js");
-const Configuration = require("../models/configuration.js");
-const User = require("../models/user.js");
-const Category = require("../models/category.js");
 const Carousel = require("../models/carousel.js");
 const Content = require("../models/content.js");
 

@@ -76,16 +76,6 @@ router.get("/content/:videoId", async (req, res) => {
 });
 
 // GET /api/content
-router.get("/content", async (req, res) => {
-  try {
-    const content = await Content.find({});
-    return res.status(200).json(content);
-  } catch (error) {
-    return res.status(500).json({ message: "Internal server error" });
-  }
-});
-
-// GET /api/content
 router.get("/content-search/:id", async (req, res) => {
   try {
     const id = req.params.id;
@@ -132,35 +122,57 @@ router.get("/content-search/:id", async (req, res) => {
   }
 });
 
+//PRIVATE
+
+// GET /api/content
+router.get(
+  "/content",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    try {
+      const content = await Content.find({});
+      return res.status(200).json(content);
+    } catch (error) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
 // GET /api/categorys
-router.get("/categorys", async (req, res) => {
-  //get all categorys
-  var categorys = await Category.find({});
+router.get(
+  "/categorys",
+  checkAuth,
+  checkRole(["admin", "owner"]),
+  async (req, res) => {
+    //get all categorys
+    var categorys = await Category.find({});
 
-  //for each category push all videos
-  let algo = await Promise.all(
-    categorys.map(async (item) => {
-      try {
-        var category = item;
-        var video_categorys = await VideoCategory.find({
-          categoryId: category._id,
-        });
-        //get all videos
-        var videos = await Promise.all(
-          video_categorys.map(async (element) => {
-            return await Content.findOne({ _id: element.videoId });
-          })
-        );
-        category.videos = videos;
+    //for each category push all videos
+    let algo = await Promise.all(
+      categorys.map(async (item) => {
+        try {
+          var category = item;
+          var video_categorys = await VideoCategory.find({
+            categoryId: category._id,
+          });
+          //get all videos
+          var videos = await Promise.all(
+            video_categorys.map(async (element) => {
+              return await Content.findOne({ _id: element.videoId });
+            })
+          );
+          category.videos = videos;
 
-        return category;
-      } catch (error) {
-        console.log(error);
-      }
-    })
-  );
+          return category;
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
 
-  res.json(algo);
-});
+    res.json(algo);
+  }
+);
 
 module.exports = router;
