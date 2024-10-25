@@ -53,7 +53,7 @@ nav ul li a {
   font-size: 18px;
 }
 
-nav a:hover {
+.btn-hover:hover {
   background-color: rgb(110, 14, 14);
   color: rgb(255, 255, 255);
 }
@@ -68,6 +68,19 @@ nav li:first-of-type {
 .principal {
   display: flex;
   margin-left: 50px;
+}
+
+.topbar {
+  z-index: 999;
+  position: sticky;
+}
+
+@media (max-width: 1380px) {
+  .principal {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
 }
 
 @media (max-width: 800px) {
@@ -92,7 +105,7 @@ nav li:first-of-type {
   right: 0;
   height: 100dvh;
   width: 250px;
-  z-index: 999;
+  z-index: 1;
   background-color: rgba(255, 255, 225, 0.2);
   backdrop-filter: blur(10px);
   box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
@@ -109,6 +122,7 @@ nav li:first-of-type {
 .sidebar a {
   width: 100%;
 }
+
 .buscar input {
   color: #000;
   padding: 0 20px;
@@ -147,8 +161,8 @@ nav li:first-of-type {
   top: 10;
   right: 10px;
   background: rgb(110, 14, 14);
-  width: 44px;
-  height: 45px;
+  width: 50px;
+  height: 50px;
   line-height: 55px;
   text-align: center;
   color: white;
@@ -158,21 +172,31 @@ nav li:first-of-type {
 }
 
 .menu-button {
+  align-self: center;
   display: none;
+  align-items: center;
+  justify-content: center;
 }
-@media (max-width: 800px) {
+
+@media (max-width: 1160px) {
+  .btn-lupa {
+    background: rgb(255, 255, 255);
+    border: rgba(43, 43, 43, 0.753) 2px solid;
+  }
+
   .hideOnMobile {
     display: none;
   }
 
   .menu-button {
-    display: block;
+    display: flex;
   }
 
   .container {
     padding: 10px 50px;
   }
 }
+
 @media (max-width: 400px) {
   .sidebar {
     width: 100%;
@@ -242,7 +266,7 @@ footer {
 .logos-redes {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: 1;
   transform: scale(2);
 }
 
@@ -255,5 +279,9 @@ footer {
     display: flex;
     flex-direction: row;
     gap: 3rem;
+  }
+
+  .logos-redes {
+    gap: 0.4em;
   }
 }

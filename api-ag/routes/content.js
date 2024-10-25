@@ -89,14 +89,19 @@ router.get("/content", async (req, res) => {
 router.get("/content-search/:id", async (req, res) => {
   try {
     const id = req.params.id;
+    const page = parseInt(req.params.page) || 1;
+    const limit = 15;
 
     let content;
+    const total = await Content.countDocuments({});
+    const totalPages = Math.ceil(total / limit);
+
     if (id === "favorites") {
-      content = await Content.find({}).sort({ likes: -1 }).limit(15);
+      content = await Content.find({}).sort({ likes: -1 }).limit(limit);
     } else if (id === "most-liked") {
-      content = await Content.find({}).sort({ likes: -1 }).limit(15);
+      content = await Content.find({}).sort({ likes: -1 }).limit(limit);
     } else if (id === "most-recent") {
-      content = await Content.find({}).sort({ createdAt: -1 }).limit(15);
+      content = await Content.find({}).sort({ createdAt: -1 }).limit(limit);
     } else if (id === "this-month") {
       const startOfMonth = new Date(
         new Date().getFullYear(),
@@ -104,12 +109,12 @@ router.get("/content-search/:id", async (req, res) => {
         1
       );
       content = await Content.find({ createdAt: { $gte: startOfMonth } }).limit(
-        15
+        limit
       );
     } else {
       content = await Content.find({
         title: { $regex: id, $options: "i" },
-      }).limit(15);
+      }).limit(limit);
     }
 
     content = content.map((item) => {
@@ -117,7 +122,11 @@ router.get("/content-search/:id", async (req, res) => {
       return rest;
     });
 
-    return res.status(200).json(content);
+    return res.status(200).json({
+      content,
+      totalPages,
+      currentPage: page,
+    });
   } catch (error) {
     return res.status(500).json({ message: "Internal server error" });
   }

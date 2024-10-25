@@ -74,29 +74,40 @@ function App() {
 
   return (
     <>
-      <nav style={{ backgroundColor: theme.palette.background.topbar }}>
+      <nav>
         <ul
           className="sidebar"
           style={{ backgroundColor: theme.palette.background.sidebar }}
         >
           <li onClick={toggleSidebar}>
-            <a href="#">XXXX</a>
+            <a href="#">X</a>
           </li>
           <li>
-            <a href="/search?id=favorites">Favoritos</a>
+            <a className="btn-hover" href="/search?id=favorites">
+              Favoritos
+            </a>
           </li>
           <li>
-            <a href="/search?id=this-month">Video del mes</a>
+            <a className="btn-hover" href="/search?id=this-month">
+              Video del mes
+            </a>
           </li>
           <li>
-            <a href="/search?id=most-liked">Mas likeados</a>
+            <a className="btn-hover" href="/search?id=most-liked">
+              Mas likeados
+            </a>
           </li>
           <li>
-            <a href="/search?id=most-recent">Más recientes</a>
+            <a className="btn-hover" href="/search?id=most-recent">
+              Más recientes
+            </a>
           </li>
         </ul>
 
-        <ul className="topbar">
+        <ul
+          className="topbar"
+          style={{ backgroundColor: theme.palette.background.topbar }}
+        >
           <li className="principal">
             <Typography>
               <a
@@ -106,6 +117,7 @@ function App() {
                 style={{
                   color: theme.palette.secondary.main,
                   fontSize: "1.9rem",
+                  backgroundColor: theme.palette.background.topbar,
                 }}
               >
                 ALMENDRA GALA
@@ -113,18 +125,26 @@ function App() {
             </Typography>
           </li>
           <li className="hideOnMobile">
-            <a href="/search?id=favorites">Favoritos</a>
+            <a className="btn-hover" href="/search?id=favorites">
+              Favoritos
+            </a>
           </li>
           <li className="hideOnMobile">
-            <a href="/search?id=this-month">Video del mes</a>
+            <a className="btn-hover" href="/search?id=this-month">
+              Video del mes
+            </a>
           </li>
           <li className="hideOnMobile">
-            <a href="/search?id=most-liked">Mas likeados</a>
+            <a className="btn-hover" href="/search?id=most-liked">
+              Mas likeados
+            </a>
           </li>
           <li className="hideOnMobile">
-            <a href="/search?id=most-recent">Más recientes</a>
+            <a className="btn-hover" href="/search?id=most-recent">
+              Más recientes
+            </a>
           </li>
-          <li className="hideOnMobile">
+          <li className="lupa-container">
             <div className="buscar">
               <input
                 type="text"

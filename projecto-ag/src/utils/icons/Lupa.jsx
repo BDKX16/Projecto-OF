@@ -4,8 +4,8 @@ function Lupa() {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="45px"
-      height="45px"
+      width="180px"
+      height="180px"
       version="1.1"
       viewBox="0 0 57.231 57.231"
       xmlSpace="preserve"
