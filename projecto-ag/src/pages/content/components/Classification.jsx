@@ -43,7 +43,7 @@ const Classification = ({ data, demo }) => {
   const [imagesUrl, setImagesUrl] = useState([]);
 
   useEffect(() => {
-    if (component.imagesUrl.length > 1) {
+    if (component.imagesUrl.length > 3) {
       let newImagesUrl = [...component.imagesUrl];
       while (newImagesUrl.length < 5) {
         newImagesUrl = newImagesUrl.concat(component.imagesUrl);
