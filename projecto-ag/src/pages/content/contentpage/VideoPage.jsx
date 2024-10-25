@@ -5,7 +5,10 @@ import { Button, Typography } from "@mui/material";
 
 const VideoPage = ({ video }) => {
   return (
-    <div className="main-container">
+    <div
+      className="mid-container"
+      style={{ justifyContent: "start", padding: 0 }}
+    >
       {/* Aquí puedes agregar el reproductor de video y otros elementos relacionados */}
       <div className="video-container">
         <iframe
@@ -23,7 +26,7 @@ const VideoPage = ({ video }) => {
       <div className="video-info">
         <Typography
           component="h1"
-          variant="h1"
+          style={{ fontSize: "1.1rem", marginBottom: 10, lineHeight: 1.2 }}
           fontWeight={400}
           color="text.primary"
         >

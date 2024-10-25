@@ -66,6 +66,7 @@
 @media screen and (max-width: 640px) {
   :root {
     overflow-y: auto;
+    overflow-x: hidden;
   }
 }
 
@@ -78,6 +79,7 @@ body {
   color: #333;
   background-color: #a0a0a0;
   display: block;
+  overflow-x: hidden;
 }
 
 .main {
