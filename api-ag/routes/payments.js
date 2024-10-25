@@ -244,6 +244,7 @@ const processMercadopagoPayment = async ({ contentId, price }) => {
           title: "AlmenWeb",
           description: "Contenido pagina web",
           quantity: 1,
+          currency_id: "ARS",
           unit_price: price,
         },
       ],
