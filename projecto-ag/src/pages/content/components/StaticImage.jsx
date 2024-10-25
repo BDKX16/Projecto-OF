@@ -100,12 +100,3 @@ const StaticImage = ({ data, demo }) => {
 };
 
 export default StaticImage;
-
-/*
-<img
-          src={component.imagesUrl[0]}
-          alt={component.title}
-          className="classification-image"
-          style={{ width: "90%", height: "auto" }}
-        ></img>
-        */
