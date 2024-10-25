@@ -54,7 +54,7 @@ nav ul li a {
 }
 
 .btn-hover:hover {
-  background-color: rgb(110, 14, 14);
+  background-color: #911431;
   color: rgb(255, 255, 255);
 }
 
@@ -125,7 +125,7 @@ nav li:first-of-type {
   font-size: 18px;
   width: 0px;
   outline: none;
-  border: 2px solid rgb(92, 28, 28);
+  border: 2px solid #911431;
   border-radius: 30px;
   transition: all 0.6s ease;
   z-index: 5;
@@ -272,12 +272,12 @@ footer {
 
   .buscar:hover .btn-lupa {
     background-color: rgb(0, 0, 0);
-    border: 2px solid rgb(92, 28, 28);
+    border: 2px solid #911431;
   }
 
   .buscar .btn-lupa:focus {
     background-color: rgb(0, 0, 0);
-    border: 2px solid rgb(92, 28, 28);
+    border: 2px solid #911431;
   }
   .lupa-container:hover .overlay {
     display: block; /* Mostrar la superposición cuando se hace hover */
