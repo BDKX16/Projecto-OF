@@ -272,7 +272,7 @@ const processMercadopagoPayment = async (contentId, price) => {
 
     console.log(preference);
     console.log(paymentData);
-    return { preference: preference, init_point: preference.body.init_point };
+    return { preference: preference, init_point: preference.init_point };
   } catch (error) {
     return { preference: null, init_point: null };
   }
