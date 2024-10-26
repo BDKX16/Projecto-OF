@@ -14,10 +14,7 @@ const VideoPage = ({ video }) => {
         <iframe
           width="100%"
           height="100%"
-          src={
-            video.videoUrl ||
-            "https://via.placeholder.com/989x556?text=Video+not+found"
-          }
+          src={video.videoUrl}
           title="Video Player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
