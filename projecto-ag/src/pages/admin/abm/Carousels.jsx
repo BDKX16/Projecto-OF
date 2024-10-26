@@ -65,6 +65,7 @@ const ABMCarousel = () => {
       if (!result || Object.keys(result)?.length === 0) {
         return;
       } else {
+        console.log(result.data);
         setData(result.data.map((item) => createCarouselAdapter(item)));
       }
     };
@@ -437,12 +438,12 @@ const ABMCarousel = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell style={black}>Title</TableCell>
-                  <TableCell style={black}>Description</TableCell>
-                  <TableCell style={black}>Images</TableCell>
-                  <TableCell style={black}>Link</TableCell>
-                  <TableCell style={black}>Type</TableCell>
-                  <TableCell style={black}>Fecha de creación</TableCell>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Description</TableCell>
+                  <TableCell>Images</TableCell>
+                  <TableCell>Link</TableCell>
+                  <TableCell>Type</TableCell>
+                  <TableCell>Fecha de creación</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -463,39 +464,49 @@ const ABMCarousel = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell style={black}>Title</TableCell>
-                <TableCell style={black}>Description</TableCell>
-                <TableCell style={black}>Images</TableCell>
-                <TableCell style={black}>Link</TableCell>
-                <TableCell style={black}>Type</TableCell>
-                <TableCell style={black}>Fecha de creación</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Images</TableCell>
+                <TableCell>Link</TableCell>
+                <TableCell>Type</TableCell>
+                <TableCell>Fecha de creación</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell style={black}>{row.title}</TableCell>
-                    <TableCell style={black}>{row.description}</TableCell>
-                    <TableCell style={black}>
-                      {row.imagesUrl ? row.imagesUrl.length : 0}
+                    <TableCell>{row.title}</TableCell>
+                    <TableCell>
+                      {row.description != null && row.description.length > 15
+                        ? `${row.description.substring(0, 15)}...`
+                        : row.description}
                     </TableCell>
-                    <TableCell style={black}>{row.link}</TableCell>
-                    <TableCell style={black}>{row.type}</TableCell>
-                    <TableCell style={black}>
-                      {formatDateToString(row.createdAt)}{" "}
+                    <TableCell>
+                      {row.imagesUrl.length != 0 ? row.imagesUrl.length : "-"}
                     </TableCell>
-                    <TableCell style={black}>
-                      <IconButton
-                        onClick={() => {
-                          setCurrentEdit(row);
-                          setFormData(row);
-                          setIsAddOpen(false);
-                          setIsEditOpen(!isEditOpen);
-                        }}
-                      >
-                        <Edit />
-                      </IconButton>
+                    <TableCell>
+                      {" "}
+                      {row.link != null && row.link.length > 20
+                        ? `${row.link.substring(0, 20)}...`
+                        : row.link}
+                    </TableCell>
+                    <TableCell>{row.type}</TableCell>
+                    <TableCell>{formatDateToString(row.createdAt)} </TableCell>
+                    <TableCell>
+                      {row.type != "category" && (
+                        <IconButton
+                          onClick={() => {
+                            setCurrentEdit(row);
+                            setFormData(row);
+                            setIsAddOpen(false);
+                            setIsEditOpen(!isEditOpen);
+                          }}
+                        >
+                          <Edit />
+                        </IconButton>
+                      )}
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
                       </IconButton>

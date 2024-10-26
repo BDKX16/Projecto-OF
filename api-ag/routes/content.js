@@ -23,7 +23,10 @@ router.get("/content/:videoId", async (req, res) => {
       return res.status(404).json({ message: "Content not found" });
     }
 
-    const payment = await Payment.findOne({ videoId: videoId });
+    const payment = await Payment.findOne({
+      videoId: videoId,
+      status: { $in: ["completed", "approved", "accredited", "authorized"] },
+    });
 
     if (!payment) {
       const videoContent = {

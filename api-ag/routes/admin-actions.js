@@ -94,13 +94,13 @@ router.put(
   }
 );
 
-// PUT /admin/payments/:id - Update existing payment
+// GET /admin/payments/:id - GET existing payments
 router.get(
   "/payments",
   checkAuth,
   checkRole(["admin", "owner"]),
   async (req, res) => {
-    const payments = await Payment.find({});
+    const payments = await Payment.find({ nullDate: null });
     res.status(200).json(payments);
   }
 );

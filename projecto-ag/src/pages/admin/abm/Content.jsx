@@ -366,7 +366,9 @@ const ABMTable = () => {
                       {row.title}
                     </TableCell>
                     <TableCell style={{ color: "#272727" }}>
-                      {row.description}
+                      {row.description != null && row.description.length > 20
+                        ? `${row.description.substring(0, 20)}...`
+                        : row.description}
                     </TableCell>
                     <TableCell style={{ color: "#272727" }}>
                       {row.price}

@@ -33,6 +33,7 @@ import { sendPayment } from "../../../services/public";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 
 import { enqueueSnackbar } from "notistack";
+import PayPalButton from "./PayPalButton";
 
 const steps = [
   "Datos de usuario / facturacion",
@@ -68,7 +69,7 @@ function getStepContent(
     case 2:
       return (
         <Review
-          video={videoData}
+          price={videoData.price}
           formData={formData}
           paymentData={paymentData}
         />
@@ -77,7 +78,10 @@ function getStepContent(
       throw new Error("Unknown step");
   }
 }
-
+const convertToUsd = (price) => {
+  const usdPrice = (price / 1250) * 1.04;
+  return usdPrice.toFixed(2) + " USD";
+};
 export default function Checkout({ video }) {
   const { loading, callEndpoint } = useFetchAndLoad();
   const defaultTheme = createTheme({ palette: { mode: "light" } });
@@ -138,6 +142,36 @@ export default function Checkout({ video }) {
     }
   };
 
+  const paymentButton = () => {
+    if (activeStep > 0) {
+      if (activeStep === steps.length - 1 && selectedPaymentType === "paypal") {
+        return (
+          <PayPalButton
+            style={{ marginBottom: 20 }}
+            toSend={{
+              ...formData,
+              paymentMethod: "paypal",
+              contentId: video.id,
+            }}
+          ></PayPalButton>
+        );
+      } else {
+        return (
+          <Button
+            variant="contained"
+            endIcon={<ChevronRightRoundedIcon />}
+            onClick={handleNext}
+            sx={{
+              width: { xs: "100%", sm: "fit-content" },
+            }}
+          >
+            {activeStep === steps.length - 1 ? "Confirmar compra" : "Siguiente"}
+          </Button>
+        );
+      }
+    }
+  };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid
@@ -189,8 +223,12 @@ export default function Checkout({ video }) {
             }}
           >
             <Info
-              totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"}
-              contenido={[video]}
+              totalPrice={
+                selectedPaymentType == "paypal"
+                  ? convertToUsd(video.price)
+                  : video.price.toString()
+              }
+              contenido={video}
             />
           </Box>
         </Grid>
@@ -288,11 +326,18 @@ export default function Checkout({ video }) {
                   Selected products
                 </Typography>
                 <Typography variant="body1">
-                  {activeStep >= 2 ? "$144.97" : "$134.98"}
+                  {selectedPaymentType == "paypal"
+                    ? convertToUsd(video.price)
+                    : video.price.toString()}
                 </Typography>
               </div>
               <InfoMobile
-                totalPrice={activeStep >= 2 ? "$144.97" : "$134.98"}
+                totalPrice={
+                  selectedPaymentType == "paypal"
+                    ? convertToUsd(video.price)
+                    : video.price.toString()
+                }
+                contenido={video}
               />
             </CardContent>
           </Card>
@@ -367,7 +412,8 @@ export default function Checkout({ video }) {
                     flexDirection: { xs: "column-reverse", sm: "row" },
                     justifyContent:
                       activeStep !== 0 ? "space-between" : "flex-end",
-                    alignItems: "end",
+                    alignItems:
+                      selectedPaymentType == "paypal" ? "center" : "end",
                     flexGrow: 1,
                     gap: 1,
                     pb: { xs: 12, sm: 0 },
@@ -387,21 +433,7 @@ export default function Checkout({ video }) {
                       Anterior
                     </Button>
                   )}
-
-                  {activeStep > 0 && (
-                    <Button
-                      variant="contained"
-                      endIcon={<ChevronRightRoundedIcon />}
-                      onClick={handleNext}
-                      sx={{
-                        width: { xs: "100%", sm: "fit-content" },
-                      }}
-                    >
-                      {activeStep === steps.length - 1
-                        ? "Confirmar compra"
-                        : "Siguiente"}
-                    </Button>
-                  )}
+                  {paymentButton()}
                 </Box>
               </React.Fragment>
             )}

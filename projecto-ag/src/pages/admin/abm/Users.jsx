@@ -272,11 +272,11 @@ const ABMUsuarios = () => {
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
-                <TableCell style={black}>User</TableCell>
-                <TableCell style={black}>Rol</TableCell>
-                <TableCell style={black}>Fecha de creacion</TableCell>
-                <TableCell style={black}>Fecha de baja</TableCell>
-                <TableCell style={black}>Actions</TableCell>
+                <TableCell>User</TableCell>
+                <TableCell>Rol</TableCell>
+                <TableCell>Fecha de creacion</TableCell>
+                <TableCell>Fecha de baja</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -319,13 +319,9 @@ const ABMUsuarios = () => {
                         {row.email}
                       </p>
                     </TableCell>
-                    <TableCell style={black}>{colorRole(row.role)}</TableCell>
-                    <TableCell style={black}>
-                      {formatDateToString(row.createdAt)}
-                    </TableCell>
-                    <TableCell style={black}>
-                      {formatDateToString(row.nullDate)}
-                    </TableCell>
+                    <TableCell>{colorRole(row.role)}</TableCell>
+                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
+                    <TableCell>{formatDateToString(row.nullDate)}</TableCell>
                     <TableCell>
                       <IconButton
                         onClick={() => {

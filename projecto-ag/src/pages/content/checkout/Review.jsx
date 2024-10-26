@@ -8,7 +8,22 @@ import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-export default function Review({ video, formData, paymentData }) {
+const convertToUsd = (price) => {
+  const usdPrice = price / 1250;
+  return usdPrice.toFixed(2) + " USD";
+};
+
+const convertToPaypalFee = (price) => {
+  const usdPrice = (price / 1250) * 0.04;
+  return usdPrice.toFixed(2) + " USD";
+};
+
+const convertToUsdTotal = (price) => {
+  const usdPrice = (price / 1250) * 1.04;
+  return usdPrice.toFixed(2) + " USD";
+};
+
+export default function Review({ price, formData, paymentData }) {
   const capitalize = (str) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
@@ -18,13 +33,22 @@ export default function Review({ video, formData, paymentData }) {
       <List disablePadding>
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Products" secondary="1 Selected" />
-          <Typography variant="body2">${video.price}</Typography>
+          <Typography variant="body2">
+            ${paymentData == "paypal" ? convertToUsd(price) : price}
+          </Typography>
+        </ListItem>
+
+        <ListItem sx={{ py: 1, px: 0 }}>
+          <ListItemText primary="Paypal" secondary="fee" />
+          <Typography variant="body2">
+            ${paymentData == "paypal" ? convertToPaypalFee(price) : price}
+          </Typography>
         </ListItem>
 
         <ListItem sx={{ py: 1, px: 0 }}>
           <ListItemText primary="Total" />
           <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-            ${video.price}
+            ${paymentData == "paypal" ? convertToUsdTotal(price) : price}
           </Typography>
         </ListItem>
       </List>

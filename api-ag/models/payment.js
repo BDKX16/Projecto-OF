@@ -9,6 +9,10 @@ const paymentSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  netAmount: {
+    type: Number,
+    required: false,
+  },
   currency: {
     type: String,
     required: true,

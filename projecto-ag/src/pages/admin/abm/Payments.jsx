@@ -310,13 +310,13 @@ const Payments = () => {
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
-                <TableCell style={black}>User</TableCell>
-                <TableCell style={black}>Video</TableCell>
-                <TableCell style={black}>Estado</TableCell>
-                <TableCell style={black}>Monto</TableCell>
-                <TableCell style={black}>Metodo de pago</TableCell>
-                <TableCell style={black}>Fecha</TableCell>
-                <TableCell style={black}>Actions</TableCell>
+                <TableCell>User</TableCell>
+                <TableCell>Video</TableCell>
+                <TableCell>Estado</TableCell>
+                <TableCell>Monto</TableCell>
+                <TableCell>Metodo de pago</TableCell>
+                <TableCell>Fecha</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -348,18 +348,14 @@ const Payments = () => {
                         </Tooltip>
                       </div>
                     </TableCell>
-                    <TableCell disabled style={black}>
-                      {row.userId}
-                    </TableCell>
-                    <TableCell style={black}>{row.videoId}</TableCell>
-                    <TableCell style={black}>
+                    <TableCell disabled>{row.userId}</TableCell>
+                    <TableCell>{row.videoId}</TableCell>
+                    <TableCell>
                       <PaymentStatus
                         status={row.nullDate == null ? row.status : "deleted"}
                       ></PaymentStatus>
                     </TableCell>
-                    <TableCell style={black}>
-                      {row.amount + " " + row.currency}
-                    </TableCell>
+                    <TableCell>{row.amount + " " + row.currency}</TableCell>
                     <TableCell>
                       <div
                         style={{
@@ -372,9 +368,7 @@ const Payments = () => {
                         <PaymentIcon method={row.paymentMethod}></PaymentIcon>
                       </div>
                     </TableCell>
-                    <TableCell style={black}>
-                      {formatDateToString(row.date)}
-                    </TableCell>
+                    <TableCell>{formatDateToString(row.date)}</TableCell>
                     <TableCell>
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />

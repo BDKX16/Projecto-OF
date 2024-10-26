@@ -7,11 +7,44 @@ const {
   Payment,
 } = require("mercadopago");
 
+const {
+  ApiError,
+  CheckoutPaymentIntent,
+  Client,
+  Environment,
+  LogLevel,
+  OrdersController,
+} = require("@paypal/paypal-server-sdk");
+
+const bodyParser = require("body-parser");
+
 const { checkAuth, checkRole } = require("../middlewares/authentication");
 const router = express.Router();
 
 const Payments = require("../models/payment.js");
 const Content = require("../models/content.js");
+
+// Set up PayPal credentials
+
+const ppclient = new Client({
+  clientCredentialsAuthCredentials: {
+    oAuthClientId: process.env.PAYPAL_CLIENT_ID,
+    oAuthClientSecret: process.env.PAYPAL_SECRET,
+  },
+  timeout: 0,
+  environment: Environment.Sandbox,
+  logging: {
+    logLevel: LogLevel.Info,
+    logRequest: {
+      logBody: true,
+    },
+    logResponse: {
+      logHeaders: true,
+    },
+  },
+});
+
+const ordersController = new OrdersController(ppclient);
 
 // Set up MercadoPago credentials
 const client = new MercadoPagoConfig({
@@ -29,6 +62,7 @@ router.post(
     try {
       const formData = req.body;
       const userId = req.userData._id;
+      let errorMessage = null;
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
       const content = await Content.findById(formData.contentId);
@@ -37,25 +71,7 @@ router.post(
       }
 
       let paymentResponse;
-      if (formData.paymentMethod === "mercadopago") {
-        paymentResponse = await processMercadopagoPayment(
-          formData.contentId,
-          content.price
-        );
-
-        if (!paymentResponse.preference) {
-          return res.status(500).json({ error: "Failed to create payment" });
-        }
-      } else if (formData.paymentMethod === "paypal") {
-        paymentResponse = await processPaypalPayment({});
-      } else {
-        return res.status(500).json({ error: "Invalid payment method" });
-      }
-      if (!paymentResponse) {
-        return res.status(500).json({ error: "Failed to create payment" });
-      }
-
-      const paymentResult = await Payments.create({
+      let paymentToSave = {
         userId: userId,
         contentId: formData.contentId,
         paymentId: null,
@@ -74,11 +90,48 @@ router.post(
         state: formData.state,
         country: formData.country,
         postalCode: formData.postalCode,
-      });
+      };
+
+      if (formData.paymentMethod === "mercadopago") {
+        paymentResponse = await processMercadopagoPayment(
+          formData.contentId,
+          content.price
+        );
+
+        if (!paymentResponse.preference) {
+          return res.status(500).json({ error: "Failed to create payment" });
+        }
+      } else if (formData.paymentMethod === "paypal") {
+        const usdPrice = (content.price / 1250) * 1.04;
+        paymentResponse = await processPaypalPayment(usdPrice);
+
+        if (
+          !(
+            paymentResponse.httpStatusCode !== 201 ||
+            paymentResponse.httpStatusCode !== 200
+          )
+        ) {
+          errorMessage = "Failed to create payment";
+        } else {
+          paymentToSave.paymentId = paymentResponse.jsonResponse.id;
+          paymentToSave.currency = "USD";
+        }
+      } else {
+        return res.status(500).json({ error: "Invalid payment method" });
+      }
+
+      if (!paymentResponse || errorMessage !== null) {
+        return res
+          .status(500)
+          .json({ error: errorMessage || "Failed to create payment" });
+      }
+
+      const paymentResult = await Payments.create(paymentToSave);
 
       // Return the payment preference ID
       res
         .json({
+          paymentResponse: paymentResponse,
           preferenceRedirect: paymentResponse.init_point,
           orderId: paymentResult._id,
         })
@@ -144,8 +197,58 @@ router.get(
   }
 );
 
+// Capture payment region
+
+router.post("/payments/paypal/:orderID/capture", async (req, res) => {
+  try {
+    const { orderID } = req.params;
+    const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+    const errorDetail = jsonResponse?.details?.[0];
+    if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
+      console.error("Failed to create order:", error);
+      return res.status(500).json({ error: "Failed to capture order." });
+    } else if (errorDetail) {
+      // (2) Other non-recoverable errors -> Show a failure message
+      await Payments.findOneAndUpdate(
+        {
+          paymentMethod: "paypal",
+          paymentId: jsonResponse.id,
+        },
+        { userData: userData, status: "rejected" }
+      );
+      throw new Error(`${errorDetail.description} (${jsonResponse.debug_id})`);
+    } else {
+      // (3) Successful transaction -> Show confirmation or thank you message
+      const transaction = jsonResponse.purchase_units[0].payments.captures[0];
+
+      const userData = {
+        user: jsonResponse.payer,
+        address: jsonResponse.purchase_units[0].shipping.address,
+      };
+
+      await Payments.findOneAndUpdate(
+        {
+          paymentMethod: "paypal",
+          paymentId: jsonResponse.id,
+        },
+        {
+          userData: userData,
+          status: "completed",
+          date: new Date(),
+          currency: transaction.amount.currency_code,
+          amount: transaction.amount.value,
+          netAmount: transaction.seller_receivable_breakdown.net_amount.value,
+        }
+      );
+    }
+    res.status(httpStatusCode).json(jsonResponse);
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to capture order." });
+  }
+});
+
 router.post("/payments/success", async (req, res) => {
-  console.log(req.query);
   const payment = req.query;
 
   try {
@@ -261,25 +364,98 @@ const processMercadopagoPayment = async (contentId, price) => {
       },
     },
   };
-  console.log(contentId, price);
-  console.log(requestMP.body.items);
-
   try {
     const preference = await new Preference(client)
       .create(requestMP)
       .then((res) => (paymentData = res))
       .catch((error) => console.error(error));
 
-    console.log(preference);
-    console.log(paymentData);
     return { preference: preference, init_point: preference.init_point };
   } catch (error) {
     return { preference: null, init_point: null };
   }
 };
 
-const processPaypalPayment = async ({}) => {
+const processPaypalPayment = async (amount) => {
+  try {
+    // use the cart information passed from the front-end to calculate the order amount detals
+
+    const { jsonResponse, httpStatusCode } = await createOrder(amount);
+
+    //res.status(httpStatusCode).json(jsonResponse);
+    return { jsonResponse, httpStatusCode };
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to create order." });
+  }
   return { preference: null, init_point: null };
+};
+
+/**
+ * Create an order to start the transaction.
+ * @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
+ */
+const createOrder = async (ammount) => {
+  const collect = {
+    body: {
+      intent: CheckoutPaymentIntent.CAPTURE,
+      purchaseUnits: [
+        {
+          amount: {
+            currencyCode: "USD",
+            value: ammount.toString(),
+          },
+        },
+      ],
+    },
+    prefer: "return=minimal",
+  };
+
+  try {
+    const { body, ...httpResponse } = await ordersController.ordersCreate(
+      collect
+    );
+
+    // Get more response info...
+    // const { statusCode, headers } = httpResponse;
+    return {
+      jsonResponse: JSON.parse(body),
+      httpStatusCode: httpResponse.statusCode,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      // const { statusCode, headers } = error;
+      throw new Error(error.message);
+    }
+  }
+};
+
+/**
+ * Capture payment for the created order to complete the transaction.
+ * @see https://developer.paypal.com/docs/api/orders/v2/#orders_capture
+ */
+const captureOrder = async (orderID) => {
+  const collect = {
+    id: orderID,
+    prefer: "return=minimal",
+  };
+
+  try {
+    const { body, ...httpResponse } = await ordersController.ordersCapture(
+      collect
+    );
+    // Get more response info...
+    // const { statusCode, headers } = httpResponse;
+    return {
+      jsonResponse: JSON.parse(body),
+      httpStatusCode: httpResponse.statusCode,
+    };
+  } catch (error) {
+    if (error instanceof ApiError) {
+      // const { statusCode, headers } = error;
+      throw new Error(error.message);
+    }
+  }
 };
 
 module.exports = router;

@@ -420,28 +420,24 @@ const Templates = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell style={black}>Nombre</TableCell>
-                <TableCell style={black}>Fecha de creacion</TableCell>
-                <TableCell style={black}>Valido desde</TableCell>
-                <TableCell style={black}>Valido hasta</TableCell>
-                <TableCell style={black}>Acciones</TableCell>
+                <TableCell>Nombre</TableCell>
+                <TableCell>Fecha de creacion</TableCell>
+                <TableCell>Valido desde</TableCell>
+                <TableCell>Valido hasta</TableCell>
+                <TableCell>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data &&
                 data.map((row) => (
                   <TableRow key={row.id}>
-                    <TableCell style={black}>{row.name}</TableCell>
-                    <TableCell style={black}>
-                      {formatDateToString(row.createdAt)}
-                    </TableCell>
-                    <TableCell style={black}>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{formatDateToString(row.createdAt)}</TableCell>
+                    <TableCell>
                       {formatDateToString(row.validityFrom)}
                     </TableCell>
-                    <TableCell style={black}>
-                      {formatDateToString(row.validityTo)}
-                    </TableCell>
-                    <TableCell style={black}>
+                    <TableCell>{formatDateToString(row.validityTo)}</TableCell>
+                    <TableCell>
                       <IconButton
                         onClick={() => {
                           setCurrentEdit(row);
