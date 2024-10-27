@@ -21,9 +21,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 0px 20px 0px 20px;
 }
 .video-info {
   display: flex;
@@ -32,7 +29,7 @@
   align-items: start;
   width: 100%;
   height: 300px;
-  padding: 10px 20px 0px 20px;
+  padding: 20px 5px 0px 5px;
   text-align: start;
 }
 
@@ -50,4 +47,10 @@
 .video-info p {
   font-size: 1rem;
   margin-bottom: 20px;
+}
+
+@media (min-width: 1000px) {
+  .main-container {
+    max-width: 500px;
+  }
 }

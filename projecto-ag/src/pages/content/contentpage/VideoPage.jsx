@@ -12,8 +12,13 @@ const VideoPage = ({ video }) => {
       {/* Aquí puedes agregar el reproductor de video y otros elementos relacionados */}
       <div className="video-container">
         <iframe
-          width="100%"
-          height="100%"
+          style={{
+            width: "100dvw",
+            height: "50dvw",
+            maxWidth: "1280px",
+            maxHeight: "80vh",
+          }}
+          frameBorder={0}
           src={video.videoUrl}
           title="Video Player"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
