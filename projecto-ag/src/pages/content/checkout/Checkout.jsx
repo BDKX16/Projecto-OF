@@ -269,7 +269,7 @@ export default function Checkout({ video }) {
               <Button
                 startIcon={<ArrowBackRoundedIcon />}
                 component="a"
-                href="/material-ui/getting-started/templates/landing-page/"
+                href="/"
                 sx={{ alignSelf: "start" }}
               >
                 Volver al sitio

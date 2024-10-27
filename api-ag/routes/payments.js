@@ -207,6 +207,7 @@ router.post("/payments/paypal/:orderID/capture", async (req, res) => {
   try {
     const { orderID } = req.params;
     const { jsonResponse, httpStatusCode } = await captureOrder(orderID);
+    console.log(jsonResponse);
     const errorDetail = jsonResponse?.details?.[0];
     if (errorDetail?.issue === "INSTRUMENT_DECLINED") {
       console.error("Failed to create order:", error);
