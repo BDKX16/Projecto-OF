@@ -54,3 +54,9 @@
     max-width: 500px;
   }
 }
+
+@media (max-width: 1000px) {
+  .mid-container {
+    min-height: 90dvh;
+  }
+}
