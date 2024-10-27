@@ -384,7 +384,9 @@ const processPaypalPayment = async (amount) => {
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
 
-    const { jsonResponse, httpStatusCode } = await createOrder(9);
+    const { jsonResponse, httpStatusCode } = await createOrder(
+      amount.toFixed(2)
+    );
 
     //res.status(httpStatusCode).json(jsonResponse);
     return { jsonResponse, httpStatusCode };
