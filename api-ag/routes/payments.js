@@ -390,9 +390,8 @@ const processPaypalPayment = async (amount) => {
     return { jsonResponse, httpStatusCode };
   } catch (error) {
     console.error("Failed to create order:", error);
-    res.status(500).json({ error: "Failed to create order." });
+    return { preference: null, init_point: null };
   }
-  return { preference: null, init_point: null };
 };
 
 /**
@@ -415,9 +414,6 @@ const createOrder = async (ammount) => {
     prefer: "return=minimal",
   };
 
-  console.log(collect);
-  console.log("collect");
-
   try {
     const { body, ...httpResponse } = await ordersController.ordersCreate(
       collect
@@ -432,6 +428,11 @@ const createOrder = async (ammount) => {
   } catch (error) {
     if (error instanceof ApiError) {
       // const { statusCode, headers } = error;
+      return {
+        jsonResponse: null,
+        httpStatusCode: 500,
+      };
+
       throw new Error(error.message);
     }
   }

@@ -27,7 +27,7 @@ jobs:
             cd /srv/repositories/Projecto-OF
 
             docker compose down
-            docker image rm projecto-of-backend
+            docker image rm projecto-of-backend:latest
 
 
             git config --global user.email "xaveeg@gmail.com"
