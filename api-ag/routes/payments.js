@@ -62,6 +62,8 @@ router.post(
     try {
       const formData = req.body;
       const userId = req.userData._id;
+
+      console.log(formData);
       let errorMessage = null;
       var paymentData;
       //guardar solicitud en mongo, estado: pendiente
@@ -70,6 +72,8 @@ router.post(
         return res.status(404).json({ error: "Content not found" });
       }
 
+      console.log("content");
+      console.log(content);
       let paymentResponse;
       let paymentToSave = {
         userId: userId,
@@ -410,6 +414,9 @@ const createOrder = async (ammount) => {
     },
     prefer: "return=minimal",
   };
+
+  console.log(collect);
+  console.log("collect");
 
   try {
     const { body, ...httpResponse } = await ordersController.ordersCreate(
