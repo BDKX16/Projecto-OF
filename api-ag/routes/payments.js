@@ -111,8 +111,8 @@ router.post(
 
         if (
           !(
-            paymentResponse.httpStatusCode !== 201 ||
-            paymentResponse.httpStatusCode !== 200
+            paymentResponse.httpStatusCode === 201 ||
+            paymentResponse.httpStatusCode === 200
           )
         ) {
           errorMessage = "Failed to create payment";
@@ -384,7 +384,7 @@ const processPaypalPayment = async (amount) => {
   try {
     // use the cart information passed from the front-end to calculate the order amount detals
 
-    const { jsonResponse, httpStatusCode } = await createOrder(amount);
+    const { jsonResponse, httpStatusCode } = await createOrder(9);
 
     //res.status(httpStatusCode).json(jsonResponse);
     return { jsonResponse, httpStatusCode };
