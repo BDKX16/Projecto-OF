@@ -42,20 +42,6 @@ router.get("/content/:videoId", async (req, res) => {
       return res.status(200).json(videoContent);
     }
 
-    if (payment.status !== "completed") {
-      const videoContent = {
-        title: content.title,
-        videoUrl: undefined,
-        status: payment.status,
-        description: content.description,
-        coverUrl: content.coverUrl,
-        price: content.price,
-        createdAt: content.createdAt,
-        id: content.id,
-      };
-      return res.status(200).json(videoContent);
-    }
-
     // Increment the count of the specific content
     await Content.updateOne({ _id: videoId }, { $inc: { cantVisits: 1 } });
 
