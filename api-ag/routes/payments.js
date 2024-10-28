@@ -221,6 +221,7 @@ router.post("/payments/paypal/:orderID/capture", async (req, res) => {
         },
         { userData: userData, status: "rejected" }
       );
+      res.status(500).json({ error: "Failed to capture order." });
       throw new Error(`${errorDetail.description} (${jsonResponse.debug_id})`);
     } else {
       // (3) Successful transaction -> Show confirmation or thank you message

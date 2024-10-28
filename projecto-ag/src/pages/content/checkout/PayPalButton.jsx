@@ -28,9 +28,7 @@ function PayPalButton({ toSend }) {
           }}
           createOrder={async () => {
             try {
-              console.log(toSend);
               const response = await callEndpoint(sendPayment(toSend));
-              console.log(response);
               const orderData = response.data.paymentResponse.jsonResponse;
 
               if (orderData.id) {
@@ -85,6 +83,7 @@ function PayPalButton({ toSend }) {
                     variant: "success",
                   }
                 );
+                window.location.reload();
               }
             } catch (error) {
               console.error(error);
