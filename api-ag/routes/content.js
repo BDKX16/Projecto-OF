@@ -25,6 +25,7 @@ router.get("/content/:videoId", async (req, res) => {
 
     const payment = await Payment.findOne({
       videoId: videoId,
+      nullDate: null,
       status: { $in: ["completed", "approved", "accredited", "authorized"] },
     });
 
