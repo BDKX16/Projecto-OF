@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
         userData: user,
       };
 
-      return res.json(response);
+      return res.status(200).json(response);
     } else {
       const response = {
         status: "error",
@@ -77,8 +77,6 @@ router.post("/register", async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-
-    console.log(req.body);
 
     const encryptedPassword = encryptPass(password);
 
@@ -104,13 +102,23 @@ router.post("/register", async (req, res) => {
       console.error(error);
     }
 */
-    await User.create(newUser);
+    const user = await User.create(newUser);
+
+    user.set("password", undefined, { strict: false });
+
+    const token = jwt.sign({ userData: user }, process.env.TOKEN_SECRET, {
+      expiresIn: 60 * 60 * 24 * 30,
+    });
+
+    user.set("isAdmin", undefined, { strict: false });
 
     const response = {
       status: "success",
+      token: token,
+      userData: user,
     };
 
-    res.status(200).json(response);
+    return res.status(200).json(response);
   } catch (error) {
     console.log("ERROR - REGISTER ENDPOINT");
     console.log(error);

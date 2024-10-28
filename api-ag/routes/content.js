@@ -10,8 +10,9 @@ const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
 const Payment = require("../models/payment.js");
 // GET /api/content/:videoId
-router.get("/content/:videoId", async (req, res) => {
+router.get("/content/:videoId", checkAuth, async (req, res) => {
   const videoId = req.params.videoId;
+  const userId = req.userData._id;
 
   if (videoId === "undefined") {
     return res.status(400).json({ message: "VideoId is required" });
@@ -24,6 +25,7 @@ router.get("/content/:videoId", async (req, res) => {
     }
 
     const payment = await Payment.findOne({
+      userId: userId,
       videoId: videoId,
       nullDate: null,
       status: { $in: ["completed", "approved", "accredited", "authorized"] },

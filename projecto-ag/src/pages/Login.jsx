@@ -16,10 +16,8 @@ import {
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { createUser } from "./../redux/states/user";
 
 import { useState } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import useAuth from "../hooks/useAuth";
 
@@ -82,7 +80,18 @@ export default function Login() {
     const result = await callEndpoint(
       register(data.get("email"), data.get("email"), data.get("password"))
     );
-    dispatch(createUser(createUserAdapter(result)));
+
+    if (result.status !== 200) {
+      enqueueSnackbar("Error al registrar usuario", {
+        variant: "error",
+      });
+      return;
+    } else {
+      enqueueSnackbar("Registro exitoso", {
+        variant: "success",
+      });
+      setUserData(createUserAdapter(result));
+    }
   };
 
   return (

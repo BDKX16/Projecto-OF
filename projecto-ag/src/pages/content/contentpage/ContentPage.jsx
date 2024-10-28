@@ -2,17 +2,19 @@ import { useEffect, useState } from "react";
 
 import "./contentpage.css";
 import Checkout from "../checkout/Checkout.jsx";
+import { Navigate } from "react-router-dom";
 
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad.js";
 import { getVideo } from "../../../services/public.js";
 import VideoPage from "./VideoPage.jsx";
 import { createContentAdapter } from "../../../adapters/content.js";
 import NotFound from "./NotFound.jsx";
-import { enqueueSnackbar } from "notistack";
 import PendingPayment from "./PendingPayment.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
+import { useSelector } from "react-redux";
 
 const ContentPage = () => {
+  const userState = useSelector((state) => state.user);
   const { loading, callEndpoint } = useFetchAndLoad();
   const [data, setData] = useState({});
 
@@ -47,6 +49,8 @@ const ContentPage = () => {
         <NotFound />
       </div>
     );
+  } else if (!userState.name) {
+    return <Navigate to="/login" />;
   } else if (data.status === "pending") {
     return (
       <div className="main-container">
