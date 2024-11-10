@@ -2,6 +2,7 @@ import { loadAbort } from "../utils/load-abort-controller";
 import axios from "axios";
 import store from "../redux/store";
 //import { useSelector } from "react-redux";
+import { enqueueSnackbar } from "notistack";
 
 const getAxiosHeaders = () => {
   //const userState = useSelector((store) => store.user);
@@ -83,13 +84,18 @@ export const getContent = () => {
 
 export const getVideo = (id) => {
   const controller = loadAbort();
+
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
   return {
     call: axios
-      .get(import.meta.env.VITE_BASE_URL + "/content/" + id, {
+      .get(import.meta.env.VITE_BASE_URL + "/content/" + id, headers, {
         signal: controller.signal,
       })
       .catch((error) => {
-        notifyError(error);
+        //notifyError(error);
       }),
     controller,
   };

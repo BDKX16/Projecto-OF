@@ -25,7 +25,7 @@ const ContentPage = () => {
       // Use the parameters as needed
       const result = await callEndpoint(getVideo(videoId));
 
-      if (Object.keys(result).length === 0) {
+      if (!result || Object.keys(result).length === 0) {
         return;
       } else if (result.status !== 200) {
         //enqueueSnackbar("Error", { variant: "error", });
@@ -49,7 +49,7 @@ const ContentPage = () => {
         <NotFound />
       </div>
     );
-  } else if (!userState.name) {
+  } else if (data.status === "unauthorized") {
     return <Navigate to="/login" />;
   } else if (data.status === "pending") {
     return (

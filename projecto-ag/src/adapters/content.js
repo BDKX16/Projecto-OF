@@ -7,5 +7,5 @@ export const createContentAdapter = (content) => ({
   price: content.price,
   date: content.createdAt,
   id: content._id || content.id,
-  status: content.state,
+  status: content.state || content.status,
 });

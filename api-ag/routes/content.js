@@ -1,5 +1,5 @@
 const express = require("express");
-
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 const mongoose = require("mongoose");
@@ -10,10 +10,9 @@ const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
 const Payment = require("../models/payment.js");
 // GET /api/content/:videoId
-router.get("/content/:videoId", checkAuth, async (req, res) => {
+router.get("/content/:videoId", async (req, res) => {
   const videoId = req.params.videoId;
-  const userId = req.userData._id;
-
+  let token = req.get("token");
   if (videoId === "undefined") {
     return res.status(400).json({ message: "VideoId is required" });
   }
@@ -24,44 +23,84 @@ router.get("/content/:videoId", checkAuth, async (req, res) => {
       return res.status(404).json({ message: "Content not found" });
     }
 
-    const payment = await Payment.findOne({
-      userId: userId,
-      videoId: videoId,
-      nullDate: null,
-      status: { $in: ["completed", "approved", "accredited", "authorized"] },
-    });
+    try {
+      jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+        if (err) {
+          console.log("ERROR JWT");
+          const videoContent = {
+            title: content.title,
+            videoUrl: undefined,
+            description: content.description,
+            coverUrl: content.coverUrl,
+            status: "unauthorized",
+            price: content.price,
+            createdAt: content.createdAt,
+            id: content.id,
+          };
 
-    if (!payment) {
+          return res.status(200).json(videoContent);
+        } else {
+          const userId = decoded.userData._id;
+          const payment = await Payment.findOne({
+            userId: userId,
+            videoId: videoId,
+            nullDate: null,
+            status: {
+              $in: ["completed", "approved", "accredited", "authorized"],
+            },
+          });
+
+          if (!payment) {
+            const videoContent = {
+              title: content.title,
+              videoUrl: undefined,
+              description: content.description,
+              coverUrl: content.coverUrl,
+              status: undefined,
+              price: content.price,
+              createdAt: content.createdAt,
+              id: content.id,
+            };
+            return res.status(200).json(videoContent);
+          }
+
+          // Increment the count of the specific content
+          await Content.updateOne(
+            { _id: videoId },
+            { $inc: { cantVisits: 1 } }
+          );
+
+          // Example response
+          const videoContent = {
+            title: content.title,
+            description: content.description,
+            videoUrl: content.videoUrl,
+            status: payment.status,
+            coverUrl: content.coverUrl,
+            price: content.price,
+            categorys: content.categorys,
+            createdAt: content.createdAt,
+            id: content.id,
+          };
+
+          return res.status(200).json(videoContent);
+        }
+      });
+    } catch (err) {
+      console.log("jwt error:");
+      console.log(err);
       const videoContent = {
         title: content.title,
         videoUrl: undefined,
         description: content.description,
         coverUrl: content.coverUrl,
-        status: undefined,
+        status: "unauthorized",
         price: content.price,
         createdAt: content.createdAt,
         id: content.id,
       };
       return res.status(200).json(videoContent);
     }
-
-    // Increment the count of the specific content
-    await Content.updateOne({ _id: videoId }, { $inc: { cantVisits: 1 } });
-
-    // Example response
-    const videoContent = {
-      title: content.title,
-      description: content.description,
-      videoUrl: content.videoUrl,
-      status: payment.status,
-      coverUrl: content.coverUrl,
-      price: content.price,
-      categorys: content.categorys,
-      createdAt: content.createdAt,
-      id: content.id,
-    };
-
-    return res.status(200).json(videoContent);
   } catch (err) {
     return res.status(500).json({ message: "Internal server error" });
   }
