@@ -144,7 +144,7 @@ export const getUser = (id) => {
   };
 };
 
-export const editUser = (role = null, nullDate = null) => {
+export const editUser = (id, role = null, nullDate = null) => {
   const controller = loadAbort();
   const headers = getAxiosHeaders();
   if (!headers) {

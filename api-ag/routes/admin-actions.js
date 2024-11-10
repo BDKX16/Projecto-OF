@@ -331,6 +331,9 @@ router.put("/user/:id", checkAuth, checkRole(["owner"]), async (req, res) => {
   const { id } = req.params;
   const { role, nullDate } = req.body;
   try {
+    if (!role) {
+      return res.status(500).json({ message: "Internal server error" });
+    }
     const user = await User.findOneAndUpdate({ _id: id }, { role, nullDate });
 
     if (user) {

@@ -14,26 +14,12 @@ import {
   IconButton,
   Box,
   Avatar,
-  Switch,
 } from "@mui/material";
-import {
-  Add,
-  Edit,
-  Delete,
-  ExpandMore,
-  ExpandLess,
-  ViewAgenda,
-  Visibility,
-} from "@mui/icons-material";
+import { Edit, Delete } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
 import { enqueueSnackbar } from "notistack";
-import { getContent } from "../../../services/public";
 import {
-  editContent,
-  deleteContent,
-  addContent,
-  contentState,
   editUser,
   deleteUser,
   getUsers,
@@ -82,24 +68,14 @@ const ABMUsuarios = () => {
     fetchData();
   }, []);
 
-  const handleAdd = async (e) => {
-    e.preventDefault();
-    setData([...data, { ...formData, id: Math.random() * 10000 }]);
-
-    //handle submit form
-    const result = await callEndpoint(addContent(formData));
-    if (result.status !== 200) {
-      enqueueSnackbar("Error", { variant: "error" });
-    } else {
-      enqueueSnackbar("Contenido agregado", { variant: "success" });
-      setData([...data, result.data]);
-      setFormData(initialFormData);
-    }
-    setIsAddOpen(false);
-  };
-
   const handleEdit = async () => {
-    const result = await callEndpoint(editUser(formData));
+    console.log(currentEdit.id);
+    console.log(formData.role);
+
+    console.log("currentEdit");
+    const result = await callEndpoint(
+      editUser(currentEdit.id, formData.role, null)
+    );
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
@@ -133,23 +109,32 @@ const ABMUsuarios = () => {
     }
   };
 
-  const changeState = async (id, status) => {
-    const result = await callEndpoint(contentState(id, !status));
-    if (result.status !== 200) {
-      enqueueSnackbar("Error", { variant: "error" });
-    } else {
-      enqueueSnackbar(
-        status == true ? "Contenido desabilitado" : "Contenido visible",
-        { variant: "success" }
-      );
-    }
-  };
-
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const colorRole = (role) => {
+  const colorRole = (role, deleted = false) => {
+    if (deleted) {
+      return (
+        <span
+          style={{
+            backgroundColor: "#dddddd",
+            border: "solid",
+            borderWidth: 2,
+            borderColor: "#868686",
+            color: "#636363",
+            borderRadius: 20,
+            paddingLeft: 8,
+            paddingRight: 8,
+            paddingTop: 4,
+            paddingBottom: 3,
+            textTransform: "capitalize",
+          }}
+        >
+          {role}
+        </span>
+      );
+    }
     switch (role) {
       case "admin":
         return (
@@ -213,6 +198,7 @@ const ABMUsuarios = () => {
             {role}
           </span>
         );
+
       default:
         return <span>{role}</span>;
     }
@@ -319,7 +305,9 @@ const ABMUsuarios = () => {
                         {row.email}
                       </p>
                     </TableCell>
-                    <TableCell>{colorRole(row.role)}</TableCell>
+                    <TableCell>
+                      {colorRole(row.role, row.nullDate != null)}
+                    </TableCell>
                     <TableCell>{formatDateToString(row.createdAt)}</TableCell>
                     <TableCell>{formatDateToString(row.nullDate)}</TableCell>
                     <TableCell>
@@ -336,9 +324,9 @@ const ABMUsuarios = () => {
                       <IconButton onClick={() => handleDelete(row.id)}>
                         <Delete />
                       </IconButton>
-                      <IconButton onClick={() => handleViewUser(row.id)}>
+                      {/*<IconButton onClick={() => handleViewUser(row.id)}>
                         <Visibility />
-                      </IconButton>
+                      </IconButton>*/}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -350,50 +338,14 @@ const ABMUsuarios = () => {
       <Collapse in={isEditOpen}>
         <Box component={Paper} p={2} mt={2}>
           <TextField
-            label="Title"
-            name="title"
-            value={formData.title}
+            label="Role"
+            name="role"
+            value={formData.role}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
 
-          <TextField
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            multiline
-            rows={8}
-          />
-          <TextField
-            label="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            type="number"
-          />
-          <TextField
-            helperText="Url de la imagen de portada en jpeg o jpg"
-            name="coverUrl"
-            value={formData.coverUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            helperText="Url del video"
-            label="Video URL"
-            name="videoUrl"
-            value={formData.videoUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
           <Button
             variant="contained"
             color="primary"
