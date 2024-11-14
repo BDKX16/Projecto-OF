@@ -37,3 +37,9 @@ api-ag/.env
 projecto-ag/.env
 projecto-ag/package-lock.json
 !projecto-ag/package-lock.json
+projecto-ag/.env
+projecto-ag/package-lock.json
+projecto-ag/package.json
+api-ag/package.json
+api-ag/package-lock.json
+api-ag/.env
