@@ -81,6 +81,7 @@ const ABMTable = () => {
   const [paymentData, setPaymentData] = useState(initialPaymentData);
 
   const [categorys, setCategorys] = useState([]);
+  console.log(categorys);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -95,6 +96,9 @@ const ABMTable = () => {
           });
         } else {
           setData(result.data.map((item) => createContentAdapter(item)));
+          console.log(result.data.map((item) => createContentAdapter(item)));
+
+          console.log(result.data);
         }
       }
     };
@@ -107,42 +111,7 @@ const ABMTable = () => {
   };
 
   const handleNext = () => {
-    if (activeStep === 0) {
-      if (
-        formData.title &&
-        formData.description &&
-        formData.coverUrl &&
-        formData.videoUrl &&
-        formData.categorys.length > 0
-      ) {
-        handleComplete();
-      } else {
-        handleUncomplete();
-      }
-    } else if (activeStep === 1) {
-      if (
-        trailerData.videoUrl &&
-        trailerData.images.length > 0 &&
-        trailerData.description
-      ) {
-        handleComplete();
-      } else {
-        handleUncomplete();
-      }
-    } else if (activeStep === 2) {
-      if (
-        paymentData.usd &&
-        paymentData.eur &&
-        paymentData.ars &&
-        paymentData.brl &&
-        paymentData.col &&
-        paymentData.mxn
-      ) {
-        handleComplete();
-      } else {
-        handleUncomplete();
-      }
-    }
+    testCompleted();
     const newActiveStep =
       isLastStep() && !allStepsCompleted()
         ? // It's the last step, but not all steps have been completed,
@@ -152,30 +121,27 @@ const ABMTable = () => {
     setActiveStep(newActiveStep);
   };
 
-  const handleBack = () => {
+  const testCompleted = () => {
     if (activeStep === 0) {
       if (
         formData.title &&
         formData.description &&
         formData.coverUrl &&
-        formData.videoUrl &&
-        formData.categorys.length > 0
+        formData.videoUrl
       ) {
         handleComplete();
       } else {
         handleUncomplete();
       }
-    } else if (activeStep === 1) {
-      if (
-        trailerData.videoUrl &&
-        trailerData.images.length > 0 &&
-        trailerData.description
-      ) {
+    }
+    if (activeStep === 1) {
+      if (trailerData.videoUrl && trailerData.description) {
         handleComplete();
       } else {
         handleUncomplete();
       }
-    } else if (activeStep === 2) {
+    }
+    if (activeStep === 2) {
       if (
         paymentData.usd &&
         paymentData.eur &&
@@ -189,7 +155,10 @@ const ABMTable = () => {
         handleUncomplete();
       }
     }
+  };
 
+  const handleBack = () => {
+    testCompleted();
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
@@ -208,11 +177,6 @@ const ABMTable = () => {
     //handleNext();
   };
 
-  const handleReset = () => {
-    setActiveStep(0);
-    setCompleted({});
-  };
-
   const totalSteps = () => {
     return steps.length;
   };
@@ -226,7 +190,15 @@ const ABMTable = () => {
   };
 
   const allStepsCompleted = () => {
-    return completedSteps() === totalSteps();
+    return (
+      completedSteps() === totalSteps() &&
+      paymentData.usd &&
+      paymentData.eur &&
+      paymentData.ars &&
+      paymentData.brl &&
+      paymentData.col &&
+      paymentData.mxn
+    );
   };
 
   const handleImagesUrlChange = (e) => {
@@ -727,6 +699,8 @@ const ABMTable = () => {
                           setFormData(row);
                           setPaymentData(row.priceTable || initialPaymentData);
                           setTrailerData(row.trailer || initialTrailerData);
+                          setActiveStep(0);
+                          testCompleted();
                           setIsAddOpen(false);
                           setIsEditOpen(true);
                         }}
@@ -802,6 +776,7 @@ const ABMTable = () => {
                 multiple
                 name="categorys"
                 id="categorys"
+                value={formData.categorys}
                 options={categorys}
                 onChange={(e, value) => {
                   handleCategoriesChange(value);
