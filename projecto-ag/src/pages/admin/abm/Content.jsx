@@ -81,7 +81,6 @@ const ABMTable = () => {
   const [paymentData, setPaymentData] = useState(initialPaymentData);
 
   const [categorys, setCategorys] = useState([]);
-  console.log(categorys);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -96,9 +95,6 @@ const ABMTable = () => {
           });
         } else {
           setData(result.data.map((item) => createContentAdapter(item)));
-          console.log(result.data.map((item) => createContentAdapter(item)));
-
-          console.log(result.data);
         }
       }
     };
@@ -191,7 +187,12 @@ const ABMTable = () => {
 
   const allStepsCompleted = () => {
     return (
-      completedSteps() === totalSteps() &&
+      formData.title &&
+      formData.description &&
+      formData.coverUrl &&
+      formData.videoUrl &&
+      trailerData.videoUrl &&
+      trailerData.description &&
       paymentData.usd &&
       paymentData.eur &&
       paymentData.ars &&
@@ -700,7 +701,7 @@ const ABMTable = () => {
                           setPaymentData(row.priceTable || initialPaymentData);
                           setTrailerData(row.trailer || initialTrailerData);
                           setActiveStep(0);
-                          testCompleted();
+                          setCompleted({});
                           setIsAddOpen(false);
                           setIsEditOpen(true);
                         }}

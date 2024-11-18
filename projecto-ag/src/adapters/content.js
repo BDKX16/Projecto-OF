@@ -8,4 +8,6 @@ export const createContentAdapter = (content) => ({
   date: content.createdAt,
   id: content._id || content.id,
   status: content.state || content.status,
+  trailer: content.trailer,
+  priceTable: content.priceTable,
 });
