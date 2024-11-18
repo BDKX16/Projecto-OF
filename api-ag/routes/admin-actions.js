@@ -100,8 +100,47 @@ router.get(
   checkAuth,
   checkRole(["admin", "owner"]),
   async (req, res) => {
-    const payments = await Payment.find({ nullDate: null });
-    res.status(200).json(payments);
+    try {
+      let payments = await Payment.find({ nullDate: null });
+
+      let content = await Content.find({
+        _id: { $in: payments.map((p) => p.videoId) },
+      });
+      let users = await User.find({
+        _id: { $in: payments.map((p) => p.userId) },
+      });
+
+      payments = payments.map((payment) => {
+        const video = content.find((c) => c._id == payment.videoId);
+        const user = users.find((c) => c._id == payment.userId);
+        return {
+          _id: payment._id,
+          videoId: video ? video.title : "Unknown",
+          status: payment.status,
+          date: payment.date,
+          amount: payment.amount,
+          currency: payment.currency,
+          userId: user?.email || payment.userId,
+          paymentMethod: payment.paymentMethod,
+          paymentId: payment.paymentId,
+          firstName: payment.firstName,
+          lastName: payment.lastName,
+          phone: payment.phone,
+          address: payment.address,
+          city: payment.city,
+          state: payment.state,
+          country: payment.country,
+          postalCode: payment.postalCode,
+          netAmount: payment.netAmount,
+          userData: payment.userData,
+        };
+      });
+
+      res.status(200).json(payments);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
   }
 );
 

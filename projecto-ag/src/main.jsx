@@ -85,19 +85,8 @@ const App = () => {
 
       if (Object.keys(result).length === 0) {
         return;
-      } else if (result.status === 401) {
-        enqueueSnackbar("No autorizado", {
-          variant: "error",
-        });
-      } else if (result.status !== 200) {
-        enqueueSnackbar("Error", {
-          variant: "error",
-        });
       } else {
         if (result.data.length === 0) {
-          enqueueSnackbar("No hay datos", {
-            variant: "warning",
-          });
         } else {
           setTheme(createTheme(createThemeAdapter(result.data)));
         }

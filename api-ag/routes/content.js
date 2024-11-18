@@ -22,23 +22,36 @@ router.get("/content/:videoId", async (req, res) => {
     if (!content) {
       return res.status(404).json({ message: "Content not found" });
     }
-
     try {
       jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
         if (err) {
-          console.log("ERROR JWT");
-          const videoContent = {
-            title: content.title,
-            videoUrl: undefined,
-            description: content.description,
-            coverUrl: content.coverUrl,
-            status: "unauthorized",
-            price: content.price,
-            createdAt: content.createdAt,
-            id: content.id,
-          };
+          if (err.name === "TokenExpiredError") {
+            const videoContent = {
+              title: content.title,
+              videoUrl: undefined,
+              description: content.description,
+              coverUrl: content.coverUrl,
+              status: "expiredToken",
+              price: content.price,
+              createdAt: content.createdAt,
+              id: content.id,
+            };
 
-          return res.status(200).json(videoContent);
+            return res.status(200).json(videoContent);
+          } else {
+            const videoContent = {
+              title: content.title,
+              videoUrl: undefined,
+              description: content.description,
+              coverUrl: content.coverUrl,
+              status: "unauthorized",
+              price: content.price,
+              createdAt: content.createdAt,
+              id: content.id,
+            };
+
+            return res.status(200).json(videoContent);
+          }
         } else {
           const userId = decoded.userData._id;
           const payment = await Payment.findOne({
@@ -51,6 +64,7 @@ router.get("/content/:videoId", async (req, res) => {
           });
 
           if (!payment) {
+            ///MOSTRAR TRAILER
             const videoContent = {
               title: content.title,
               videoUrl: undefined,

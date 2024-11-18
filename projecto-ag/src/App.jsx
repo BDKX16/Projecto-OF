@@ -109,19 +109,25 @@ function App() {
           style={{ backgroundColor: theme.palette.background.topbar }}
         >
           <li className="principal">
-            <Typography>
-              <a
-                href="/"
-                className="logo cinzel-600"
+            <a
+              href="/"
+              className="logo cinzel-600"
+              alt="Almendra Gala Logo"
+              style={{
+                color: theme.palette.secondary.main,
+                backgroundColor: theme.palette.background.topbar,
+              }}
+            >
+              <img
+                src="/logo-horizontal-blanco.webp"
                 alt="Almendra Gala Logo"
                 style={{
-                  color: theme.palette.secondary.main,
-                  backgroundColor: theme.palette.background.topbar,
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
                 }}
-              >
-                ALMENDRA GALA
-              </a>
-            </Typography>
+              ></img>
+            </a>
           </li>
           <li className="hideOnMobile">
             <a className="btn-hover" href="/search?id=favorites">

@@ -8,7 +8,6 @@ const Content = require("../models/content.js");
 // GET /api/content
 router.get("/webcontent", async (req, res) => {
   try {
-    console.log("hola");
     let template = await Template.findOne({
       nullDate: null,
       active: true,

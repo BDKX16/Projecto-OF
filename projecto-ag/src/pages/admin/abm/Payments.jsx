@@ -77,7 +77,6 @@ const Payments = () => {
             variant: "warning",
           });
         } else {
-          console.log(result.data);
           setData(result.data.map((item) => createPaymentAdapter(item)));
         }
       }

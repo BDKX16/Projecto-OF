@@ -12,11 +12,13 @@ import NotFound from "./NotFound.jsx";
 import PendingPayment from "./PendingPayment.jsx";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { useSelector } from "react-redux";
+import TrailerPage from "./TrailerPage.jsx";
+import useAuth from "../../../hooks/useAuth.jsx";
 
 const ContentPage = () => {
-  const userState = useSelector((state) => state.user);
+  const { logout } = useAuth();
   const { loading, callEndpoint } = useFetchAndLoad();
-  const [data, setData] = useState({});
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,14 +32,18 @@ const ContentPage = () => {
       } else if (result.status !== 200) {
         //enqueueSnackbar("Error", { variant: "error", });
       } else {
+        console.log(result.data);
         setData(createContentAdapter(result.data));
+        if (result.data.status === "expiredToken") {
+          logout();
+        }
       }
     };
 
     fetchData();
   }, []);
 
-  if (loading) {
+  if (loading || data == null) {
     return (
       <div className="main-container">
         <LoadingSpinner />
@@ -49,6 +55,8 @@ const ContentPage = () => {
         <NotFound />
       </div>
     );
+  } else if (data.status === "expiredToken") {
+    return <Navigate to="/login" />;
   } else if (data.status === "unauthorized") {
     return <Navigate to="/login" />;
   } else if (data.status === "pending") {
@@ -57,7 +65,7 @@ const ContentPage = () => {
         <PendingPayment video={data} />{" "}
       </div>
     );
-  } else if (data.videoUrl == null) {
+  } else if (data.videoUrl == undefined) {
     return (
       <div
         style={{
@@ -66,7 +74,8 @@ const ContentPage = () => {
           borderRadius: 15,
         }}
       >
-        <Checkout video={data} />
+        <TrailerPage video={data} />
+        {/* {<Checkout video={data} />} */}
       </div>
     );
   } else {

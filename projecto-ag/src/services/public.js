@@ -2,12 +2,15 @@ import { loadAbort } from "../utils/load-abort-controller";
 import axios from "axios";
 import store from "../redux/store";
 //import { useSelector } from "react-redux";
+
 import { enqueueSnackbar } from "notistack";
 
 const getAxiosHeaders = () => {
   //const userState = useSelector((store) => store.user);
   const state = store.getState();
-  //const token = state.userState.token;
+  if (!state.user.token) {
+    return;
+  }
   return {
     headers: {
       token: state.user.token,

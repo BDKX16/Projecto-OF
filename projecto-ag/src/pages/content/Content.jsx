@@ -32,6 +32,7 @@ const Content = () => {
   useEffect(() => {
     const fetchData = async () => {
       const result = await callEndpoint(getWebContent());
+      console.log(result);
 
       if (!result || Object.keys(result)?.length === 0) {
         return;
