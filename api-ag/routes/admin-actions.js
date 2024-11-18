@@ -370,7 +370,7 @@ router.delete(
   }
 );
 
-// GET /admin/content - Get all content
+// GET /admin/categorys - Get all categorys
 router.get(
   "/categorys",
   checkAuth,
@@ -442,7 +442,7 @@ router.delete(
   }
 );
 
-// GET /admin/content - Get all content
+// GET /admin/carousels - Get all carousels
 router.get(
   "/carousels",
   checkAuth,
