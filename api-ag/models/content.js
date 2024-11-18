@@ -1,4 +1,18 @@
 const mongoose = require("mongoose");
+const trailerSchema = new mongoose.Schema({
+  videoUrl: {
+    type: String,
+    required: true,
+  },
+  images: {
+    type: [String],
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+});
 
 const contentSchema = new mongoose.Schema({
   title: {
@@ -48,6 +62,15 @@ const contentSchema = new mongoose.Schema({
   discount: {
     type: Number,
     required: false,
+  },
+  trailer: {
+    type: trailerSchema,
+    required: false,
+  },
+  priceTable: {
+    type: Map,
+    of: Number,
+    required: true,
   },
   validityFrom: {
     type: Date,

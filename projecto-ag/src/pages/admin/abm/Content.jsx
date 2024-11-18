@@ -6,6 +6,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
   Paper,
   Button,
   Collapse,
@@ -15,7 +16,11 @@ import {
   Switch,
   Chip,
   Autocomplete,
+  Step,
+  StepButton,
+  Stepper,
 } from "@mui/material";
+
 import { Add, Edit, Delete, ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useEffect } from "react";
 import useFetchAndLoad from "../../../hooks/useFetchAndLoad";
@@ -42,15 +47,38 @@ const initialFormData = {
   videoUrl: "",
   date: new Date(),
 };
+const initialTrailerData = {
+  videoUrl: "",
+  images: [],
+  description: "",
+};
+
+const initialPaymentData = {
+  usd: 0,
+  eur: 0,
+  ars: 0,
+  brl: 0,
+  col: 0,
+  mxn: 0,
+};
+
+const steps = ["Video", "Trailer", "Pago"];
 
 const ABMTable = () => {
   const { loading, callEndpoint } = useFetchAndLoad();
+
+  //stepper
+
+  const [activeStep, setActiveStep] = React.useState(0);
+  const [completed, setCompleted] = React.useState({});
 
   const [data, setData] = useState([]);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [currentEdit, setCurrentEdit] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
+  const [trailerData, setTrailerData] = useState(initialTrailerData);
+  const [paymentData, setPaymentData] = useState(initialPaymentData);
 
   const [categorys, setCategorys] = useState([]);
   useEffect(() => {
@@ -72,6 +100,137 @@ const ABMTable = () => {
     fetchCategorys();
     fetchData();
   }, []);
+
+  const handleStep = (step) => () => {
+    setActiveStep(step);
+  };
+
+  const handleNext = () => {
+    if (activeStep === 0) {
+      if (
+        formData.title &&
+        formData.description &&
+        formData.coverUrl &&
+        formData.videoUrl &&
+        formData.categorys.length > 0
+      ) {
+        handleComplete();
+      } else {
+        handleUncomplete();
+      }
+    } else if (activeStep === 1) {
+      if (
+        trailerData.videoUrl &&
+        trailerData.images.length > 0 &&
+        trailerData.description
+      ) {
+        handleComplete();
+      } else {
+        handleUncomplete();
+      }
+    } else if (activeStep === 2) {
+      if (
+        paymentData.usd &&
+        paymentData.eur &&
+        paymentData.ars &&
+        paymentData.brl &&
+        paymentData.col &&
+        paymentData.mxn
+      ) {
+        handleComplete();
+      } else {
+        handleUncomplete();
+      }
+    }
+    const newActiveStep =
+      isLastStep() && !allStepsCompleted()
+        ? // It's the last step, but not all steps have been completed,
+          // find the first step that has been completed
+          steps.findIndex((step, i) => !(i in completed))
+        : activeStep + 1;
+    setActiveStep(newActiveStep);
+  };
+
+  const handleBack = () => {
+    if (activeStep === 0) {
+      if (
+        formData.title &&
+        formData.description &&
+        formData.coverUrl &&
+        formData.videoUrl &&
+        formData.categorys.length > 0
+      ) {
+        handleComplete();
+      } else {
+        handleUncomplete();
+      }
+    } else if (activeStep === 1) {
+      if (
+        trailerData.videoUrl &&
+        trailerData.images.length > 0 &&
+        trailerData.description
+      ) {
+        handleComplete();
+      } else {
+        handleUncomplete();
+      }
+    } else if (activeStep === 2) {
+      if (
+        paymentData.usd &&
+        paymentData.eur &&
+        paymentData.ars &&
+        paymentData.brl &&
+        paymentData.col &&
+        paymentData.mxn
+      ) {
+        handleComplete();
+      } else {
+        handleUncomplete();
+      }
+    }
+
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleComplete = () => {
+    setCompleted({
+      ...completed,
+      [activeStep]: true,
+    });
+    //handleNext();
+  };
+  const handleUncomplete = () => {
+    setCompleted({
+      ...completed,
+      [activeStep]: false,
+    });
+    //handleNext();
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+    setCompleted({});
+  };
+
+  const totalSteps = () => {
+    return steps.length;
+  };
+
+  const completedSteps = () => {
+    return Object.keys(completed).length;
+  };
+
+  const isLastStep = () => {
+    return activeStep === totalSteps() - 1;
+  };
+
+  const allStepsCompleted = () => {
+    return completedSteps() === totalSteps();
+  };
+
+  const handleImagesUrlChange = (e) => {
+    setTrailerData({ ...trailerData, images: e });
+  };
 
   const handleAdd = async (e) => {
     e.preventDefault();
@@ -146,6 +305,14 @@ const ABMTable = () => {
     setFormData({ ...formData, categorys: e });
   };
 
+  const handleTrailerChange = (e) => {
+    setTrailerData({ ...trailerData, [e.target.name]: e.target.value });
+  };
+
+  const handlePaymentChange = (e) => {
+    setPaymentData({ ...paymentData, [e.target.name]: e.target.value });
+  };
+
   return (
     <Box>
       <h1 style={{ textAlign: "start", lineHeight: 0, fontSize: 45 }}>
@@ -212,88 +379,240 @@ const ABMTable = () => {
               width: "50%",
             }}
           >
-            <TextField
-              label="Title"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-
-            <TextField
-              label="Description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              multiline
-              rows={8}
-            />
-            <TextField
-              label="Price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-              type="number"
-            />
-            <TextField
-              helperText="Url de la imagen de portada en jpeg o jpg. Preferentemente en formato 150x150, aunque puede ir cualquier tamaño si es el mismo en todo el contenido"
-              name="coverUrl"
-              value={formData.coverUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              helperText="Url del video"
-              label="Video URL"
-              name="videoUrl"
-              value={formData.videoUrl}
-              onChange={handleChange}
-              fullWidth
-              margin="normal"
-            />
-            <Autocomplete
-              multiple
-              name="categorys"
-              id="categorys"
-              options={categorys}
-              onChange={(e, value) => {
-                handleCategoriesChange(value);
-              }}
-              renderTags={(value, getTagProps) =>
-                value.map((option, index) => {
-                  const { key, ...tagProps } = getTagProps({ index });
-                  return (
-                    <Chip
-                      variant="outlined"
-                      label={option}
-                      key={key}
-                      {...tagProps}
-                    />
-                  );
-                })
-              }
-              renderInput={(params) => (
+            <Stepper
+              nonLinear
+              activeStep={activeStep}
+              style={{ marginBottom: 40, paddingLeft: 60, paddingRight: 60 }}
+            >
+              {steps.map((label, index) => (
+                <Step key={label} completed={completed[index]}>
+                  <StepButton color="inherit" onClick={handleStep(index)}>
+                    {label}
+                  </StepButton>
+                </Step>
+              ))}
+            </Stepper>
+            {activeStep === 0 && (
+              <>
                 <TextField
-                  {...params}
-                  label="Categorias"
-                  placeholder="Categorias"
+                  label="Title"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
                 />
+
+                <TextField
+                  label="Description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  rows={8}
+                />
+                <TextField
+                  helperText="Url de la imagen de portada en jpeg o jpg. Preferentemente en formato 150x150, aunque puede ir cualquier tamaño si es el mismo en todo el contenido"
+                  name="coverUrl"
+                  label="Cover URL"
+                  value={formData.coverUrl}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <TextField
+                  helperText="https://s3.almengragala.com/..."
+                  label="Video URL"
+                  name="videoUrl"
+                  value={formData.videoUrl}
+                  onChange={handleChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <Autocomplete
+                  multiple
+                  name="categorys"
+                  id="categorys"
+                  options={categorys}
+                  onChange={(e, value) => {
+                    handleCategoriesChange(value);
+                  }}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => {
+                      const { key, ...tagProps } = getTagProps({ index });
+                      return (
+                        <Chip
+                          variant="outlined"
+                          label={option}
+                          key={key}
+                          {...tagProps}
+                        />
+                      );
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Categorias"
+                      placeholder="Categorias"
+                    />
+                  )}
+                />
+              </>
+            )}
+            {activeStep === 1 && (
+              <>
+                <TextField
+                  label="Description"
+                  name="description"
+                  value={trailerData.description}
+                  onChange={handleTrailerChange}
+                  fullWidth
+                  margin="normal"
+                  multiline
+                  rows={8}
+                />
+                <TextField
+                  helperText="https://s3.almengragala.com/..."
+                  label="Video URL"
+                  name="videoUrl"
+                  value={trailerData.videoUrl}
+                  onChange={handleTrailerChange}
+                  fullWidth
+                  margin="normal"
+                />
+                <Autocomplete
+                  multiple
+                  name="imagesUrl"
+                  id="imagesUrl"
+                  options={trailerData.images}
+                  freeSolo
+                  onChange={(e, value) => {
+                    handleImagesUrlChange(value);
+                  }}
+                  renderTags={(value, getTagProps) =>
+                    value.map((option, index) => {
+                      const { key, ...tagProps } = getTagProps({ index });
+                      return (
+                        <Chip
+                          variant="outlined"
+                          label={option}
+                          key={key}
+                          {...tagProps}
+                        />
+                      );
+                    })
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Urls de las imagenes"
+                      placeholder="URLs"
+                    />
+                  )}
+                />
+              </>
+            )}
+            {activeStep === 2 && (
+              <>
+                <TextField
+                  label="Europa (€)"
+                  name="eur"
+                  value={paymentData.eur}
+                  onChange={handlePaymentChange}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                />
+                <TextField
+                  label="Argentina (ARS)"
+                  name="ars"
+                  value={paymentData.ars}
+                  onChange={handlePaymentChange}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                />
+                <TextField
+                  label="Brazil (R$)"
+                  name="brl"
+                  value={paymentData.brl}
+                  onChange={handlePaymentChange}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                />
+                <TextField
+                  label="Colombia (COP)"
+                  name="col"
+                  value={paymentData.col}
+                  onChange={handlePaymentChange}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                />
+                <TextField
+                  label="Mexico (MXN)"
+                  name="mxn"
+                  value={paymentData.mxn}
+                  onChange={handlePaymentChange}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                />
+                <TextField
+                  label="Resto del mundo (U$D)"
+                  name="usd"
+                  value={paymentData.usd}
+                  onChange={handlePaymentChange}
+                  fullWidth
+                  margin="normal"
+                  type="number"
+                />
+              </>
+            )}
+
+            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Back
+              </Button>
+              <Box sx={{ flex: "1 1 auto" }} />
+              {isLastStep() ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleAdd}
+                  disabled={loading || !allStepsCompleted()}
+                >
+                  Finalizar
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleNext}
+                  sx={{ mr: 1 }}
+                >
+                  Siguiente
+                </Button>
               )}
-            />
-            <Button
+            </Box>
+            {/* <Button
               variant="contained"
               color="primary"
               onClick={handleAdd}
               disabled={loading}
+              style={{ marginTop: 20, paddingLeft: 40, paddingRight: 40 }}
             >
-              Add
-            </Button>
+              Agregar
+            </Button> */}
           </Box>
           <Box
             style={{
@@ -451,7 +770,7 @@ const ABMTable = () => {
             margin="normal"
           />
           <TextField
-            helperText="Url del video"
+            helperText="https://s3.almengragala.com/..."
             label="Video URL"
             name="videoUrl"
             value={formData.videoUrl}
