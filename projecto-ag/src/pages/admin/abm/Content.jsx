@@ -81,6 +81,7 @@ const ABMTable = () => {
   const [paymentData, setPaymentData] = useState(initialPaymentData);
 
   const [categorys, setCategorys] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       const result = await callEndpoint(getContent());
@@ -235,9 +236,14 @@ const ABMTable = () => {
   const handleAdd = async (e) => {
     e.preventDefault();
     setData([...data, { ...formData, id: Math.random() * 10000 }]);
+    const toSend = {
+      ...formData,
+      trailer: trailerData,
+      priceTable: paymentData,
+    };
 
     //handle submit form
-    const result = await callEndpoint(addContent(formData));
+    const result = await callEndpoint(addContent(toSend));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
@@ -249,7 +255,12 @@ const ABMTable = () => {
   };
 
   const handleEdit = async () => {
-    const result = await callEndpoint(editContent(formData));
+    const toSend = {
+      ...formData,
+      trailer: trailerData,
+      priceTable: paymentData,
+    };
+    const result = await callEndpoint(editContent(toSend));
     if (result.status !== 200) {
       enqueueSnackbar("Error", { variant: "error" });
     } else {
@@ -262,7 +273,6 @@ const ABMTable = () => {
       );
       setIsEditOpen(false);
     }
-    console.log(currentEdit);
     setCurrentEdit(null);
   };
 
@@ -488,6 +498,7 @@ const ABMTable = () => {
                   name="imagesUrl"
                   id="imagesUrl"
                   options={trailerData.images}
+                  value={trailerData.images}
                   freeSolo
                   onChange={(e, value) => {
                     handleImagesUrlChange(value);
@@ -714,6 +725,8 @@ const ABMTable = () => {
                         onClick={() => {
                           setCurrentEdit(row);
                           setFormData(row);
+                          setPaymentData(row.priceTable || initialPaymentData);
+                          setTrailerData(row.trailer || initialTrailerData);
                           setIsAddOpen(false);
                           setIsEditOpen(true);
                         }}
@@ -732,91 +745,233 @@ const ABMTable = () => {
       )}
 
       <Collapse in={isEditOpen}>
-        <Box component={Paper} p={2} mt={2}>
-          <TextField
-            label="Title"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-
-          <TextField
-            label="Description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            multiline
-            rows={8}
-          />
-          <TextField
-            label="Price"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-            type="number"
-          />
-          <TextField
-            helperText="Url de la imagen de portada en jpeg o jpg"
-            name="coverUrl"
-            value={formData.coverUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <TextField
-            helperText="https://s3.almengragala.com/..."
-            label="Video URL"
-            name="videoUrl"
-            value={formData.videoUrl}
-            onChange={handleChange}
-            fullWidth
-            margin="normal"
-          />
-          <Autocomplete
-            multiple
-            name="categorys"
-            id="categorys"
-            options={categorys}
-            freeSolo
-            value={formData.categorys}
-            onChange={(e, value) => {
-              handleCategoriesChange(value);
-            }}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => {
-                const { key, ...tagProps } = getTagProps({ index });
-                return (
-                  <Chip
-                    variant="outlined"
-                    label={option}
-                    key={key}
-                    {...tagProps}
-                  />
-                );
-              })
-            }
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Categorias"
-                placeholder="Categorias"
-              />
-            )}
-          />
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleEdit}
-            disabled={loading}
+        <Box style={{ marginTop: 70 }}>
+          <Stepper
+            nonLinear
+            activeStep={activeStep}
+            style={{ marginBottom: 20, paddingLeft: 60, paddingRight: 60 }}
           >
-            Save
-          </Button>
+            {steps.map((label, index) => (
+              <Step key={label} completed={completed[index]}>
+                <StepButton color="inherit" onClick={handleStep(index)}>
+                  {label}
+                </StepButton>
+              </Step>
+            ))}
+          </Stepper>
+          {activeStep === 0 && (
+            <>
+              <TextField
+                label="Title"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+
+              <TextField
+                label="Description"
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={8}
+              />
+              <TextField
+                helperText="Url de la imagen de portada en jpeg o jpg. Preferentemente en formato 150x150, aunque puede ir cualquier tamaño si es el mismo en todo el contenido"
+                name="coverUrl"
+                label="Cover URL"
+                value={formData.coverUrl}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <TextField
+                helperText="https://s3.almengragala.com/..."
+                label="Video URL"
+                name="videoUrl"
+                value={formData.videoUrl}
+                onChange={handleChange}
+                fullWidth
+                margin="normal"
+              />
+              <Autocomplete
+                multiple
+                name="categorys"
+                id="categorys"
+                options={categorys}
+                onChange={(e, value) => {
+                  handleCategoriesChange(value);
+                }}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                      <Chip
+                        variant="outlined"
+                        label={option}
+                        key={key}
+                        {...tagProps}
+                      />
+                    );
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Categorias"
+                    placeholder="Categorias"
+                  />
+                )}
+              />
+            </>
+          )}
+          {activeStep === 1 && (
+            <>
+              <TextField
+                label="Description"
+                name="description"
+                value={trailerData.description}
+                onChange={handleTrailerChange}
+                fullWidth
+                margin="normal"
+                multiline
+                rows={8}
+              />
+              <TextField
+                helperText="https://s3.almengragala.com/..."
+                label="Video URL"
+                name="videoUrl"
+                value={trailerData.videoUrl}
+                onChange={handleTrailerChange}
+                fullWidth
+                margin="normal"
+              />
+              <Autocomplete
+                multiple
+                name="imagesUrl"
+                id="imagesUrl"
+                options={trailerData.images}
+                value={trailerData.images}
+                freeSolo
+                onChange={(e, value) => {
+                  handleImagesUrlChange(value);
+                }}
+                renderTags={(value, getTagProps) =>
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                      <Chip
+                        variant="outlined"
+                        label={option}
+                        key={key}
+                        {...tagProps}
+                      />
+                    );
+                  })
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Urls de las imagenes"
+                    placeholder="URLs"
+                  />
+                )}
+              />
+            </>
+          )}
+          {activeStep === 2 && (
+            <>
+              <TextField
+                label="Europa (€)"
+                name="eur"
+                value={paymentData.eur}
+                onChange={handlePaymentChange}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <TextField
+                label="Argentina (ARS)"
+                name="ars"
+                value={paymentData.ars}
+                onChange={handlePaymentChange}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <TextField
+                label="Brazil (R$)"
+                name="brl"
+                value={paymentData.brl}
+                onChange={handlePaymentChange}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <TextField
+                label="Colombia (COP)"
+                name="col"
+                value={paymentData.col}
+                onChange={handlePaymentChange}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <TextField
+                label="Mexico (MXN)"
+                name="mxn"
+                value={paymentData.mxn}
+                onChange={handlePaymentChange}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+              <TextField
+                label="Resto del mundo (U$D)"
+                name="usd"
+                value={paymentData.usd}
+                onChange={handlePaymentChange}
+                fullWidth
+                margin="normal"
+                type="number"
+              />
+            </>
+          )}
+
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Button
+              color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Back
+            </Button>
+            <Box sx={{ flex: "1 1 auto" }} />
+            {isLastStep() ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleEdit}
+                disabled={loading || !allStepsCompleted()}
+              >
+                Guardar
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleNext}
+                sx={{ mr: 1 }}
+              >
+                Siguiente
+              </Button>
+            )}
+          </Box>
         </Box>
       </Collapse>
     </Box>
