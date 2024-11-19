@@ -32,7 +32,6 @@ const ContentPage = () => {
       } else if (result.status !== 200) {
         //enqueueSnackbar("Error", { variant: "error", });
       } else {
-        console.log(result.data);
         setData(createContentAdapter(result.data));
         if (result.data.status === "expiredToken") {
           logout();
@@ -66,18 +65,8 @@ const ContentPage = () => {
       </div>
     );
   } else if (data.videoUrl == undefined) {
-    return (
-      <div
-        style={{
-          backgroundColor: "white",
-          padding: 30,
-          borderRadius: 15,
-        }}
-      >
-        <TrailerPage video={data} />
-        {/* {<Checkout video={data} />} */}
-      </div>
-    );
+    /* {<Checkout video={data} />} */
+    return <TrailerPage video={data} />;
   } else {
     return <VideoPage video={data} />;
   }

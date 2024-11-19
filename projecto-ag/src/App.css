@@ -295,7 +295,7 @@ footer {
   }
 
   .container {
-    padding: 10px 50px;
+    padding: 10px 0px;
   }
 
   .topbar li {
@@ -323,7 +323,7 @@ footer {
     width: 60px;
   }
   .container {
-    padding: 10px 20px;
+    padding: 10px 0px;
   }
 }
 @media (max-width: 400px) {
@@ -362,6 +362,6 @@ footer {
     width: 100%;
   }
   .container {
-    padding: 10px 5px;
+    padding: 10px 0px;
   }
 }
