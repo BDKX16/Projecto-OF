@@ -35,6 +35,8 @@ router.get("/content/:videoId", async (req, res) => {
               price: content.price,
               createdAt: content.createdAt,
               id: content.id,
+              trailer: content.trailer,
+              priceTable: content.priceTable,
             };
 
             return res.status(200).json(videoContent);

@@ -50,6 +50,7 @@ const initialFormData = {
 const initialTrailerData = {
   videoUrl: "",
   images: [],
+  title: "",
   description: "",
 };
 
@@ -131,7 +132,11 @@ const ABMTable = () => {
       }
     }
     if (activeStep === 1) {
-      if (trailerData.videoUrl && trailerData.description) {
+      if (
+        trailerData.videoUrl &&
+        trailerData.title &&
+        trailerData.description
+      ) {
         handleComplete();
       } else {
         handleUncomplete();
@@ -193,6 +198,7 @@ const ABMTable = () => {
       formData.videoUrl &&
       trailerData.videoUrl &&
       trailerData.description &&
+      trailerData.title &&
       paymentData.usd &&
       paymentData.eur &&
       paymentData.ars &&
@@ -447,6 +453,14 @@ const ABMTable = () => {
             )}
             {activeStep === 1 && (
               <>
+                <TextField
+                  label="Titulo"
+                  name="title"
+                  value={trailerData.title}
+                  onChange={handleTrailerChange}
+                  fullWidth
+                  margin="normal"
+                />
                 <TextField
                   label="Description"
                   name="description"
@@ -807,6 +821,14 @@ const ABMTable = () => {
           )}
           {activeStep === 1 && (
             <>
+              <TextField
+                label="Titulo"
+                name="title"
+                value={trailerData.title}
+                onChange={handleTrailerChange}
+                fullWidth
+                margin="normal"
+              />
               <TextField
                 label="Description"
                 name="description"
