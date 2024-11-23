@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Typography, Box } from "@mui/material";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../content.css"; // Archivo CSS para estilos personalizados
-import { Box, Button, Typography } from "@mui/material";
 import { AsyncImage } from "loadable-image";
 
 const settings = {
@@ -40,6 +41,7 @@ const settings = {
 
 const Classification = ({ data, demo }) => {
   const [component, setComponent] = useState(data.componentData);
+  const navigate = useNavigate();
   const [imagesUrl, setImagesUrl] = useState([]);
 
   useEffect(() => {
@@ -170,7 +172,7 @@ const Classification = ({ data, demo }) => {
                   color="secondary"
                   variant="contained"
                   className="carousel-image-button"
-                  href={"video?id=" + img._id}
+                  onClick={() => navigate("video?id=" + img._id)}
                 >
                   Ver mas
                 </Button>

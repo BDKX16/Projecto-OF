@@ -8,9 +8,18 @@ import { Route, Routes } from "react-router-dom";
 import ContentPage from "./pages/content/contentpage/ContentPage";
 import { Box, Typography, useTheme } from "@mui/material";
 import BasesYCondiciones from "./pages/BasesYCondiciones";
-import { Facebook, Instagram, Telegram, Twitter } from "@mui/icons-material";
+import {
+  Facebook,
+  Instagram,
+  Logout,
+  Telegram,
+  Twitter,
+} from "@mui/icons-material";
 import { grey } from "@mui/material/colors";
 import SearchPage from "./pages/content/SearchPage";
+import { AsyncImage } from "loadable-image";
+import { useNavigate } from "react-router-dom";
+import useAuth from "./hooks/useAuth";
 
 function TikTokIcon({ color }) {
   return (
@@ -42,6 +51,9 @@ function OnlyFans({ color }) {
 
 function App() {
   const [sidebarState, setSidebarState] = useState(false);
+  const { logout } = useAuth();
+
+  const navigate = useNavigate();
   const theme = useTheme();
 
   const toggleSidebar = () => {
@@ -83,23 +95,40 @@ function App() {
             <a href="#">X</a>
           </li>
           <li>
-            <a className="btn-hover" href="/search?id=favorites">
+            <a
+              className="btn-hover"
+              onClick={() => navigate("/search?id=favorites")}
+            >
               Favoritos
             </a>
           </li>
           <li>
-            <a className="btn-hover" href="/search?id=this-month">
+            <a
+              className="btn-hover"
+              onClick={() => navigate("/search?id=this-month")}
+            >
               Video del mes
             </a>
           </li>
           <li>
-            <a className="btn-hover" href="/search?id=most-liked">
+            <a
+              className="btn-hover"
+              onClick={() => navigate("/search?id=most-liked")}
+            >
               Mas likeados
             </a>
           </li>
           <li>
-            <a className="btn-hover" href="/search?id=most-recent">
+            <a
+              className="btn-hover"
+              onClick={() => navigate("/search?id=most-recent")}
+            >
               Más recientes
+            </a>
+          </li>
+          <li className="sidebar-bottom">
+            <a className="btn-hover" onClick={() => logout()}>
+              Logout
             </a>
           </li>
         </ul>
@@ -110,7 +139,7 @@ function App() {
         >
           <li className="principal">
             <a
-              href="/"
+              onClick={() => navigate("/")}
               className="logo cinzel-600"
               alt="Almendra Gala Logo"
               style={{
@@ -118,15 +147,39 @@ function App() {
                 backgroundColor: theme.palette.background.topbar,
               }}
             >
-              <img
-                src="/logo-horizontal-blanco.webp"
-                alt="Almendra Gala Logo"
+              <AsyncImage
+                src={"/logo-horizontal-blanco.webp"}
                 style={{
+                  height: "auto",
+                  aspectRatio: 11 / 2,
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
                 }}
-              ></img>
+                loader={
+                  <div
+                    style={{
+                      background: "transparent",
+                      height: "150px",
+                      width: "150px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      animation: "pulse 2.5s infinite",
+                    }}
+                  >
+                    <div
+                      style={{
+                        height: "80%",
+                        width: "80%",
+                        background: "transparent",
+                        borderRadius: "4px",
+                      }}
+                    />
+                  </div>
+                }
+                error={<div style={{ background: "#eee" }} />}
+              ></AsyncImage>
             </a>
           </li>
           <li className="hideOnMobile">

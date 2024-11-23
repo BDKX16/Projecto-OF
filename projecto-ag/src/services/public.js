@@ -87,11 +87,8 @@ export const getContent = () => {
 
 export const getVideo = (id) => {
   const controller = loadAbort();
-
   const headers = getAxiosHeaders();
-  if (!headers) {
-    return;
-  }
+
   return {
     call: axios
       .get(import.meta.env.VITE_BASE_URL + "/content/" + id, headers, {

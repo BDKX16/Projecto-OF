@@ -55,8 +55,6 @@ const ContentPage = () => {
         <NotFound />
       </div>
     );
-  } else if (data.status === "expiredToken") {
-    return <Navigate to="/login" />;
   } else if (data.status === "pending") {
     return (
       <div className="main-container">

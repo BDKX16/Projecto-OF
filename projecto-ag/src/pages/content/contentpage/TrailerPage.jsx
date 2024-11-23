@@ -16,6 +16,7 @@ import {
   Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { AsyncImage } from "loadable-image";
 
 const currencyMap = {
   ars: { locale: "es-AR", currency: "ARS", name: "Argentina" },
@@ -94,6 +95,34 @@ const TrailerPage = ({ video }) => {
           <Grid container spacing={2}>
             {video.trailer.images.map((item) => (
               <Grid item key={item} xs={12} sm={6} md={4}>
+                <AsyncImage
+                  src={item}
+                  style={{ height: "auto" }}
+                  alt="Trailer"
+                  loader={
+                    <div
+                      style={{
+                        background: "#2b2b2b",
+                        height: "150px",
+                        width: "150px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        animation: "pulse 2.5s infinite",
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: "80%",
+                          width: "80%",
+                          background: "#353535",
+                          borderRadius: "4px",
+                        }}
+                      />
+                    </div>
+                  }
+                  error={<div style={{ background: "#eee" }} />}
+                />
                 <img src={item} alt="Trailer" style={{ width: "100%" }} />
               </Grid>
             ))}
