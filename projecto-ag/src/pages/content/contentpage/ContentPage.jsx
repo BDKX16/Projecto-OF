@@ -25,7 +25,6 @@ const ContentPage = () => {
     const fetchData = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const videoId = urlParams.get("id");
-      enqueueSnackbar(videoId, { variant: "info" });
       // Use the parameters as needed
       const result = await callEndpoint(getVideo(videoId));
 
