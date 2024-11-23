@@ -12,12 +12,40 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  TableFooter,
+  Button,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
+const currencyMap = {
+  ars: { locale: "es-AR", currency: "ARS", name: "Argentina" },
+  brl: { locale: "pt-BR", currency: "BRL", name: "Brazil" },
+  col: { locale: "es-CO", currency: "COP", name: "Colombia" },
+  eur: { locale: "de-DE", currency: "EUR", name: "Europe" },
+  mxn: { locale: "es-MX", currency: "MXN", name: "Mexico" },
+  usd: { locale: "en-US", currency: "USD", name: "United States" },
+};
+
 const TrailerPage = ({ video }) => {
   return (
-    <Box>
+    <Box
+      sx={{
+        alignItems: "center",
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Box sx={{ marginBottom: 1 }}>
+        <Typography
+          variant="h4"
+          color="text.primary"
+          sx={{ marginTop: 3 }}
+          gutterBottom
+        >
+          {video.title}
+        </Typography>
+      </Box>
       {video.trailer && (
         <iframe
           style={{
@@ -34,21 +62,35 @@ const TrailerPage = ({ video }) => {
         ></iframe>
       )}
       {video.trailer && (
-        <Box className="title-description-section" sx={{ marginBottom: 4 }}>
-          <Typography variant="h4" color="text.primary" gutterBottom>
-            {video.title}
+        <Box
+          className="title-description-section"
+          sx={{ marginBottom: 6, paddingLeft: 2, paddingRight: 2 }}
+        >
+          <Typography
+            variant="h4"
+            color="text.primary"
+            sx={{ marginTop: 5 }}
+            gutterBottom
+          >
+            {video.trailer.title}
           </Typography>
-          <Typography variant="body1" color="text.primary">
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.primary",
+              textAlign: "start",
+              lineHeight: 1.6,
+              textWrap: "balance",
+              letterSpacing: "0.00938em",
+            }}
+          >
             {video.trailer.description}
           </Typography>
         </Box>
       )}
 
       {video.trailer && video.trailer.images.length > 0 && (
-        <Box className="images-section" sx={{ marginBottom: 4 }}>
-          <Typography variant="h4" color="text.primary" gutterBottom>
-            Images
-          </Typography>
+        <Box className="images-section" sx={{ marginBottom: 9 }}>
           <Grid container spacing={2}>
             {video.trailer.images.map((item) => (
               <Grid item key={item} xs={12} sm={6} md={4}>
@@ -58,28 +100,74 @@ const TrailerPage = ({ video }) => {
           </Grid>
         </Box>
       )}
-
-      <Box className="payment-info-section" sx={{ marginBottom: 4 }}>
+      <Box
+        sx={{
+          marginBottom: 6,
+        }}
+      >
+        <Button
+          variant="contained"
+          size="large"
+          sx={{ minWidth: 300, height: 60, fontSize: 22 }}
+        >
+          Comprar contenido
+        </Button>
+      </Box>
+      <Box
+        sx={{
+          marginBottom: 6,
+        }}
+      >
         <Typography variant="h4" color="text.primary" gutterBottom>
           Payment Information
         </Typography>
-        <Paper>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {Object.keys(video.priceTable).map((location) => (
-                  <TableCell key={location}>{location.toUpperCase()}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                {Object.values(video.priceTable).map((price, index) => (
-                  <TableCell key={index}>{price}</TableCell>
-                ))}
-              </TableRow>
-            </TableBody>
-          </Table>
+        <Paper
+          sx={{
+            backgroundColor: "primary.main",
+            padding: 2,
+          }}
+        >
+          <Grid container spacing={2}>
+            {Object.entries(video.priceTable).map(([currency, price]) => {
+              const {
+                locale,
+                currency: currencyCode,
+                name,
+              } = currencyMap[currency] || {};
+              return (
+                <Grid item xs={6} sm={4} md={2} key={currency}>
+                  <Box
+                    sx={{
+                      minWidth: 157,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      padding: 2,
+                      border: "1px solid",
+                      borderColor: "primary.light",
+                      borderRadius: 1,
+                    }}
+                  >
+                    <Box>
+                      <Typography variant="body1">
+                        {name.toUpperCase()}
+                      </Typography>
+                    </Box>
+                    <Box>
+                      <Typography variant="body1">
+                        {locale && currencyCode
+                          ? new Intl.NumberFormat(locale, {
+                              style: "currency",
+                              currency: currencyCode,
+                            }).format(price)
+                          : price}
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Grid>
+              );
+            })}
+          </Grid>
         </Paper>
       </Box>
 
@@ -115,7 +203,7 @@ const TrailerPage = ({ video }) => {
           },
           {
             question:
-              "Yo estoy en Argentina y no tengo tarjeta de crédito, puedo pagar en efectivo y a través de Pago Fácil / RapiPago, ¿Tengo que imprimir el cupón para ir a pagarlo?",
+              "Yo no tengo tarjeta de crédito, puedo pagar en efectivo y a través de Pago Fácil / RapiPago",
             answer:
               "Si, puedes hacer el pago en efectivo a través de Pago Fácil / RapiPago.",
           },
@@ -130,15 +218,30 @@ const TrailerPage = ({ video }) => {
               "Si estás México podés pagar en Pesos Mexicanos; en Colombia en Pesos Colombianos; o en el resto del mundo en Dólares de Estados Unidos.",
           },
         ].map((faq, index) => (
-          <Accordion color="text.secondary" key={index}>
+          <Accordion
+            color="text.secondary"
+            sx={{ backgroundColor: "background.default" }}
+            key={index}
+          >
             <AccordionSummary
               color="background.default"
-              expandIcon={<ExpandMoreIcon />}
+              expandIcon={<ExpandMoreIcon sx={{ color: "text.primary" }} />}
             >
-              <Typography color="text.secondary">{faq.question}</Typography>
+              <Typography
+                sx={{
+                  color: "text.primary",
+                  fontSize: { xs: 19, md: 22, xl: 24 },
+                }}
+              >
+                {faq.question}
+              </Typography>
             </AccordionSummary>
-            <AccordionDetails>
-              <Typography color="text.secondary">{faq.answer}</Typography>
+            <AccordionDetails
+              sx={{ backgroundColor: "#252525", textAlign: "start" }}
+            >
+              <Typography sx={{ color: "text.primary", textAlign: "start" }}>
+                {faq.answer}
+              </Typography>
             </AccordionDetails>
           </Accordion>
         ))}

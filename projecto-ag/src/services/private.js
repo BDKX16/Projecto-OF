@@ -596,6 +596,7 @@ const notifyError = (error) => {
     enqueueSnackbar("No autorizado", {
       variant: "error",
     });
+    window.location.href = "/login";
   } else if (error.status !== 200) {
     enqueueSnackbar(error.response.data.error.message, {
       variant: "error",
