@@ -40,8 +40,9 @@ const TrailerPage = ({ video }) => {
       <Box sx={{ marginBottom: 1 }}>
         <Typography
           variant="h4"
+          component={"h1"}
           color="text.primary"
-          sx={{ marginTop: 3 }}
+          sx={{ marginTop: 3, fontSize: { xs: 24, md: 30, xl: 36 } }}
           gutterBottom
         >
           {video.title}
@@ -69,8 +70,9 @@ const TrailerPage = ({ video }) => {
         >
           <Typography
             variant="h4"
+            component={"h1"}
             color="text.primary"
-            sx={{ marginTop: 5 }}
+            sx={{ marginTop: 5, fontSize: { xs: 24, md: 30 } }}
             gutterBottom
           >
             {video.trailer.title}

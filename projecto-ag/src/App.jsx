@@ -95,34 +95,22 @@ function App() {
             <a href="#">X</a>
           </li>
           <li>
-            <a
-              className="btn-hover"
-              onClick={() => navigate("/search?id=favorites")}
-            >
+            <a className="btn-hover" href="/search?id=favorites">
               Favoritos
             </a>
           </li>
           <li>
-            <a
-              className="btn-hover"
-              onClick={() => navigate("/search?id=this-month")}
-            >
+            <a className="btn-hover" href="/search?id=this-month">
               Video del mes
             </a>
           </li>
           <li>
-            <a
-              className="btn-hover"
-              onClick={() => navigate("/search?id=most-liked")}
-            >
+            <a className="btn-hover" href="/search?id=most-liked">
               Mas likeados
             </a>
           </li>
           <li>
-            <a
-              className="btn-hover"
-              onClick={() => navigate("/search?id=most-recent")}
-            >
+            <a className="btn-hover" href="/search?id=most-recent">
               Más recientes
             </a>
           </li>

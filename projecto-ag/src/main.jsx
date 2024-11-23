@@ -107,9 +107,15 @@ const App = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                position: "absolute",
+                backgroundColor: theme.palette.background.default,
+                top: 0,
+                left: 0,
+                height: "100dvh",
+                width: "100dvw",
+                zIndex: 100,
               }}
             >
-              <p>Cargando contenido</p>
               <LoadingSpinner />
             </div>
           }
@@ -124,11 +130,15 @@ const App = () => {
                         display: "flex",
                         justifyContent: "center",
                         alignItems: "center",
-                        alignSelf: "center",
-                        flexDirection: "column",
+                        position: "absolute",
+                        backgroundColor: "black",
+                        top: 0,
+                        left: 0,
+                        height: "100dvh",
+                        width: "100dvw",
+                        zIndex: 100,
                       }}
                     >
-                      <p>Cargando contenido</p>
                       <LoadingSpinner />
                     </div>
                   ) : (

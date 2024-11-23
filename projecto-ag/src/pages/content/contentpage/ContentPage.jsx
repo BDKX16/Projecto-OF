@@ -15,11 +15,14 @@ import { useSelector } from "react-redux";
 import TrailerPage from "./TrailerPage.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
 import { enqueueSnackbar } from "notistack";
+import { useTheme } from "@mui/material";
 
 const ContentPage = () => {
   const { logout } = useAuth();
   const { loading, callEndpoint } = useFetchAndLoad();
   const [data, setData] = useState(null);
+
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,8 +47,22 @@ const ContentPage = () => {
   }, []);
 
   if (loading || data == null) {
+    //loading || data == null
     return (
-      <div className="main-container">
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          position: "absolute",
+          backgroundColor: theme.palette.background.default,
+          top: 0,
+          left: 0,
+          height: "100dvh",
+          width: "100dvw",
+          zIndex: 100,
+        }}
+      >
         <LoadingSpinner />
       </div>
     );

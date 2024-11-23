@@ -77,19 +77,34 @@ const Content = () => {
               style={{ marginRight: 10, padding: 13 }}
               onClick={() => setPlusEighteen(false)}
             >
-              Soy mayor de 18
+              Si
             </Button>
             <Button
               variant="contained"
               onClick={() => (window.location.href = "https://www.google.com")}
             >
-              Cerrar
+              No
             </Button>
           </div>
         </Box>
       </Modal>
       {loading ? (
-        <LoadingSpinner />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            backgroundColor: "black",
+            top: 0,
+            left: 0,
+            height: "100dvh",
+            width: "100dvw",
+            zIndex: 100,
+          }}
+        >
+          <LoadingSpinner />
+        </div>
       ) : (
         <>
           {data &&
