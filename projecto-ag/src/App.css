@@ -282,8 +282,13 @@ footer {
     background-color: rgb(0, 0, 0);
     border: 2px solid #911431;
   }
+
   .lupa-container:hover .overlay {
     display: block; /* Mostrar la superposición cuando se hace hover */
+  }
+
+  .lupa-container:not(:hover) .overlay {
+    display: none; /* Ocultar la superposición cuando no se hace hover */
   }
 
   .hideOnMobile {
