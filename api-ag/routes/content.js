@@ -13,6 +13,7 @@ const Payment = require("../models/payment.js");
 router.get("/content/:videoId", async (req, res) => {
   const videoId = req.params.videoId;
   let token = req.get("token");
+
   if (videoId === "undefined") {
     return res.status(400).json({ message: "VideoId is required" });
   }

@@ -92,15 +92,13 @@ export const getVideo = (id) => {
   if (!headers) {
     return;
   }
-  headers.headers.token = "asdkjasdoiasdjásoijdasd";
   return {
     call: axios
       .get(import.meta.env.VITE_BASE_URL + "/content/" + id, headers, {
         signal: controller.signal,
       })
       .catch((error) => {
-        console.log(error);
-        enqueueSnackbar(error, { variant: "error", message: error });
+        //enqueueSnackbar(error, { variant: "error", message: error });
         //notifyError(error);
         return { error: error, status: error.status };
       }),

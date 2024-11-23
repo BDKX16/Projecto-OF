@@ -27,11 +27,13 @@ const ContentPage = () => {
       // Use the parameters as needed
       const result = await callEndpoint(getVideo(videoId));
 
+      console.log(result);
       if (!result || Object.keys(result).length === 0) {
         return;
       } else if (result.status !== 200) {
         //enqueueSnackbar("Error", { variant: "error", });
       } else {
+        console.log(result);
         setData(createContentAdapter(result.data));
         if (result.data.status === "expiredToken") {
           logout();
@@ -55,8 +57,6 @@ const ContentPage = () => {
       </div>
     );
   } else if (data.status === "expiredToken") {
-    return <Navigate to="/login" />;
-  } else if (data.status === "unauthorized") {
     return <Navigate to="/login" />;
   } else if (data.status === "pending") {
     return (
