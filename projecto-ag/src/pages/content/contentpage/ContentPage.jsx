@@ -14,6 +14,7 @@ import LoadingSpinner from "../components/LoadingSpinner.jsx";
 import { useSelector } from "react-redux";
 import TrailerPage from "./TrailerPage.jsx";
 import useAuth from "../../../hooks/useAuth.jsx";
+import { enqueueSnackbar } from "notistack";
 
 const ContentPage = () => {
   const { logout } = useAuth();
@@ -24,6 +25,7 @@ const ContentPage = () => {
     const fetchData = async () => {
       const urlParams = new URLSearchParams(window.location.search);
       const videoId = urlParams.get("id");
+      enqueueSnackbar(videoId, { variant: "info" });
       // Use the parameters as needed
       const result = await callEndpoint(getVideo(videoId));
 
