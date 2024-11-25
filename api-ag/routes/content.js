@@ -9,10 +9,13 @@ const Content = require("../models/content.js");
 const Category = require("../models/category.js");
 const VideoCategory = require("../models/video_category.js");
 const Payment = require("../models/payment.js");
+const Interaction = require("../models/interaction.js");
+
 // GET /api/content/:videoId
 router.get("/content/:videoId", async (req, res) => {
   const videoId = req.params.videoId;
   let token = req.get("token");
+  let userId;
 
   if (videoId === "undefined") {
     return res.status(400).json({ message: "VideoId is required" });
@@ -23,6 +26,7 @@ router.get("/content/:videoId", async (req, res) => {
     if (!content) {
       return res.status(404).json({ message: "Content not found" });
     }
+
     try {
       jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
         if (err) {
@@ -39,7 +43,12 @@ router.get("/content/:videoId", async (req, res) => {
               trailer: content.trailer,
               priceTable: content.priceTable,
             };
-
+            await Interaction.create({
+              videoId: videoId,
+              type: "visita-trailer",
+              state: true,
+              createdAt: Date.now(),
+            });
             return res.status(200).json(videoContent);
           } else {
             const videoContent = {
@@ -54,11 +63,16 @@ router.get("/content/:videoId", async (req, res) => {
               trailer: content.trailer,
               priceTable: content.priceTable,
             };
-
+            await Interaction.create({
+              videoId: videoId,
+              type: "visita-trailer",
+              state: true,
+              createdAt: Date.now(),
+            });
             return res.status(200).json(videoContent);
           }
         } else {
-          const userId = decoded.userData._id;
+          userId = decoded.userData._id;
           const payment = await Payment.findOne({
             userId: userId,
             videoId: videoId,
@@ -82,16 +96,48 @@ router.get("/content/:videoId", async (req, res) => {
               trailer: content.trailer,
               priceTable: content.priceTable,
             };
-            return res.status(200).json(videoContent);
+
+            res.status(200).json(videoContent);
+
+            await Interaction.create({
+              userId: userId,
+              videoId: videoId,
+              type: "visita-trailer",
+              state: true,
+              createdAt: Date.now(),
+            });
+            return;
           }
 
-          // Increment the count of the specific content
-          await Content.updateOne(
-            { _id: videoId },
-            { $inc: { cantVisits: 1 } }
-          );
+          const likes = await Interaction.find({
+            videoId: content.id,
+            type: "like",
+            state: true,
+          }).countDocuments();
+          const dislikes = await Interaction.find({
+            videoId: content.id,
+            type: "dislike",
+            state: true,
+          }).countDocuments();
 
-          // Example response
+          const liked = (await Interaction.findOne({
+            userId: userId,
+            videoId: content.id,
+            type: "like",
+            state: true,
+          }))
+            ? true
+            : false;
+
+          const disliked = (await Interaction.findOne({
+            userId: userId,
+            videoId: content.id,
+            type: "dislike",
+            state: true,
+          }))
+            ? true
+            : false;
+
           const videoContent = {
             title: content.title,
             description: content.description,
@@ -102,9 +148,29 @@ router.get("/content/:videoId", async (req, res) => {
             categorys: content.categorys,
             createdAt: content.createdAt,
             id: content.id,
+            likes: likes,
+            dislikes: dislikes,
+            cantVisits: content.cantVisits,
+            liked: liked,
+            disliked: disliked,
           };
 
-          return res.status(200).json(videoContent);
+          res.status(200).json(videoContent);
+
+          // Increment the count of the specific content
+          await Content.updateOne(
+            { _id: videoId },
+            { $inc: { cantVisits: 1 } }
+          );
+
+          await Interaction.create({
+            userId: userId,
+            videoId: videoId,
+            type: "visita",
+            state: true,
+            createdAt: Date.now(),
+          });
+          return;
         }
       });
     } catch (err) {
@@ -127,6 +193,117 @@ router.get("/content/:videoId", async (req, res) => {
   }
 });
 
+router.put("/content/like", checkAuth, async (req, res) => {
+  const videoId = req.body.videoId;
+  let state;
+  if (videoId === "undefined") {
+    return res.status(400).json({ message: "VideoId is required" });
+  }
+
+  try {
+    const like = await Interaction.findOne({
+      userId: req.userData._id,
+      videoId: videoId,
+      type: "like",
+    });
+
+    if (like) {
+      const resp = await Interaction.updateOne(
+        {
+          userId: req.userData._id,
+          videoId: videoId,
+          type: "like",
+        },
+        {
+          state: !like.state,
+          createdAt: Date.now(),
+        }
+      );
+      console.log(resp);
+      state = !like.state;
+    } else {
+      Interaction.create({
+        userId: req.userData._id,
+        videoId: videoId,
+        type: "like",
+        state: true,
+        createdAt: Date.now(),
+      });
+      state = true;
+    }
+
+    await Interaction.updateOne(
+      {
+        userId: req.userData._id,
+        videoId: videoId,
+        type: "dislike",
+      },
+      {
+        state: false,
+      }
+    );
+
+    return res.status(200).json({ like: state, dislike: false });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.put("/content/dislike", checkAuth, async (req, res) => {
+  const videoId = req.body.videoId;
+  let state;
+  if (videoId === "undefined") {
+    return res.status(400).json({ message: "VideoId is required" });
+  }
+
+  try {
+    const dislike = await Interaction.findOne({
+      userId: req.userData._id,
+      videoId: videoId,
+      type: "dislike",
+    });
+
+    if (dislike) {
+      await Interaction.updateOne(
+        {
+          userId: req.userData._id,
+          videoId: videoId,
+          type: "dislike",
+        },
+        {
+          state: !dislike.state,
+          createdAt: Date.now(),
+        }
+      );
+      state = !dislike.state;
+    } else {
+      Interaction.create({
+        userId: req.userData._id,
+        videoId: videoId,
+        type: "dislike",
+        state: true,
+        createdAt: Date.now(),
+      });
+      state = true;
+    }
+
+    await Interaction.updateOne(
+      {
+        userId: req.userData._id,
+        videoId: videoId,
+        type: "like",
+      },
+      {
+        state: false,
+      }
+    );
+
+    return res.status(200).json({ like: false, dislike: state });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // GET /api/content
 router.get("/content-search/:id", async (req, res) => {
   try {
@@ -141,6 +318,20 @@ router.get("/content-search/:id", async (req, res) => {
     if (id === "favorites") {
       content = await Content.find({}).sort({ likes: -1 }).limit(limit);
     } else if (id === "most-liked") {
+      const mostLikedInteractions = await Interaction.aggregate([
+        { $match: { type: "like", state: true } },
+        { $group: { _id: "$videoId", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: limit },
+      ]);
+
+      const mostLikedVideoIds = mostLikedInteractions.map(
+        (interaction) => interaction.videoId
+      );
+      content = await Content.find({ _id: { $in: mostLikedVideoIds } }).limit(
+        limit
+      );
+
       content = await Content.find({}).sort({ likes: -1 }).limit(limit);
     } else if (id === "most-recent") {
       content = await Content.find({}).sort({ createdAt: -1 }).limit(limit);

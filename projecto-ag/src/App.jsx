@@ -20,6 +20,7 @@ import SearchPage from "./pages/content/SearchPage";
 import { AsyncImage } from "loadable-image";
 import { useNavigate } from "react-router-dom";
 import useAuth from "./hooks/useAuth";
+import Checkout from "./pages/content/checkout/Checkout";
 
 function TikTokIcon({ color }) {
   return (
@@ -236,6 +237,7 @@ function App() {
           <Route path={`/search`} element={<SearchPage />} />
           <Route path="/video" element={<ContentPage />} />
           <Route path={`/video/:id`} element={<ContentPage />} />
+          <Route path={`/finalizar-compra/:id`} element={<Checkout />} />
           <Route
             path={"/bases"}
             element={<BasesYCondiciones></BasesYCondiciones>}

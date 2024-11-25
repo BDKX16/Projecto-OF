@@ -10,4 +10,9 @@ export const createContentAdapter = (content) => ({
   status: content.state || content.status,
   trailer: content.trailer,
   priceTable: content.priceTable,
+  likes: content.likes,
+  dislikes: content.dislikes,
+  views: content.cantVisits,
+  liked: content.liked,
+  disliked: content.disliked,
 });

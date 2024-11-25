@@ -85,6 +85,58 @@ export const getContent = () => {
   };
 };
 
+//like video
+export const likeVideo = (videoId) => {
+  const controller = loadAbort();
+
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+
+  return {
+    call: axios
+      .put(
+        import.meta.env.VITE_BASE_URL + "/content/like",
+        { videoId },
+        headers,
+        {
+          signal: controller.signal,
+        }
+      )
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+//dislike video
+
+export const dislikeVideo = (videoId) => {
+  const controller = loadAbort();
+
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+
+  return {
+    call: axios
+      .put(
+        import.meta.env.VITE_BASE_URL + "/content/dislike",
+        { videoId },
+        headers,
+        {
+          signal: controller.signal,
+        }
+      )
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
 export const getVideo = (id) => {
   const controller = loadAbort();
   const headers = getAxiosHeaders();

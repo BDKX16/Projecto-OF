@@ -3,9 +3,9 @@ import "./pages.css";
 
 const BasesYCondiciones = () => {
   return (
-    <div className="terminos">
+    <div className="terminos" style={{ marginLeft: 20, marginRight: 20 }}>
       <h2>Términos y Condiciones</h2>
-      <p>
+      <p className="text-balance ">
         Esta página web es propiedad, y está administrada por,{" "}
         <strong>AlmendraGala</strong>, entidad legal responsable de los
         servicios y contenidos ofrecidos en la misma. <br />
