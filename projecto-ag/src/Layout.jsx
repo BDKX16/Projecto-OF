@@ -24,7 +24,12 @@ const Login = lazy(() => import("./pages/Login.jsx"));
 const Layout = () => {
   const userState = useSelector((state) => state.user);
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_relativeSplatPath: true,
+        v7_startTransition: true,
+      }}
+    >
       <Routes>
         <Route
           path="/login"

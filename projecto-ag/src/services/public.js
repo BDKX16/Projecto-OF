@@ -137,6 +137,31 @@ export const dislikeVideo = (videoId) => {
   };
 };
 
+export const favoriteVideo = (videoId) => {
+  const controller = loadAbort();
+
+  const headers = getAxiosHeaders();
+  if (!headers) {
+    return;
+  }
+
+  return {
+    call: axios
+      .put(
+        import.meta.env.VITE_BASE_URL + "/content/favorite",
+        { videoId },
+        headers,
+        {
+          signal: controller.signal,
+        }
+      )
+      .catch((error) => {
+        notifyError(error);
+      }),
+    controller,
+  };
+};
+
 export const getVideo = (id) => {
   const controller = loadAbort();
   const headers = getAxiosHeaders();
@@ -157,10 +182,13 @@ export const getVideo = (id) => {
 
 export const searchVideos = (id, page) => {
   const controller = loadAbort();
+
+  const headers = getAxiosHeaders();
   return {
     call: axios
       .get(
         `${import.meta.env.VITE_BASE_URL}/content-search/${id}?page=${page}`,
+        headers,
         {
           signal: controller.signal,
         }

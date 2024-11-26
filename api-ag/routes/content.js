@@ -138,6 +138,15 @@ router.get("/content/:videoId", async (req, res) => {
             ? true
             : false;
 
+          const favorite = (await Interaction.findOne({
+            userId: userId,
+            videoId: content.id,
+            type: "favorite",
+            state: true,
+          }))
+            ? true
+            : false;
+
           const videoContent = {
             title: content.title,
             description: content.description,
@@ -153,6 +162,7 @@ router.get("/content/:videoId", async (req, res) => {
             cantVisits: content.cantVisits,
             liked: liked,
             disliked: disliked,
+            favorite: favorite,
           };
 
           res.status(200).json(videoContent);
@@ -208,7 +218,7 @@ router.put("/content/like", checkAuth, async (req, res) => {
     });
 
     if (like) {
-      const resp = await Interaction.updateOne(
+      await Interaction.updateOne(
         {
           userId: req.userData._id,
           videoId: videoId,
@@ -219,7 +229,6 @@ router.put("/content/like", checkAuth, async (req, res) => {
           createdAt: Date.now(),
         }
       );
-      console.log(resp);
       state = !like.state;
     } else {
       Interaction.create({
@@ -304,9 +313,52 @@ router.put("/content/dislike", checkAuth, async (req, res) => {
   }
 });
 
+router.put("/content/favorite", checkAuth, async (req, res) => {
+  const videoId = req.body.videoId;
+
+  if (videoId === "undefined") {
+    return res.status(400).json({ message: "VideoId is required" });
+  }
+
+  try {
+    const like = await Interaction.findOne({
+      userId: req.userData._id,
+      videoId: videoId,
+      type: "favorite",
+    });
+
+    if (like) {
+      await Interaction.updateOne(
+        {
+          userId: req.userData._id,
+          videoId: videoId,
+          type: "favorite",
+        },
+        {
+          state: !like.state,
+          createdAt: Date.now(),
+        }
+      );
+    } else {
+      Interaction.create({
+        userId: req.userData._id,
+        videoId: videoId,
+        type: "favorite",
+        state: true,
+        createdAt: Date.now(),
+      });
+    }
+
+    return res.status(200).json({ message: "Succes" });
+  } catch (err) {
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 // GET /api/content
 router.get("/content-search/:id", async (req, res) => {
   try {
+    const token = req.get("token");
     const id = req.params.id;
     const page = parseInt(req.query.page) || 1;
     const limit = 15;
@@ -314,9 +366,26 @@ router.get("/content-search/:id", async (req, res) => {
     let content;
     const total = await Content.countDocuments({});
     const totalPages = Math.ceil(total / limit);
-
     if (id === "favorites") {
-      content = await Content.find({}).sort({ likes: -1 }).limit(limit);
+      let userId;
+      jwt.verify(token, process.env.TOKEN_SECRET, async (err, decoded) => {
+        if (!err) {
+          userId = decoded.userData._id;
+        }
+        return;
+      });
+      const favoriteInteractions = await Interaction.find({
+        userId: userId,
+        type: "favorite",
+        state: true,
+      });
+      const favoriteVideoIds = favoriteInteractions.map(
+        (interaction) => interaction.videoId
+      );
+
+      content = await Content.find({
+        _id: { $in: favoriteVideoIds },
+      }).limit(limit);
     } else if (id === "most-liked") {
       const mostLikedInteractions = await Interaction.aggregate([
         { $match: { type: "like", state: true } },

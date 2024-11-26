@@ -26,6 +26,7 @@ const InteractionSchema = new Schema({
       "share",
       "save",
       "report",
+      "favorite",
     ],
   },
   state: {

@@ -15,4 +15,5 @@ export const createContentAdapter = (content) => ({
   views: content.cantVisits,
   liked: content.liked,
   disliked: content.disliked,
+  favorite: content.favorite,
 });

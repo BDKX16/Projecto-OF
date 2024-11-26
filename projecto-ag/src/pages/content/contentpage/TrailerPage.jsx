@@ -262,6 +262,7 @@ const TrailerPage = ({ video }) => {
                 sx={{
                   color: "text.primary",
                   fontSize: { xs: 19, md: 22, xl: 24 },
+                  textAlign: "start",
                 }}
               >
                 {faq.question}
