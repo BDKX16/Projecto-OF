@@ -9,7 +9,9 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-
+import { Autocomplete } from "@mui/material";
+import TextField from "@mui/material/TextField";
+import countries from "../../../utils/countries";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 
 const FormGrid = styled(Grid)(() => ({
@@ -22,10 +24,11 @@ const InputContainer = styled("div")({
 });
 
 const ErrorText = styled(Typography)({
+  textAlign: "right",
   position: "absolute",
   top: "100%",
-  left: 0,
-  color: "red",
+  right: 0,
+  color: "#d1291d",
   fontSize: "12px",
 });
 
@@ -42,11 +45,12 @@ const validationSchema = Yup.object({
   city: Yup.string().required("La ciudad es requerida"),
   state: Yup.string().required("La provincia es requerida"),
   postalCode: Yup.string().required("El codio postal es obligatorio"),
-  country: Yup.string().required("El pais es obligatorio"),
+  country: Yup.object().required("El pais es obligatorio"),
 });
 
 export default function AddressForm({ onFormDataChange, formData }) {
   const initialValues = JSON.parse(JSON.stringify(formData));
+
   return (
     <Formik
       initialValues={initialValues}
@@ -55,9 +59,16 @@ export default function AddressForm({ onFormDataChange, formData }) {
         onFormDataChange(values);
       }}
     >
-      {({ handleChange, handleBlur, values }) => (
+      {({
+        handleChange,
+        handleBlur,
+        values,
+        errors,
+        touched,
+        setFieldValue,
+      }) => (
         <Form>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{ textAlign: "left" }}>
             <Grid item xs={12} md={6}>
               <FormLabel htmlFor="firstName" required>
                 Nombre
@@ -69,6 +80,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.firstName}
+                  error={touched.firstName && Boolean(errors.firstName)}
                   fullWidth
                 />
                 <ErrorMessage
@@ -89,6 +101,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.lastName}
+                  error={touched.lastName && Boolean(errors.lastName)}
                   fullWidth
                 />
                 <ErrorMessage
@@ -109,6 +122,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.address}
+                  error={touched.address && Boolean(errors.address)}
                   fullWidth
                 />
                 <ErrorMessage
@@ -129,6 +143,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onChange={handleChange}
                   onBlur={handleBlur}
                   value={values.phone}
+                  error={touched.phone && Boolean(errors.phone)}
                   fullWidth
                 />
                 <ErrorMessage
@@ -150,6 +165,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onBlur={handleBlur}
                   value={values.city}
                   fullWidth
+                  error={touched.city && Boolean(errors.city)}
                 />
                 <ErrorMessage name="city" component={ErrorText} color="error" />
               </InputContainer>
@@ -166,6 +182,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onBlur={handleBlur}
                   value={values.state}
                   fullWidth
+                  error={touched.state && Boolean(errors.state)}
                 />
                 <ErrorMessage
                   name="state"
@@ -186,6 +203,7 @@ export default function AddressForm({ onFormDataChange, formData }) {
                   onBlur={handleBlur}
                   value={values.postalCode}
                   fullWidth
+                  error={touched.postalCode && Boolean(errors.postalCode)}
                 />
                 <ErrorMessage
                   name="postalCode"
@@ -199,13 +217,27 @@ export default function AddressForm({ onFormDataChange, formData }) {
                 País
               </FormLabel>
               <InputContainer>
-                <OutlinedInput
-                  id="country"
-                  name="country"
-                  onChange={handleChange}
+                <Autocomplete
+                  disablePortal
+                  options={countries}
+                  onChange={(event, value) => {
+                    setFieldValue("country", value);
+                  }}
+                  isOptionEqualToValue={(option, value) =>
+                    option?.label === value?.label
+                  }
                   onBlur={handleBlur}
                   value={values.country}
                   fullWidth
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label=""
+                      color="error"
+                      name="country"
+                      error={touched.country && Boolean(errors.country)}
+                    />
+                  )}
                 />
                 <ErrorMessage
                   name="country"

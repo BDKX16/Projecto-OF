@@ -96,9 +96,8 @@ export default function Checkout({ video }) {
     city: "",
     state: "",
     postalCode: "",
-    country: "",
+    country: { id: "ARS", label: "Argentina" },
   });
-
   const handlePaymentTypeChange = (paymentType) => {
     setSelectedPaymentType(paymentType);
   };
@@ -128,7 +127,7 @@ export default function Checkout({ video }) {
       paymentMethod: selectedPaymentType,
       contentId: video.id,
     };
-    console.log(video);
+
     const result = await callEndpoint(sendPayment(toSend));
     if (result.status !== 200) {
       enqueueSnackbar("Error procesing payment", {
@@ -142,6 +141,18 @@ export default function Checkout({ video }) {
     }
   };
 
+  const calculatePrice = () => {
+    const countryId = formData.country.id.toLowerCase();
+    const priceTable = video.priceTable;
+
+    if (priceTable && priceTable[countryId]) {
+      return priceTable[countryId];
+    } else {
+      // Fallback to USD if the country ID is not found in the price table
+      return priceTable.usd;
+    }
+  };
+
   const paymentButton = () => {
     if (activeStep > 0) {
       if (activeStep === steps.length - 1 && selectedPaymentType === "paypal") {
@@ -150,6 +161,7 @@ export default function Checkout({ video }) {
             style={{ marginBottom: 20 }}
             toSend={{
               ...formData,
+              country: formData.country.label,
               paymentMethod: "paypal",
               contentId: video.id,
             }}
@@ -177,6 +189,7 @@ export default function Checkout({ video }) {
       <Grid
         container
         sx={{
+          backgroundColor: "background.paper",
           height: { xs: "185dvh", sm: "120dvh", md: "100vh" },
         }}
       >
@@ -222,14 +235,7 @@ export default function Checkout({ video }) {
               maxWidth: 500,
             }}
           >
-            <Info
-              totalPrice={
-                selectedPaymentType == "paypal"
-                  ? convertToUsd(video.price)
-                  : video.price.toString()
-              }
-              contenido={video}
-            />
+            <Info totalPrice={calculatePrice(20)} contenido={video} />
           </Box>
         </Grid>
         <Grid

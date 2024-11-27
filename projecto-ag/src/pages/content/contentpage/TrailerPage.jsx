@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { AsyncImage } from "loadable-image";
+import Checkout from "../checkout/Checkout";
 
 const currencyMap = {
   ars: { locale: "es-AR", currency: "ARS", name: "Argentina" },
@@ -28,6 +29,11 @@ const currencyMap = {
 };
 
 const TrailerPage = ({ video }) => {
+  const [goCheckout, setGoCheckout] = useState(false);
+
+  if (goCheckout) {
+    return <Checkout video={video} />;
+  }
   return (
     <Box
       sx={{
@@ -140,6 +146,7 @@ const TrailerPage = ({ video }) => {
           variant="contained"
           size="large"
           sx={{ minWidth: 300, height: 60, fontSize: 22 }}
+          onClick={() => setGoCheckout(true)}
         >
           Comprar contenido
         </Button>
@@ -150,7 +157,7 @@ const TrailerPage = ({ video }) => {
         }}
       >
         <Typography variant="h4" color="text.primary" gutterBottom>
-          Payment Information
+          Valor del pack
         </Typography>
         <Paper
           sx={{

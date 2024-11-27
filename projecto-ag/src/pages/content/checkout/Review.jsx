@@ -77,7 +77,7 @@ export default function Review({ price, formData, paymentData }) {
               ", " +
               formData.postalCode +
               ", " +
-              capitalize(formData.country)}
+              capitalize(formData.country.label)}
           </Typography>
         </div>
         <div>

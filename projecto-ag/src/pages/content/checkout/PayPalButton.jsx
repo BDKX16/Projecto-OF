@@ -28,6 +28,7 @@ function PayPalButton({ toSend }) {
           }}
           createOrder={async () => {
             try {
+              console.log(toSend);
               const response = await callEndpoint(sendPayment(toSend));
               const orderData = response.data.paymentResponse.jsonResponse;
 

@@ -85,7 +85,7 @@ export default function PaymentForm({ onPaymentTypeChange }) {
               <CardContent
                 sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >
-                <AccountBalanceRoundedIcon color="primary" fontSize="small" />
+                <CreditCardRoundedIcon color="primary" fontSize="small" />
                 <Typography fontWeight="medium">Paypal</Typography>
               </CardContent>
             </CardActionArea>
@@ -109,7 +109,7 @@ export default function PaymentForm({ onPaymentTypeChange }) {
                 sx={{ display: "flex", alignItems: "center", gap: 1 }}
               >
                 <AccountBalanceRoundedIcon color="primary" fontSize="small" />
-                <Typography fontWeight="medium">Bank account</Typography>
+                <Typography fontWeight="medium">Transferencia</Typography>
               </CardContent>
             </CardActionArea>
           </Card>
@@ -152,36 +152,45 @@ export default function PaymentForm({ onPaymentTypeChange }) {
           }}
         >
           <Alert severity="warning" icon={<WarningRoundedIcon />}>
-            Tu orden sera procesada un vez que recibamos los fondos
+            Tu orden sera procesada un vez que recibamos los fondos.
           </Alert>
           <Typography variant="subtitle1" fontWeight="medium">
-            Bank account
+            Cuenta Bancaria
           </Typography>
           <Typography variant="body1" gutterBottom>
-            Please transfer the payment to the bank account details shown below.
+            Por favor transferir el pago a la cuenta bancaria detallada a
+            continuacion.
           </Typography>
           <Box sx={{ display: "flex", gap: 1 }}>
             <Typography variant="body1" color="text.secondary">
-              Bank:
+              Banco:
             </Typography>
             <Typography variant="body1" fontWeight="medium">
-              Mastercredit
+              Banco Provincia
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: 1 }}>
             <Typography variant="body1" color="text.secondary">
-              Account number:
+              Nro de cuenta:
             </Typography>
             <Typography variant="body1" fontWeight="medium">
-              123456789
+              42006877745
             </Typography>
           </Box>
           <Box sx={{ display: "flex", gap: 1 }}>
             <Typography variant="body1" color="text.secondary">
-              Routing number:
+              CBU:
             </Typography>
             <Typography variant="body1" fontWeight="medium">
-              987654321
+              0140323503420068777451
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", gap: 1 }}>
+            <Typography variant="body1" color="text.secondary">
+              Alias:
+            </Typography>
+            <Typography variant="body1" fontWeight="medium">
+              almendra.gala
             </Typography>
           </Box>
         </Box>

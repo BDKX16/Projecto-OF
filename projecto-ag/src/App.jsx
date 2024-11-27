@@ -233,15 +233,13 @@ function App() {
         }}
       >
         <Routes>
+          <Route path={`/*`} element={<Content />} />
           <Route path={`/`} element={<Content />} />
           <Route path={`/search`} element={<SearchPage />} />
           <Route path="/video" element={<ContentPage />} />
           <Route path={`/video/:id`} element={<ContentPage />} />
           <Route path={`/finalizar-compra/:id`} element={<Checkout />} />
-          <Route
-            path={"/bases"}
-            element={<BasesYCondiciones></BasesYCondiciones>}
-          ></Route>
+          <Route path={"/bases"} element={<BasesYCondiciones />}></Route>
         </Routes>
       </div>
 
